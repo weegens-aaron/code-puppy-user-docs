@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCP Commands Reference — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="index.html">Index</a>
+<a href="ConfigCommands.html">Config Commands</a>
+<a href="ConfigReference.html">Config Reference</a>
+<a href="CoreCommands.html">Core Commands</a>
+<a href="EnvVars.html">Env Vars</a>
+<a href="MCPCommands.html" class="active">MCPCommands</a>
+<a href="RESTAPI.html">RESTAPI</a>
+<a href="SchedulerCommands.html">Scheduler Commands</a>
+<a href="SessionCommands.html">Session Commands</a>
+<a href="SkillsCommands.html">Skills Commands</a>
+<a href="ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="mcp-commands-reference">MCP Commands Reference</h1>
+<h2 id="overview">Overview</h2>
+<p>This reference covers all <code>/mcp</code> commands for managing Model Context Protocol (MCP) servers in Code Puppy. MCP servers provide additional tools and capabilities to AI agents.</p>
+<hr>
+<h2 id="mcp-no-arguments"><code>/mcp</code> (no arguments)</h2>
+<p><strong>Description:</strong> Show the MCP server status dashboard.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/mcp</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>🔌 MCP Server Status Dashboard
+┌──────────────┬────────┬─────────┬──────────┬──────────┬─────────────────┐
+│ Name         │ Type   │ State   │ Enabled  │ Uptime   │ Status          │
+├──────────────┼────────┼─────────┼──────────┼──────────┼─────────────────┤
+│ filesystem   │ STDIO  │ ✓ Running│ ✓       │ 2h 15m   │ OK              │
+│ postgres     │ STDIO  │ ✗ Stopped│ ✓      │ -        │ Not running     │
+│ browser      │ SSE    │ ⚠ Error  │ ✓      │ -        │ Connection failed│
+└──────────────┴────────┴─────────┴──────────┴──────────┴─────────────────┘
+
+📊 Summary: 1/3 servers running</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/ManageMCP.html">Guide: How to manage MCP servers</a></li>
+</ul>
+<hr>
+<h2 id="mcp-list"><code>/mcp list</code></h2>
+<p><strong>Description:</strong> List all registered MCP servers in a formatted table.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/mcp list</code></pre>
+<p><strong>Output:</strong> Same as <code>/mcp</code> - shows the status dashboard with all servers.</p>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/ManageMCP.html">Guide: How to manage MCP servers</a></li>
+</ul>
+<hr>
+<h2 id="mcp-start"><code>/mcp start</code></h2>
+<p><strong>Description:</strong> Start a specific MCP server.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/mcp start &lt;server_name&gt;</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>&lt;server_name&gt;</code></td>
+<td>Name of the server to start</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Start the filesystem server
+/mcp start filesystem</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>🚀 Starting server: filesystem (subprocess starting in background)
+Tip: Use /mcp status to check if the server is fully initialized
+Agent reloaded with updated servers</code></pre>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li><strong>stdio servers</strong>: Start subprocess asynchronously in the background</li>
+<li><strong>SSE/HTTP servers</strong>: Enable the server (connects on first use)</li>
+<li>Automatically reloads the agent to pick up new server tools</li>
+</ul>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/ManageMCP.html">Guide: How to manage MCP servers</a></li>
+</ul>
+<hr>
+<h2 id="mcp-start-all"><code>/mcp start-all</code></h2>
+<p><strong>Description:</strong> Start all registered MCP servers.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/mcp start-all</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>🚀 Starting all servers...
+✓ Started: filesystem
+✓ Started: postgres
+✓ Started: browser
+
+📊 Summary: 3/3 servers starting</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/ManageMCP.html">Guide: How to manage MCP servers</a></li>
+</ul>
+<hr>
+<h2 id="mcp-stop"><code>/mcp stop</code></h2>
+<p><strong>Description:</strong> Stop a specific MCP server.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/mcp stop &lt;server_name&gt;</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>&lt;server_name&gt;</code></td>
+<td>Name of the server to stop</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Stop the filesystem server
+/mcp stop filesystem</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>✅ Stopped server: filesystem
+Agent reloaded with updated servers</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/ManageMCP.html">Guide: How to manage MCP servers</a></li>
+</ul>
+<hr>
+<h2 id="mcp-stop-all"><code>/mcp stop-all</code></h2>
+<p><strong>Description:</strong> Stop all running MCP servers.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/mcp stop-all [group_id]</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>[group_id]</code></td>
+<td>Optional: Stop only servers in a specific group</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Stop all servers
+/mcp stop-all
+
+# Stop servers in a specific group
+/mcp stop-all my-group</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>🛑 Stopping all servers...
+✓ Stopped: filesystem
+✓ Stopped: postgres
+✓ Stopped: browser
+
+📊 Summary: 0/3 servers running</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/ManageMCP.html">Guide: How to manage MCP servers</a></li>
+</ul>
+<hr>
+<h2 id="mcp-restart"><code>/mcp restart</code></h2>
+<p><strong>Description:</strong> Restart a specific MCP server.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/mcp restart &lt;server_name&gt;</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>&lt;server_name&gt;</code></td>
+<td>Name of the server to restart</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Restart the filesystem server
+/mcp restart filesystem</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>🔄 Restarting server: filesystem
+🚀 Starting server: filesystem (subprocess starting in background)
+Agent reloaded with updated servers</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/ManageMCP.html">Guide: How to manage MCP servers</a></li>
+</ul>
+<hr>
+<h2 id="mcp-status"><code>/mcp status</code></h2>
+<p><strong>Description:</strong> Show detailed status for a specific server or all servers.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/mcp status [server_name]</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>[server_name]</code></td>
+<td>Optional: Show detailed status for specific server</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Show status for all servers
+/mcp status
+
+# Show detailed status for filesystem server
+/mcp status filesystem</code></pre>
+<p><strong>Output (all servers):</strong></p>
+<pre><code>🔌 MCP Server Status Dashboard
+┌──────────────┬────────┬─────────┬──────────┬──────────┬─────────────────┐
+│ Name         │ Type   │ State   │ Enabled  │ Uptime   │ Status          │
+├──────────────┼────────┼─────────┼──────────┼──────────┼─────────────────┤
+│ filesystem   │ STDIO  │ ✓ Running│ ✓      │ 2h 15m   │ OK              │
+└──────────────┴────────┴─────────┴──────────┴──────────┴─────────────────┘
+
+📊 Summary: 1/1 servers running</code></pre>
+<p><strong>Output (specific server):</strong></p>
+<pre><code>🔌 filesystem Status
+┌────────────────────────────────────────────────────────────┐
+│ Server: filesystem                                         │
+│ ID: filesystem                                             │
+│ Type: STDIO                                                │
+│ State: ✓ Running                                           │
+│ Enabled: ✓ Yes                                             │
+│ Process: ✓ Active (subprocess/connection running)          │
+│ Uptime: 2h 15m                                             │
+│ Recent Events: 12                                          │
+└────────────────────────────────────────────────────────────┘
+
+📋 Recent Events:
+  14:30:15: Server started
+  14:30:16: Connected to agent
+  14:35:22: Tool call: read_file</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/ManageMCP.html">Guide: How to manage MCP servers</a></li>
+</ul>
+<hr>
+<h2 id="mcp-test"><code>/mcp test</code></h2>
+<p><strong>Description:</strong> Test connectivity to a specific MCP server.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/mcp test &lt;server_name&gt;</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>&lt;server_name&gt;</code></td>
+<td>Name of the server to test</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Test the filesystem server
+/mcp test filesystem</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>🧪 Testing server: filesystem
+✓ Connection successful
+✓ Server responded in 45ms
+✓ Available tools: read_file, write_file, list_directory</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/ManageMCP.html">Guide: How to manage MCP servers</a></li>
+</ul>
+<hr>
+<h2 id="mcp-logs"><code>/mcp logs</code></h2>
+<p><strong>Description:</strong> Show recent events/logs for a specific server.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/mcp logs &lt;server_name&gt; [limit]</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>&lt;server_name&gt;</code></td>
+<td>Name of the server</td>
+</tr>
+<tr>
+<td><code>[limit]</code></td>
+<td>Optional: Number of events to show (default: 10)</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Show last 10 events for filesystem server
+/mcp logs filesystem
+
+# Show last 20 events
+/mcp logs filesystem 20</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>📋 filesystem - Recent Events:
+  14:30:15: Server started
+  14:30:16: Connected to agent
+  14:35:22: Tool call: read_file
+  14:35:23: Tool result: success
+  14:40:10: Tool call: write_file
+  14:40:11: Tool result: success
+  14:45:05: Heartbeat received
+  14:50:05: Heartbeat received
+  14:55:05: Heartbeat received
+  15:00:05: Heartbeat received</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/ManageMCP.html">Guide: How to manage MCP servers</a></li>
+</ul>
+<hr>
+<h2 id="mcp-edit"><code>/mcp edit</code></h2>
+<p><strong>Description:</strong> Edit an existing MCP server configuration.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/mcp edit &lt;server_name&gt;</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>&lt;server_name&gt;</code></td>
+<td>Name of the server to edit</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Edit the filesystem server
+/mcp edit filesystem</code></pre>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>Opens an interactive editor to modify server configuration</li>
+<li>Allows changing command, arguments, environment variables</li>
+<li>Saves changes and restarts the server if running</li>
+</ul>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/ManageMCP.html">Guide: How to manage MCP servers</a></li>
+</ul>
+<hr>
+<h2 id="mcp-remove"><code>/mcp remove</code></h2>
+<p><strong>Description:</strong> Remove/disable a registered MCP server.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/mcp remove &lt;server_name&gt;</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>&lt;server_name&gt;</code></td>
+<td>Name of the server to remove</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Remove the filesystem server
+/mcp remove filesystem</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>⚠ Disabling server: filesystem
+Server removed from configuration
+Agent reloaded with updated servers</code></pre>
+<p><strong>Note:</strong> This disables the server but doesn't delete the configuration file. Use <code>/mcp edit</code> to re-enable it.</p>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/ManageMCP.html">Guide: How to manage MCP servers</a></li>
+</ul>
+<hr>
+<h2 id="mcp-search"><code>/mcp search</code></h2>
+<p><strong>Description:</strong> Search the MCP server registry for pre-configured servers.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/mcp search [query]</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>[query]</code></td>
+<td>Optional: Search term (e.g., "database", "filesystem")</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Search for database servers
+/mcp search database
+
+# Search for filesystem servers
+/mcp search filesystem</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>🔍 Search results for "database":
+
+1. postgres (✓ Verified, ⭐ Popular)
+   ID: postgres
+   Description: PostgreSQL database MCP server
+
+2. mysql
+   ID: mysql
+   Description: MySQL database MCP server
+
+3. mongodb
+   ID: mongodb
+   Description: MongoDB database MCP server
+
+Use '/mcp install &lt;server_id&gt;' to install a server</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/ManageMCP.html">Guide: How to manage MCP servers</a></li>
+</ul>
+<hr>
+<h2 id="mcp-install"><code>/mcp install</code></h2>
+<p><strong>Description:</strong> Install an MCP server from the registry.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/mcp install &lt;server_id&gt;</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>&lt;server_id&gt;</code></td>
+<td>Server ID from the registry</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Install PostgreSQL server
+/mcp install postgres
+
+# Install filesystem server
+/mcp install filesystem</code></pre>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>If no arguments: Opens interactive menu to browse available servers</li>
+<li>With server_id: Installs the specified server from the registry</li>
+<li>Prompts for required environment variables and arguments</li>
+<li>Automatically starts the server after installation</li>
+</ul>
+<p><strong>Output:</strong></p>
+<pre><code>📦 Installing: PostgreSQL MCP Server
+Description: PostgreSQL database MCP server
+
+Required Environment Variables:
+  POSTGRES_HOST: localhost
+  POSTGRES_PORT: 5432
+  POSTGRES_USER: [prompted]
+  POSTGRES_PASSWORD: [prompted]
+
+✅ Server installed: postgres
+🚀 Starting server: postgres</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/ManageMCP.html">Guide: How to manage MCP servers</a></li>
+</ul>
+<hr>
+<h2 id="mcp-help"><code>/mcp help</code></h2>
+<p><strong>Description:</strong> Show help information for all MCP commands.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/mcp help</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>MCP Server Management Commands
+
+Registry Commands:
+  /mcp search [query]     Search 30+ pre-configured servers
+  /mcp install &lt;id&gt;       Install server from registry
+
+Core Commands:
+  /mcp                    Show server status dashboard
+  /mcp list               List all registered servers
+  /mcp start &lt;name&gt;       Start a specific server
+  /mcp start-all          Start all servers
+  /mcp stop &lt;name&gt;        Stop a specific server
+  /mcp stop-all           Stop all running servers
+  /mcp restart &lt;name&gt;     Restart a specific server
+
+Management Commands:
+  /mcp status [name]      Show detailed status
+  /mcp test &lt;name&gt;        Test connectivity
+  /mcp logs &lt;name&gt; [limit] Show recent events
+  /mcp edit &lt;name&gt;        Edit server config
+  /mcp remove &lt;name&gt;      Remove a server
+  /mcp help               Show this help message
+
+Status Indicators:
+  ✓ Running    ✗ Stopped    ⚠ Error    ⚠ Quarantined    ⭐ Popular
+
+Examples:
+  /mcp search database     # Find database servers
+  /mcp install postgres    # Install PostgreSQL server
+  /mcp start filesystem    # Start a specific server
+  /mcp start-all           # Start all servers at once
+  /mcp stop-all            # Stop all running servers</code></pre>
+<hr>
+<h2 id="status-indicators">Status Indicators</h2>
+<table>
+<thead><tr>
+<th>Indicator</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>✓</td>
+<td>Server is running</td>
+</tr>
+<tr>
+<td>✗</td>
+<td>Server is stopped</td>
+</tr>
+<tr>
+<td>⚠</td>
+<td>Server has an error</td>
+</tr>
+<tr>
+<td>⏠</td>
+<td>Server is quarantined</td>
+</tr>
+<tr>
+<td>⭐</td>
+<td>Popular server</td>
+</tr>
+<tr>
+<td>✓</td>
+<td>Verified server</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="server-types">Server Types</h2>
+<table>
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>STDIO</strong></td>
+<td>Server runs as a subprocess, communicates via stdin/stdout</td>
+</tr>
+<tr>
+<td><strong>SSE</strong></td>
+<td>Server runs as an HTTP service, communicates via Server-Sent Events</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="../Guides/ManageMCP.html">Guide: How to manage MCP servers</a></li>
+<li><a href="../Concepts/MCP.html">Concept: Understanding MCP Integration</a></li>
+<li><a href="CoreCommands.html">Reference: Core Commands</a></li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

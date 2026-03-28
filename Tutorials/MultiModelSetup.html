@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tutorial: Setting Up Multi-Model Distribution — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="index.html">Index</a>
+<a href="CustomAgent.html">Custom Agent</a>
+<a href="FirstTask.html">First Task</a>
+<a href="MultiModelSetup.html" class="active">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="tutorial-setting-up-multi-model-distribution">Tutorial: Setting Up Multi-Model Distribution</h1>
+<h2 id="what-you-ll-achieve">What You'll Achieve</h2>
+<p>By the end of this tutorial, you'll have configured a round-robin model that distributes requests across multiple models, helping you overcome rate limits and balance load across different API keys or providers.</p>
+<h2 id="before-you-begin">Before You Begin</h2>
+<p><strong>Time needed:</strong> ~10 minutes</p>
+<p><strong>You'll need:</strong></p>
+<ul>
+<li>Code Puppy installed and running</li>
+<li>At least 2 models configured (or API keys for the same model type)</li>
+<li>Basic familiarity with the <a href="../Getting-Started/QuickStart.html">Quick Start</a></li>
+</ul>
+<p><strong>You should already know:</strong></p>
+<ul>
+<li>How to run Code Puppy</li>
+<li>How to use the <code>/model</code> command to switch models</li>
+</ul>
+<h2 id="the-scenario">The Scenario</h2>
+<p>You're working on a large coding project that requires many AI interactions. You've hit rate limits with your single API key, or you want to:</p>
+<ul>
+<li><strong>Maximize throughput</strong> by distributing requests across multiple API keys</li>
+<li><strong>Balance costs</strong> by mixing expensive and cheaper models</li>
+<li><strong>Increase reliability</strong> by having fallback options</li>
+<li><strong>Test multiple models</strong> to see which works best for your use case</li>
+</ul>
+<p>Multi-model distribution solves this by creating a virtual model that cycles through your available models automatically.</p>
+<h2 id="step-1-choose-your-distribution-strategy">Step 1: Choose Your Distribution Strategy</h2>
+<p>Decide what you want to achieve:</p>
+<table>
+<thead><tr>
+<th>Goal</th>
+<th>Strategy</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Avoid rate limits</td>
+<td>Multiple keys for the same model</td>
+</tr>
+<tr>
+<td>Cost optimization</td>
+<td>Mix expensive + cheaper models</td>
+</tr>
+<tr>
+<td>Model comparison</td>
+<td>Cycle through different model types</td>
+</tr>
+<tr>
+<td>High availability</td>
+<td>Redundant models as fallbacks</td>
+</tr>
+</tbody></table>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>For this tutorial, we'll set up multiple Cerebras API keys to maximize throughput. Adapt the steps for your use case.</p>
+</div>
+<h2 id="step-2-prepare-your-base-models">Step 2: Prepare Your Base Models</h2>
+<p>You need individual models configured before creating the round-robin. Let's set up three Cerebras keys:</p>
+<p>**Create or edit your <code>~/.code_puppy/models.json</code>:**</p>
+<pre><code class="language-json">{
+  "cerebras_key1": {
+    "type": "cerebras",
+    "name": "zai-glm-4.7",
+    "custom_endpoint": {
+      "url": "https://api.cerebras.ai/v1",
+      "api_key": "$CEREBRAS_API_KEY1"
+    },
+    "context_length": 131072,
+    "supported_settings": ["temperature", "seed", "top_p"]
+  },
+  "cerebras_key2": {
+    "type": "cerebras",
+    "name": "zai-glm-4.7",
+    "custom_endpoint": {
+      "url": "https://api.cerebras.ai/v1",
+      "api_key": "$CEREBRAS_API_KEY2"
+    },
+    "context_length": 131072,
+    "supported_settings": ["temperature", "seed", "top_p"]
+  },
+  "cerebras_key3": {
+    "type": "cerebras",
+    "name": "zai-glm-4.7",
+    "custom_endpoint": {
+      "url": "https://api.cerebras.ai/v1",
+      "api_key": "$CEREBRAS_API_KEY3"
+    },
+    "context_length": 131072,
+    "supported_settings": ["temperature", "seed", "top_p"]
+  }
+}</code></pre>
+<p><strong>Set your environment variables:</strong></p>
+<pre><code class="language-bash">export CEREBRAS_API_KEY1="your-first-api-key-here"
+export CEREBRAS_API_KEY2="your-second-api-key-here"
+export CEREBRAS_API_KEY3="your-third-api-key-here"</code></pre>
+<div class="callout callout-note">
+<div class="callout-title">NOTE</div>
+<p>Each model name (<code>cerebras_key1</code>, <code>cerebras_key2</code>, etc.) must be unique. The <code>name</code> field inside each config can be the same if you're using the same model type.</p>
+</div>
+<h2 id="step-3-create-the-round-robin-configuration">Step 3: Create the Round-Robin Configuration</h2>
+<p>Now add a round-robin model that references your base models:</p>
+<p>**Add to the same <code>models.json</code> file:**</p>
+<pre><code class="language-json">{
+  "cerebras_key1": { ... },
+  "cerebras_key2": { ... },
+  "cerebras_key3": { ... },
+  "cerebras_round_robin": {
+    "type": "round_robin",
+    "models": ["cerebras_key1", "cerebras_key2", "cerebras_key3"],
+    "rotate_every": 1
+  }
+}</code></pre>
+<p><strong>Configuration options:</strong></p>
+<table>
+<thead><tr>
+<th>Option</th>
+<th>Description</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>Must be <code>"round_robin"</code></td>
+<td><code>"round_robin"</code></td>
+</tr>
+<tr>
+<td><code>models</code></td>
+<td>List of model names to cycle through</td>
+<td><code>["model1", "model2", "model3"]</code></td>
+</tr>
+<tr>
+<td><code>rotate_every</code></td>
+<td>Requests per model before rotating (default: 1)</td>
+<td><code>1</code>, <code>5</code>, <code>10</code></td>
+</tr>
+</tbody></table>
+<p>**Understanding <code>rotate_every</code>:**</p>
+<ul>
+<li>**<code>rotate_every: 1</code>** (default): Switch after every request ``` Request 1 → Key 1 Request 2 → Key 2 Request 3 → Key 3 Request 4 → Key 1 (cycle repeats) ```</li>
+</ul>
+<ul>
+<li>**<code>rotate_every: 5</code>**: Stay on each model for 5 requests ``` Requests 1-5  → Key 1 Requests 6-10 → Key 2 Requests 11-15 → Key 3 Requests 16-20 → Key 1 (cycle repeats) ```</li>
+</ul>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>Use <code>rotate_every: 1</code> for maximum distribution. Use higher values if you want to reduce connection overhead or keep sessions on the same model longer.</p>
+</div>
+<h2 id="step-4-reload-your-configuration">Step 4: Reload Your Configuration</h2>
+<p>If Code Puppy is already running, reload the models:</p>
+<pre><code class="language-bash">/models reload</code></pre>
+<p>Or restart Code Puppy to pick up the new configuration:</p>
+<pre><code class="language-bash">code-puppy</code></pre>
+<h2 id="step-5-select-the-round-robin-model">Step 5: Select the Round-Robin Model</h2>
+<p>Use the model picker to activate your round-robin configuration:</p>
+<pre><code class="language-bash">/model</code></pre>
+<p>Tab through the list until you see <code>cerebras_round_robin</code> and press Enter.</p>
+<p><strong>You should see:</strong></p>
+<pre><code>round_robin:cerebras_key1,cerebras_key2,cerebras_key3</code></pre>
+<p>This confirms you're using the round-robin distribution.</p>
+<h2 id="step-6-verify-distribution-is-working">Step 6: Verify Distribution is Working</h2>
+<p>Make several requests and watch the model name change:</p>
+<p><strong>Request 1:</strong></p>
+<pre><code>&gt; Please analyze this code for bugs...</code></pre>
+<p>Model shows: <code>round_robin:...</code> (using Key 1)</p>
+<p><strong>Request 2:</strong></p>
+<pre><code>&gt; Now refactor this function...</code></pre>
+<p>Model shows: <code>round_robin:...</code> (using Key 2)</p>
+<p><strong>Request 3:</strong></p>
+<pre><code>&gt; Write tests for this module...</code></pre>
+<p>Model shows: <code>round_robin:...</code> (using Key 3)</p>
+<p><strong>Request 4:</strong></p>
+<pre><code>&gt; Optimize this algorithm...</code></pre>
+<p>Model shows: <code>round_robin:...</code> (using Key 1 again)</p>
+<div class="callout callout-note">
+<div class="callout-title">NOTE</div>
+<p>The underlying key rotates automatically. You don't need to manually switch models.</p>
+</div>
+<h2 id="final-result">Final Result</h2>
+<p>You now have a round-robin model that:</p>
+<ul>
+<li>✅ Distributes requests across 3 API keys</li>
+<li>✅ Effectively triples your rate limit (300 req/hr instead of 100)</li>
+<li>✅ Works transparently — just use it like any other model</li>
+<li>✅ Automatically cycles through all configured models</li>
+</ul>
+<p><strong>Your effective rate limit:</strong></p>
+<pre><code>3 keys × 100 requests/hour = 300 requests/hour</code></pre>
+<h2 id="what-you-learned">What You Learned</h2>
+<ul>
+<li><strong>Round-robin models</strong> distribute requests across multiple models</li>
+<li><strong>Configuration</strong> requires base models + a round-robin wrapper</li>
+<li>**<code>rotate_every</code>** controls how often to switch models</li>
+<li><strong>Environment variables</strong> can be referenced with <code>$VAR_NAME</code> syntax</li>
+<li><strong>Distribution</strong> happens automatically during normal use</li>
+</ul>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><a href="CustomAgent.html">Tutorial: Creating a Custom Agent</a> — Build your own specialized agent</li>
+<li><a href="../Guides/AddModels.html">Guide: How to Add Models from models.dev</a> — Discover and add more models</li>
+<li><a href="../Guides/ModelConfiguration.html">Guide: How to Configure Models</a> — Deep dive into model settings</li>
+<li><a href="../Reference/ConfigReference.html">Reference: Configuration Options</a> — All available config options</li>
+</ul>
+<h2 id="variations-to-try">Variations to Try</h2>
+<h3 id="cost-optimization-mix">Cost Optimization Mix</h3>
+<pre><code class="language-json">{
+  "expensive_model": {
+    "type": "anthropic",
+    "name": "claude-opus-4-5",
+    ...
+  },
+  "cheap_model": {
+    "type": "cerebras",
+    "name": "zai-glm-4.7",
+    ...
+  },
+  "cost_balanced": {
+    "type": "round_robin",
+    "models": ["expensive_model", "cheap_model"],
+    "rotate_every": 2
+  }
+}</code></pre>
+<p>This uses the expensive model for 2 requests, then the cheap model for 2 requests, balancing quality and cost.</p>
+<h3 id="provider-redundancy">Provider Redundancy</h3>
+<pre><code class="language-json">{
+  "openai_fallback": {
+    "type": "round_robin",
+    "models": ["gpt-5.2", "claude-4-5-sonnet", "Gemini-3"],
+    "rotate_every": 1
+  }
+}</code></pre>
+<p>Distributes across providers for maximum reliability and to compare model performance.</p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead><tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>ValueError: Round-robin model requires a 'models' list</code></td>
+<td>Ensure <code>models</code> is a non-empty array</td>
+</tr>
+<tr>
+<td><code>Model not found: cerebras_key1</code></td>
+<td>Verify all referenced models exist in your config</td>
+</tr>
+<tr>
+<td><code>rotate_every must be at least 1</code></td>
+<td>Set <code>rotate_every</code> to 1 or higher</td>
+</tr>
+<tr>
+<td>Not seeing rotation</td>
+<td>Make more requests — rotation happens per request</td>
+</tr>
+<tr>
+<td>Environment variable not found</td>
+<td>Export the variable or use a literal API key</td>
+</tr>
+</tbody></table>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

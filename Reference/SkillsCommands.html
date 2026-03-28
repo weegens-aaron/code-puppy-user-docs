@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skills Commands Reference — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="index.html">Index</a>
+<a href="ConfigCommands.html">Config Commands</a>
+<a href="ConfigReference.html">Config Reference</a>
+<a href="CoreCommands.html">Core Commands</a>
+<a href="EnvVars.html">Env Vars</a>
+<a href="MCPCommands.html">MCPCommands</a>
+<a href="RESTAPI.html">RESTAPI</a>
+<a href="SchedulerCommands.html">Scheduler Commands</a>
+<a href="SessionCommands.html">Session Commands</a>
+<a href="SkillsCommands.html" class="active">Skills Commands</a>
+<a href="ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="skills-commands-reference">Skills Commands Reference</h1>
+<h2 id="overview">Overview</h2>
+<p>This reference covers all <code>/skills</code> commands for managing agent skills in Code Puppy. Skills are reusable capabilities that extend what agents can do.</p>
+<hr>
+<h2 id="skills-no-arguments"><code>/skills</code> (no arguments)</h2>
+<p><strong>Description:</strong> Launch the interactive skills management TUI.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/skills</code></pre>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>Opens a split-panel interface showing all discovered skills</li>
+<li>Left panel: Skill list with navigation</li>
+<li>Right panel: Details for selected skill</li>
+</ul>
+<p><strong>Navigation:</strong></p>
+<table>
+<thead><tr>
+<th>Key</th>
+<th>Action</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>↑/↓</code> or <code>j/k</code></td>
+<td>Navigate skill list</td>
+</tr>
+<tr>
+<td><code>←/→</code></td>
+<td>Previous/Next page</td>
+</tr>
+<tr>
+<td><code>Enter</code></td>
+<td>Toggle skill enabled/disabled</td>
+</tr>
+<tr>
+<td><code>t</code></td>
+<td>Toggle skills system on/off</td>
+</tr>
+<tr>
+<td><code>r</code></td>
+<td>Refresh skill cache</td>
+</tr>
+<tr>
+<td><code>Ctrl+A</code></td>
+<td>Add a skill directory</td>
+</tr>
+<tr>
+<td><code>Ctrl+D</code></td>
+<td>Show/manage directories</td>
+</tr>
+<tr>
+<td><code>i</code></td>
+<td>Install skills from catalog</td>
+</tr>
+<tr>
+<td><code>q</code> or <code>Escape</code></td>
+<td>Exit</td>
+</tr>
+</tbody></table>
+<p><strong>Output (example):</strong></p>
+<pre><code> Skills: ENABLED
+
+ &gt; ✓ git_operations
+   ✓ file_operations
+   ✓ web_scraper
+   ✗ database_tools
+
+ Page 1/2
+
+ ↑/↓ or j/k Navigate  ←/→ Page
+ Enter Toggle  t Toggle System
+ Ctrl+A Add Dir  Ctrl+D Show Dirs
+ i Install from catalog  r Refresh  q Exit</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/UseSkills.html">Guide: How to use skills</a></li>
+<li><a href="../Guides/InstallSkills.html">Guide: How to install skills</a></li>
+</ul>
+<hr>
+<h2 id="skills-list"><code>/skills list</code></h2>
+<p><strong>Description:</strong> List all discovered skills in a simple format.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/skills list</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Found 5 skill(s):
+
+  [enabled] git_operations
+    Git repository operations (clone, commit, push)
+    Resources: 3
+
+  [enabled] file_operations
+    File system operations (read, write, search)
+    Resources: 5
+
+  [disabled] database_tools
+    Database query and management
+    Resources: 2</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/UseSkills.html">Guide: How to use skills</a></li>
+</ul>
+<hr>
+<h2 id="skills-enable"><code>/skills enable</code></h2>
+<p><strong>Description:</strong> Enable a specific skill.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/skills enable &lt;skill-name&gt;</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>&lt;skill-name&gt;</code></td>
+<td>Name of the skill to enable</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Enable the git_operations skill
+/skills enable git_operations</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Skill 'git_operations' has been enabled.</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/UseSkills.html">Guide: How to use skills</a></li>
+</ul>
+<hr>
+<h2 id="skills-disable"><code>/skills disable</code></h2>
+<p><strong>Description:</strong> Disable a specific skill.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/skills disable &lt;skill-name&gt;</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>&lt;skill-name&gt;</code></td>
+<td>Name of the skill to disable</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Disable the database_tools skill
+/skills disable database_tools</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Skill 'database_tools' has been disabled.</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/UseSkills.html">Guide: How to use skills</a></li>
+</ul>
+<hr>
+<h2 id="skills-toggle"><code>/skills toggle</code></h2>
+<p><strong>Description:</strong> Toggle the entire skills integration system on/off.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/skills toggle</code></pre>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>If skills are enabled: Disables all skills</li>
+<li>If skills are disabled: Enables all skills</li>
+</ul>
+<p><strong>Output (enable):</strong></p>
+<pre><code>Skills integration has been enabled.</code></pre>
+<p><strong>Output (disable):</strong></p>
+<pre><code>Skills integration has been disabled.</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/UseSkills.html">Guide: How to use skills</a></li>
+</ul>
+<hr>
+<h2 id="skills-refresh"><code>/skills refresh</code></h2>
+<p><strong>Description:</strong> Refresh the skill cache to discover newly added skills.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/skills refresh</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Refreshing skill cache...
+Skill cache refreshed successfully.</code></pre>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>After manually adding new skill files to a skill directory</li>
+<li>After installing skills from the catalog</li>
+<li>After modifying skill metadata</li>
+</ul>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/InstallSkills.html">Guide: How to install skills</a></li>
+</ul>
+<hr>
+<h2 id="skills-help"><code>/skills help</code></h2>
+<p><strong>Description:</strong> Show help information for all skills commands.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/skills help</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Available commands:
+  /skills                    - Show interactive TUI
+  /skills list              - List all skills
+  /skills enable &lt;name&gt;     - Enable a skill
+  /skills disable &lt;name&gt;    - Disable a skill
+  /skills toggle            - Toggle skills integration
+  /skills refresh           - Refresh skill cache
+  /skills help              - Show this help</code></pre>
+<hr>
+<h2 id="skill-directories">Skill Directories</h2>
+<p>Skills are discovered from the following directories:</p>
+<table>
+<thead><tr>
+<th>Location</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>~/.code_puppy/skills/</code></td>
+<td>Default user skills directory</td>
+</tr>
+<tr>
+<td><code>./skills/</code></td>
+<td>Project-local skills directory</td>
+</tr>
+<tr>
+<td>Custom directories</td>
+<td>Added via <code>/skills</code> TUI (Ctrl+A)</td>
+</tr>
+</tbody></table>
+<p><strong>Adding a Custom Directory:</strong></p>
+<ol>
+<li>Run <code>/skills</code> to open the TUI</li>
+<li>Press <code>Ctrl+A</code></li>
+<li>Enter the directory path</li>
+<li>Skills in that directory will be discovered</li>
+</ol>
+<p><strong>Managing Directories:</strong></p>
+<ol>
+<li>Run <code>/skills</code> to open the TUI</li>
+<li>Press <code>Ctrl+D</code></li>
+<li>Enter a number to remove that directory</li>
+</ol>
+<hr>
+<h2 id="skill-status-indicators">Skill Status Indicators</h2>
+<table>
+<thead><tr>
+<th>Indicator</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>✓</td>
+<td>Skill is enabled</td>
+</tr>
+<tr>
+<td>✗</td>
+<td>Skill is disabled</td>
+</tr>
+<tr>
+<td>[enabled]</td>
+<td>Skill is active</td>
+</tr>
+<tr>
+<td>[disabled]</td>
+<td>Skill is inactive</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="skill-metadata">Skill Metadata</h2>
+<p>Skills should include a <code>SKILL.md</code> file with frontmatter:</p>
+<pre><code class="language-markdown">---
+name: git_operations
+description: Git repository operations (clone, commit, push)
+tags: [git, version-control, repository]
+---</code></pre>
+<p><strong>Metadata Fields:</strong></p>
+<table>
+<thead><tr>
+<th>Field</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>Unique skill identifier</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>Human-readable description</td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>Categorization tags</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="skill-resources">Skill Resources</h2>
+<p>Skills can include resources (files, templates, scripts) that support their functionality. Resources are listed in the skill details panel.</p>
+<hr>
+<h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="../Guides/UseSkills.html">Guide: How to use skills</a></li>
+<li><a href="../Guides/InstallSkills.html">Guide: How to install skills</a></li>
+<li><a href="../Guides/CreateSkills.html">Guide: How to create custom skills</a></li>
+<li><a href="../Tutorials/FirstTask.html">Tutorial: Your First Code Task</a></li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

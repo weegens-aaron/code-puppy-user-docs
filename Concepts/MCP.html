@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Understanding MCP Integration — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="index.html">Index</a>
+<a href="AgentSkills.html">Agent Skills</a>
+<a href="Agents.html">Agents</a>
+<a href="Hooks.html">Hooks</a>
+<a href="MCP.html" class="active">MCP</a>
+<a href="Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="understanding-mcp-integration">Understanding MCP Integration</h1>
+<h2 id="what-is-mcp">What Is MCP?</h2>
+<p><strong>MCP (Model Context Protocol)</strong> is a standard way for AI assistants like Code Puppy to connect with external tools and data sources. Think of it as a universal adapter that lets your AI agent talk to filesystems, databases, browsers, version control systems, and other services.</p>
+<p>MCP servers are small programs that expose specific capabilities as "tools" your AI can use. For example:</p>
+<ul>
+<li>A <strong>filesystem server</strong> lets your agent read, write, and search files</li>
+<li>A <strong>PostgreSQL server</strong> lets your agent query databases</li>
+<li>A <strong>browser server</strong> lets your agent interact with web pages</li>
+</ul>
+<h2 id="why-does-it-matter">Why Does It Matter?</h2>
+<p>Without MCP, your AI assistant is limited to what it can do on its own. With MCP, you can:</p>
+<table>
+<thead><tr>
+<th>Capability</th>
+<th>MCP Server Example</th>
+<th>What Your Agent Can Do</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>Work with files</strong></td>
+<td><code>filesystem</code></td>
+<td>Read source code, create new files, search projects</td>
+</tr>
+<tr>
+<td><strong>Query databases</strong></td>
+<td><code>postgres</code>, <code>mysql</code></td>
+<td>Inspect schemas, run queries, debug data issues</td>
+</tr>
+<tr>
+<td><strong>Control browsers</strong></td>
+<td><code>browser</code></td>
+<td>Navigate websites, take screenshots, extract content</td>
+</tr>
+<tr>
+<td><strong>Manage Git</strong></td>
+<td><code>git</code></td>
+<td>Check commit history, view diffs, manage branches</td>
+</tr>
+<tr>
+<td><strong>Access APIs</strong></td>
+<td>Custom servers</td>
+<td>Connect to Slack, GitHub, Jira, or any REST API</td>
+</tr>
+<tr>
+<td><strong>Run system commands</strong></td>
+<td>Built-in</td>
+<td>Execute shell commands (with safety checks)</td>
+</tr>
+</tbody></table>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>MCP is <strong>optional</strong> — Code Puppy works fine without it. But adding MCP servers dramatically expands what your agent can accomplish.</p>
+</div>
+<h2 id="how-it-works-simplified">How It Works (Simplified)</h2>
+<pre class="mermaid">
+flowchart LR
+    A[You ask agent] --&gt; B[Agent receives question]
+    B --&gt; C{Does agent have&lt;br/&gt;the right tool?}
+    C --&gt;|No| D[Agent asks MCP server&lt;br/&gt;for available tools]
+    C --&gt;|Yes| E[Agent uses tool directly]
+    D --&gt; F[MCP server exposes&lt;br/&gt;tools like read_file]
+    F --&gt; E
+    E --&gt; G[Agent executes tool]
+    G --&gt; H[You see result]
+</pre>
+<h3 id="the-flow-in-detail">The Flow in Detail</h3>
+<ol>
+<li><strong>You ask a question</strong>: "What files are in the <code>src/</code> directory?"</li>
+</ol>
+<ol>
+<li><strong>Agent checks capabilities</strong>: The agent looks at its available tools. If it doesn't have a <code>list_files</code> tool, it asks connected MCP servers.</li>
+</ol>
+<ol>
+<li><strong>MCP server responds</strong>: The filesystem MCP server says "I can provide <code>list_files</code>, <code>read_file</code>, <code>write_file</code>, etc."</li>
+</ol>
+<ol>
+<li><strong>Agent uses the tool</strong>: The agent calls <code>list_files</code> with the path <code>src/</code>.</li>
+</ol>
+<ol>
+<li><strong>MCP server executes</strong>: The filesystem server runs the actual operation and returns the file list.</li>
+</ol>
+<ol>
+<li><strong>Agent shares the result</strong>: Your agent tells you what files it found.</li>
+</ol>
+<h2 id="key-terms">Key Terms</h2>
+<table>
+<thead><tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>MCP Server</strong></td>
+<td>A program that exposes tools to AI agents (e.g., <code>filesystem</code>, <code>postgres</code>)</td>
+</tr>
+<tr>
+<td><strong>stdio</strong></td>
+<td>Server runs as a subprocess on your machine (most common)</td>
+</tr>
+<tr>
+<td><strong>SSE</strong></td>
+<td>Server connects over Server-Sent Events (HTTP-based)</td>
+</tr>
+<tr>
+<td><strong>Tool</strong></td>
+<td>A specific capability exposed by an MCP server (e.g., <code>read_file</code>)</td>
+</tr>
+<tr>
+<td><strong>Catalog</strong></td>
+<td>Pre-configured servers you can install with one command</td>
+</tr>
+<tr>
+<td><strong>Quarantine</strong></td>
+<td>Automatic isolation of servers that crash repeatedly</td>
+</tr>
+</tbody></table>
+<h2 id="examples">Examples</h2>
+<h3 id="example-1-file-operations">Example 1: File Operations</h3>
+<p><strong>Scenario</strong>: Your agent needs to review a codebase.</p>
+<p><strong>Without MCP</strong>: The agent can only see files you explicitly paste into the chat.</p>
+<p><strong>With MCP filesystem server</strong>:</p>
+<pre><code>You: "What's in the src/ directory?"
+Agent: [calls list_files tool from filesystem server]
+Agent: "I found: main.py, utils.py, config.py"</code></pre>
+<h3 id="example-2-database-debugging">Example 2: Database Debugging</h3>
+<p><strong>Scenario</strong>: Your app has a data issue.</p>
+<p><strong>With MCP PostgreSQL server</strong>:</p>
+<pre><code>You: "Why are users not logging in?"
+Agent: [queries the users table via MCP]
+Agent: "I see 3 users with invalid email formats. That's likely the issue."</code></pre>
+<h2 id="common-misconceptions">Common Misconceptions</h2>
+<div class="callout callout-caution">
+<div class="callout-title">CAUTION</div>
+<p><strong>MCP is only for advanced users</strong>: <strong>Reality</strong> — Installing and using MCP servers is as simple as running <code>/mcp install</code>. You don't need to understand the protocol itself.</p>
+</div>
+<div class="callout callout-caution">
+<div class="callout-title">CAUTION</div>
+<p><strong>MCP servers are always running</strong>: <strong>Reality</strong> — stdio servers start when you run <code>/mcp start &lt;name&gt;</code> and stop when you run <code>/mcp stop &lt;name&gt;</code>. SSE servers are enabled/disabled but don't run as processes.</p>
+</div>
+<div class="callout callout-caution">
+<div class="callout-title">CAUTION</div>
+<p><strong>More servers = better</strong>: <strong>Reality</strong> — Only install servers you actually need. Each server adds complexity and potential failure points. Start with <code>filesystem</code> and add others as required.</p>
+</div>
+<h2 id="server-types">Server Types</h2>
+<h3 id="stdio-most-common">stdio (Most Common)</h3>
+<p>Runs as a subprocess on your machine.</p>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li>Starts/stops with <code>/mcp start</code> / <code>/mcp stop</code></li>
+<li>Uses your local system resources</li>
+<li>Requires the command to be available in your PATH</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-json">{
+  "type": "stdio",
+  "config": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-filesystem"]
+  }
+}</code></pre>
+<h3 id="sse-server-sent-events">SSE (Server-Sent Events)</h3>
+<p>Connects over HTTP with streaming responses.</p>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li>No subprocess management</li>
+<li>Connects to remote servers or local services</li>
+<li>Enabled/disabled but not "started"</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-json">{
+  "type": "sse",
+  "config": {
+    "url": "http://localhost:3000/mcp"
+  }
+}</code></pre>
+<h3 id="streamable-http">Streamable-HTTP</h3>
+<p>Modern HTTP-based protocol with request/response cycles.</p>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li>Similar to SSE but uses standard HTTP</li>
+<li>Better for stateless operations</li>
+<li>Growing adoption in new servers</li>
+</ul>
+<h2 id="safety-permissions">Safety &amp; Permissions</h2>
+<p>Code Puppy includes several safety mechanisms:</p>
+<table>
+<thead><tr>
+<th>Mechanism</th>
+<th>What It Does</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>Quarantine</strong></td>
+<td>Servers that crash 3+ times are automatically disabled</td>
+</tr>
+<tr>
+<td><strong>Health monitoring</strong></td>
+<td>Continuous checks detect unresponsive servers</td>
+</tr>
+<tr>
+<td><strong>Permission hooks</strong></td>
+<td>You can block specific tool calls via hooks</td>
+</tr>
+<tr>
+<td><strong>Command validation</strong></td>
+<td>Shell commands are validated before execution</td>
+</tr>
+</tbody></table>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>To block dangerous tool calls, see <a href="../Guides/BlockToolCalls.html">Guide: How to block tool calls</a>.</p>
+</div>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="server-won-t-start">Server won't start</h3>
+<p><strong>Symptoms</strong>: <code>/mcp start &lt;name&gt;</code> shows "starting" but never "running"</p>
+<p><strong>Common causes</strong>:</p>
+<ol>
+<li><strong>Missing command</strong>: The server's <code>command</code> isn't in your PATH</li>
+<li><strong>Wrong arguments</strong>: The <code>args</code> configuration is incorrect</li>
+<li><strong>Port conflict</strong>: For SSE servers, another process uses the port</li>
+</ol>
+<p><strong>Fix</strong>:</p>
+<pre><code class="language-bash"># Check detailed status
+/mcp status &lt;server_name&gt;
+
+# Check logs
+/mcp logs &lt;server_name&gt;
+
+# Try starting again
+/mcp stop &lt;server_name&gt;
+/mcp start &lt;server_name&gt;</code></pre>
+<h3 id="agent-can-t-see-tools">Agent can't see tools</h3>
+<p><strong>Symptoms</strong>: Server shows "running" but agent doesn't have access to expected tools</p>
+<p><strong>Common causes</strong>:</p>
+<ol>
+<li><strong>Agent not reloaded</strong>: After starting a server, the agent needs to reload</li>
+<li><strong>Server failed to initialize</strong>: Check <code>/mcp status</code> for errors</li>
+</ol>
+<p><strong>Fix</strong>:</p>
+<pre><code class="language-bash"># Reload the agent
+/reload
+
+# Or restart Code Puppy entirely
+# Then try /mcp start &lt;name&gt; again</code></pre>
+<h3 id="server-keeps-crashing">Server keeps crashing</h3>
+<p><strong>Symptoms</strong>: Server starts, then immediately stops</p>
+<p><strong>Common causes</strong>:</p>
+<ol>
+<li><strong>Configuration error</strong>: Check environment variables or arguments</li>
+<li><strong>Resource limits</strong>: Server needs more memory or CPU</li>
+<li><strong>Dependency missing</strong>: Server requires a library or tool not installed</li>
+</ol>
+<p><strong>Fix</strong>:</p>
+<pre><code class="language-bash"># Check the server logs
+/mcp logs &lt;server_name&gt;
+
+# Look for error messages in the output
+# Fix the configuration, then restart
+/mcp restart &lt;server_name&gt;</code></pre>
+<h2 id="tips">Tips</h2>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Start with the filesystem server</strong> — It's the most useful and works out of the box with <code>npx</code>.</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Use the catalog</strong> — <code>/mcp install</code> shows pre-configured servers so you don't have to write JSON by hand.</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Check status regularly</strong> — Run <code>/mcp</code> to see which servers are running and healthy.</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Name servers meaningfully</strong> — Use descriptive names like <code>my-project-db</code> instead of just <code>postgres</code> so you know what each server does.</p>
+</div>
+<h2 id="learn-more">Learn More</h2>
+<ul>
+<li><a href="../Guides/ManageMCP.html">Guide: How to manage MCP servers</a> — Install, start, stop, and configure servers</li>
+<li><a href="../Reference/MCPCommands.html">Reference: MCP Commands</a> — All <code>/mcp</code> subcommands</li>
+<li><a href="Hooks.html">Concept: Understanding Hooks</a> — Customize MCP behavior with hooks</li>
+<li><a href="../Tutorials/MultiModelSetup.html">Tutorial: Setting Up Multi-Model Distribution</a> — Advanced configuration</li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

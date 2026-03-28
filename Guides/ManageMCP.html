@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Manage MCP Servers — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="index.html">Index</a>
+<a href="AddModels.html">Add Models</a>
+<a href="BlockToolCalls.html">Block Tool Calls</a>
+<a href="Commands.html">Commands</a>
+<a href="CreateAgents.html">Create Agents</a>
+<a href="CreateHooks.html">Create Hooks</a>
+<a href="CreateSkills.html">Create Skills</a>
+<a href="InstallSkills.html">Install Skills</a>
+<a href="ManageMCP.html" class="active">Manage MCP</a>
+<a href="ModelConfiguration.html">Model Configuration</a>
+<a href="RoundRobinModels.html">Round Robin Models</a>
+<a href="SwitchAgents.html">Switch Agents</a>
+<a href="UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="how-to-manage-mcp-servers">How to Manage MCP Servers</h1>
+<h2 id="what-you-ll-learn">What You'll Learn</h2>
+<p>By the end of this guide, you'll be able to install, start, stop, and manage Model Context Protocol (MCP) servers to extend Code Puppy's capabilities.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Code Puppy installed and running</li>
+<li>Basic understanding of what MCP servers are (see <a href="../Concepts/MCP.html">Concepts: MCP Integration</a>)</li>
+</ul>
+<h2 id="quick-version">Quick Version</h2>
+<pre><code class="language-bash"># List all servers
+/mcp list
+
+# Install a server from catalog
+/mcp install &lt;server_id&gt;
+
+# Start a server
+/mcp start &lt;server_name&gt;
+
+# Check status
+/mcp status &lt;server_name&gt;
+
+# Stop a server
+/mcp stop &lt;server_name&gt;
+
+# Remove a server
+/mcp remove &lt;server_name&gt;</code></pre>
+<h2 id="detailed-steps">Detailed Steps</h2>
+<h3 id="1-list-available-servers">1. List Available Servers</h3>
+<p>First, see what MCP servers are currently registered:</p>
+<pre><code class="language-bash">/mcp list</code></pre>
+<p>You'll see a table showing:</p>
+<ul>
+<li><strong>Name</strong>: Server identifier</li>
+<li><strong>Type</strong>: <code>stdio</code>, <code>sse</code>, or <code>streamable-http</code></li>
+<li><strong>State</strong>: <code>running</code>, <code>stopped</code>, <code>starting</code>, <code>error</code></li>
+<li><strong>Enabled</strong>: Whether the server is active</li>
+<li><strong>Uptime</strong>: How long the server has been running</li>
+<li><strong>Status</strong>: Current health or error message</li>
+</ul>
+<p><strong>Example output:</strong></p>
+<pre><code>🔌 MCP Server Status Dashboard
+┌──────────────┬────────┬──────────┬───────────┬──────────┬────────────┐
+│ Name         │ Type   │ State    │ Enabled   │ Uptime   │ Status     │
+├──────────────┼────────┼──────────┼───────────┼──────────┼────────────┤
+│ filesystem   │ STDIO  │ 🟢 running │ ✓        │ 2h 15m   │ OK         │
+│ memory       │ STDIO  │ 🔴 stopped │ ✗        │ -        │ OK         │
+└──────────────┴────────┴──────────┴───────────┴──────────┴────────────┘
+
+📊 Summary: 1/2 servers running</code></pre>
+<h3 id="2-install-a-server-from-catalog">2. Install a Server from Catalog</h3>
+<p>Code Puppy includes a catalog of pre-configured MCP servers:</p>
+<pre><code class="language-bash">/mcp install</code></pre>
+<p>This launches an interactive menu showing available servers. Browse with arrow keys and press Enter to install.</p>
+<p><strong>Install a specific server by ID:</strong></p>
+<pre><code class="language-bash">/mcp install filesystem</code></pre>
+<p>During installation, you may be prompted for:</p>
+<ul>
+<li><strong>Custom name</strong>: How you want to refer to this server</li>
+<li><strong>Environment variables</strong>: API keys or configuration values</li>
+<li><strong>Command-line arguments</strong>: Server-specific options</li>
+</ul>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>Use <code>/mcp install</code> without arguments to browse the full catalog interactively.</p>
+</div>
+<h3 id="3-start-a-server">3. Start a Server</h3>
+<p>Once installed, start the server:</p>
+<pre><code class="language-bash">/mcp start filesystem</code></pre>
+<p><strong>For stdio servers</strong> (most common):</p>
+<ul>
+<li>The server subprocess starts asynchronously in the background</li>
+<li>You'll see: <code>🚀 Starting server: filesystem (subprocess starting in background)</code></li>
+<li>The server is ready when its state shows <code>running</code></li>
+</ul>
+<p><strong>For SSE/HTTP servers</strong>:</p>
+<ul>
+<li>The server is enabled immediately</li>
+<li>Connection happens on first use</li>
+</ul>
+<div class="callout callout-note">
+<div class="callout-title">NOTE</div>
+<p>After starting, Code Puppy automatically reloads the agent to pick up the new server tools.</p>
+</div>
+<h3 id="4-check-server-status">4. Check Server Status</h3>
+<p>Check the status of a specific server:</p>
+<pre><code class="language-bash">/mcp status filesystem</code></pre>
+<p>This shows detailed information:</p>
+<ul>
+<li>Server ID and type</li>
+<li>Current state (running/stopped/error)</li>
+<li>Whether it's enabled</li>
+<li>Uptime</li>
+<li>Recent events</li>
+<li>Any error messages</li>
+</ul>
+<p><strong>Example output:</strong></p>
+<pre><code>🔌 filesystem Status
+Server: filesystem
+ID: filesystem
+Type: STDIO
+State: 🟢 running
+Enabled: ✓ Yes
+Process: ✓ Active (subprocess/connection running)
+Uptime: 2h 15m
+Recent Events: 12</code></pre>
+<h3 id="5-stop-a-server">5. Stop a Server</h3>
+<p>Stop a server when you're done using it:</p>
+<pre><code class="language-bash">/mcp stop filesystem</code></pre>
+<p>This:</p>
+<ul>
+<li>Disables the server</li>
+<li>Stops the subprocess (for stdio servers)</li>
+<li>Reloads the agent to remove the server's tools</li>
+</ul>
+<h3 id="6-remove-a-server">6. Remove a Server</h3>
+<p>Permanently remove a server:</p>
+<pre><code class="language-bash">/mcp remove filesystem</code></pre>
+<p>This:</p>
+<ul>
+<li>Stops the server if running</li>
+<li>Removes it from the configuration</li>
+<li>Updates <code>mcp_servers.json</code></li>
+</ul>
+<div class="callout callout-warning">
+<div class="callout-title">WARNING</div>
+<p>This cannot be undone. You'll need to reinstall the server if you want it back.</p>
+</div>
+<h2 id="example-setting-up-a-filesystem-server">Example: Setting Up a Filesystem Server</h2>
+<p>Here's a complete workflow to add filesystem capabilities:</p>
+<p><strong>Step 1: Install the server</strong></p>
+<pre><code class="language-bash">/mcp install filesystem</code></pre>
+<p><strong>Step 2: Configure (if prompted)</strong></p>
+<ul>
+<li>Custom name: <code>filesystem</code> (or your preferred name)</li>
+<li>No environment variables required for basic filesystem access</li>
+</ul>
+<p><strong>Step 3: Start the server</strong></p>
+<pre><code class="language-bash">/mcp start filesystem</code></pre>
+<p><strong>Step 4: Verify it's running</strong></p>
+<pre><code class="language-bash">/mcp status filesystem</code></pre>
+<p><strong>Step 5: Use the server</strong> Now you can ask Code Puppy to work with files:</p>
+<pre><code>"Read the README.md and summarize the project"</code></pre>
+<p>The filesystem MCP server will handle file operations.</p>
+<h2 id="options-variations">Options &amp; Variations</h2>
+<table>
+<thead><tr>
+<th>Command</th>
+<th>Description</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>/mcp list</code></td>
+<td>Show all servers</td>
+<td><code>/mcp list</code></td>
+</tr>
+<tr>
+<td><code>/mcp install &lt;id&gt;</code></td>
+<td>Install from catalog</td>
+<td><code>/mcp install memory</code></td>
+</tr>
+<tr>
+<td><code>/mcp start &lt;name&gt;</code></td>
+<td>Start a server</td>
+<td><code>/mcp start filesystem</code></td>
+</tr>
+<tr>
+<td><code>/mcp stop &lt;name&gt;</code></td>
+<td>Stop a server</td>
+<td><code>/mcp stop filesystem</code></td>
+</tr>
+<tr>
+<td><code>/mcp status &lt;name&gt;</code></td>
+<td>Check status</td>
+<td><code>/mcp status filesystem</code></td>
+</tr>
+<tr>
+<td><code>/mcp remove &lt;name&gt;</code></td>
+<td>Remove a server</td>
+<td><code>/mcp remove filesystem</code></td>
+</tr>
+</tbody></table>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead><tr>
+<th>Problem</th>
+<th>Cause</th>
+<th>Solution</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>Server 'X' not found</code></td>
+<td>Server not installed or typo</td>
+<td>Use <code>/mcp list</code> to see available servers</td>
+</tr>
+<tr>
+<td>Server stuck in <code>starting</code> state</td>
+<td>Subprocess failed to start</td>
+<td>Check <code>/mcp status</code> for error details, try <code>/mcp stop</code> then <code>/mcp start</code></td>
+</tr>
+<tr>
+<td>Server shows <code>error</code> state</td>
+<td>Configuration issue</td>
+<td>Check environment variables and command-line arguments</td>
+</tr>
+<tr>
+<td>Tools not available after start</td>
+<td>Agent not reloaded</td>
+<td>The agent should auto-reload; if not, restart Code Puppy</td>
+</tr>
+<tr>
+<td><code>Quarantined</code> status</td>
+<td>Server failed repeatedly</td>
+<td>Use <code>/mcp stop</code> then <code>/mcp start</code> to reset</td>
+</tr>
+</tbody></table>
+<h2 id="related-guides">Related Guides</h2>
+<ul>
+<li><a href="../Concepts/MCP.html">Concepts: Understanding MCP Integration</a> — What MCP servers are and how they work</li>
+<li><a href="UseSkills.html">Guide: How to use skills</a> — Another way to extend Code Puppy's capabilities</li>
+<li><a href="../Reference/MCPCommands.html">Reference: MCP Commands</a> — Complete command reference</li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

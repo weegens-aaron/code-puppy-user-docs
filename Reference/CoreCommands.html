@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Core Commands Reference — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="index.html">Index</a>
+<a href="ConfigCommands.html">Config Commands</a>
+<a href="ConfigReference.html">Config Reference</a>
+<a href="CoreCommands.html" class="active">Core Commands</a>
+<a href="EnvVars.html">Env Vars</a>
+<a href="MCPCommands.html">MCPCommands</a>
+<a href="RESTAPI.html">RESTAPI</a>
+<a href="SchedulerCommands.html">Scheduler Commands</a>
+<a href="SessionCommands.html">Session Commands</a>
+<a href="SkillsCommands.html">Skills Commands</a>
+<a href="ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="core-commands-reference">Core Commands Reference</h1>
+<h2 id="overview">Overview</h2>
+<p>This reference covers all built-in slash commands available in Code Puppy. These commands are always available and don't require any plugins or additional setup.</p>
+<hr>
+<h2 id="help-information">Help &amp; Information</h2>
+<h3 id="help-h"><code>/help</code>, <code>/h</code></h3>
+<p>Show the complete list of available commands.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/help
+/h</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Built-in Commands
+/help         Show this help message
+/agent        Switch to a different agent
+...
+
+Custom Commands
+/skills       Manage agent skills
+/scheduler    Manage scheduled tasks
+
+Shell Pass-through
+!&lt;command&gt;    Run a shell command directly (e.g., !git status)</code></pre>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>Custom commands from plugins appear in a separate section.</p>
+</div>
+<hr>
+<h3 id="tools"><code>/tools</code></h3>
+<p>Show available tools and capabilities that the agent can use.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/tools</code></pre>
+<p><strong>Output:</strong> Displays a formatted list of tools including:</p>
+<ul>
+<li>File operations (read, write, edit)</li>
+<li>Command execution</li>
+<li>Browser control</li>
+<li>Agent skills</li>
+<li>And more</li>
+</ul>
+<hr>
+<h3 id="motd"><code>/motd</code></h3>
+<p>Show the latest Message of the Day (MOTD) with updates, tips, or announcements.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/motd</code></pre>
+<hr>
+<h3 id="tutorial"><code>/tutorial</code></h3>
+<p>Run the interactive onboarding tutorial wizard.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/tutorial</code></pre>
+<p><strong>What happens:</strong></p>
+<ol>
+<li>The wizard guides you through setup options</li>
+<li>You can choose authentication method (ChatGPT or Claude)</li>
+<li>Or skip and configure later</li>
+</ol>
+<p><strong>Results:</strong></p>
+<ul>
+<li><code>completed</code> - Tutorial finished successfully</li>
+<li><code>skipped</code> - You can run <code>/tutorial</code> anytime to restart</li>
+<li><code>chatgpt</code> / <code>claude</code> - OAuth flow starts for authentication</li>
+</ul>
+<hr>
+<h2 id="navigation-filesystem">Navigation &amp; Filesystem</h2>
+<h3 id="cd-directories"><code>/cd</code>, <code>/directories</code></h3>
+<p>Change the working directory or show current directory structure.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/cd              # Show current directory
+/cd &lt;path&gt;       # Change to specified directory
+/cd ..           # Go up one level
+/cd ~/projects   # Use absolute or home-relative paths</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>/cd src/code_puppy
+&gt; Changed directory to: C:\code_puppy\src\code_puppy\code_puppy</code></pre>
+<div class="callout callout-note">
+<div class="callout-title">NOTE</div>
+<p>When you change directories, the agent automatically reloads to reflect the new project context.</p>
+</div>
+<hr>
+<h2 id="model-agent-management">Model &amp; Agent Management</h2>
+<h3 id="agent-a"><code>/agent</code>, <code>/a</code></h3>
+<p>Switch to a different agent or show available agents.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/agent              # Interactive agent picker
+/agent &lt;name&gt;       # Switch to specific agent
+/a &lt;name&gt;           # Alias for /agent</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>/agent code_puppy
+&gt; Switched to agent: Code Puppy (General-purpose coding agent)
+&gt; Auto-save session rotated to: 20240115-abc123</code></pre>
+<p><strong>Available agents include:</strong></p>
+<ul>
+<li><code>code_puppy</code> - General-purpose coding agent</li>
+<li><code>planning</code> - Task planning and breakdown</li>
+<li><code>code_reviewer</code> - Code review and feedback</li>
+<li><code>python_programmer</code> - Python-specific development</li>
+<li>And many language-specific reviewers</li>
+</ul>
+<hr>
+<h3 id="model-m"><code>/model</code>, <code>/m</code></h3>
+<p>Set the active AI model for the current session.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/model              # Interactive model picker
+/model &lt;name&gt;       # Set specific model
+/m &lt;name&gt;           # Alias for /model</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>/model claude-opus-4-6
+&gt; Active model set and loaded: claude-opus-4-6</code></pre>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>Use <code>/show</code> to see your current model and configuration.</p>
+</div>
+<hr>
+<h3 id="pin-model"><code>/pin_model</code></h3>
+<p>Pin a specific model to an agent (so it always uses that model).</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/pin_model &lt;agent&gt; &lt;model&gt;</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>/pin_model python_programmer claude-opus-4-6
+&gt; Model 'claude-opus-4-6' pinned to agent 'python_programmer'</code></pre>
+<p><strong>To unpin:</strong></p>
+<pre><code>/unpin &lt;agent&gt;</code></pre>
+<hr>
+<h2 id="configuration">Configuration</h2>
+<h3 id="show"><code>/show</code></h3>
+<p>Display current Code Puppy configuration in a formatted view.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/show</code></pre>
+<p><strong>Output includes:</strong></p>
+<ul>
+<li><code>puppy_name</code> - Your Code Puppy instance name</li>
+<li><code>owner_name</code> - Your configured name</li>
+<li><code>current_agent</code> - Currently active agent</li>
+<li><code>model</code> - Active AI model</li>
+<li><code>YOLO_MODE</code> - Whether dangerous operations are allowed</li>
+<li><code>auto_save_session</code> - Auto-save status</li>
+<li><code>protected_tokens</code> - Recent tokens preserved during compaction</li>
+<li><code>compaction_threshold</code> - Context usage threshold</li>
+<li><code>temperature</code> - Model temperature setting</li>
+<li>And more</li>
+</ul>
+<hr>
+<h3 id="set"><code>/set</code></h3>
+<p>Set configuration values dynamically.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/set &lt;key&gt; &lt;value&gt;
+/set &lt;key&gt;=&lt;value&gt;</code></pre>
+<p><strong>Common settings:</strong></p>
+<table>
+<thead><tr>
+<th>Key</th>
+<th>Values</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>yolo_mode</code></td>
+<td><code>true</code> / <code>false</code></td>
+<td>Allow dangerous operations</td>
+</tr>
+<tr>
+<td><code>auto_save_session</code></td>
+<td><code>true</code> / <code>false</code></td>
+<td>Enable auto-save</td>
+</tr>
+<tr>
+<td><code>temperature</code></td>
+<td><code>0.0</code> - <code>2.0</code></td>
+<td>Model creativity</td>
+</tr>
+<tr>
+<td><code>cancel_agent_key</code></td>
+<td><code>ctrl+c</code>, <code>ctrl+k</code>, <code>ctrl+q</code></td>
+<td>Key to cancel agent</td>
+</tr>
+<tr>
+<td><code>enable_dbos</code></td>
+<td><code>true</code> / <code>false</code></td>
+<td>Enable DBOS persistence</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code>/set yolo_mode true
+/set temperature 0.7
+/set cancel_agent_key ctrl+k</code></pre>
+<div class="callout callout-warning">
+<div class="callout-title">WARNING</div>
+<p>Some settings (like <code>cancel_agent_key</code> and <code>enable_dbos</code>) require a restart to take effect.</p>
+</div>
+<hr>
+<h3 id="reasoning"><code>/reasoning</code></h3>
+<p>Set OpenAI reasoning effort for GPT-5 models.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/reasoning &lt;level&gt;</code></pre>
+<p><strong>Levels:</strong></p>
+<ul>
+<li><code>minimal</code> - Fastest, least reasoning</li>
+<li><code>low</code> - Quick reasoning</li>
+<li><code>medium</code> - Balanced (default)</li>
+<li><code>high</code> - More thorough reasoning</li>
+<li><code>xhigh</code> - Maximum reasoning</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code>/reasoning high
+&gt; Reasoning effort set to 'high' and active agent reloaded</code></pre>
+<hr>
+<h3 id="verbosity"><code>/verbosity</code></h3>
+<p>Set OpenAI verbosity for GPT-5 models.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/verbosity &lt;level&gt;</code></pre>
+<p><strong>Levels:</strong></p>
+<ul>
+<li><code>low</code> - More concise responses</li>
+<li><code>medium</code> - Balanced (default)</li>
+<li><code>high</code> - More detailed responses</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code>/verbosity low
+&gt; Verbosity set to 'low' and active agent reloaded</code></pre>
+<hr>
+<h2 id="session-management">Session Management</h2>
+<h3 id="session-s"><code>/session</code>, <code>/s</code></h3>
+<p>Show or rotate the autosave session ID.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/session          # Show current session ID
+/session id       # Same as above
+/session new      # Create new session and rotate ID
+/s                # Alias for /session</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>/session
+&gt; Autosave Session: 20240115-abc123
+&gt; Files prefix: C:\code_puppy\.puppy\autosave\20240115-abc123
+
+/session new
+&gt; New autosave session id: 20240115-def456</code></pre>
+<hr>
+<h3 id="compact"><code>/compact</code></h3>
+<p>Summarize and compact the current chat history to save tokens.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/compact</code></pre>
+<p><strong>What happens:</strong></p>
+<ol>
+<li>Analyzes your message history</li>
+<li>Applies configured compaction strategy (summarization or truncation)</li>
+<li>Preserves protected recent tokens</li>
+<li>Shows token reduction statistics</li>
+</ol>
+<p><strong>Example output:</strong></p>
+<pre><code>✨ Done! History: 50 → 25 messages via summarization
+🏦 Tokens: 45,000 → 18,500 (58.9% reduction)</code></pre>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>Use <code>/compact</code> when you're running low on context window space.</p>
+</div>
+<hr>
+<h3 id="truncate"><code>/truncate</code></h3>
+<p>Truncate history to keep only the N most recent messages.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/truncate &lt;N&gt;</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>/truncate 10
+&gt; Truncated message history from 50 to 10 messages (keeping system message and 9 most recent)</code></pre>
+<div class="callout callout-caution">
+<div class="callout-title">CAUTION</div>
+<p>This permanently removes older messages. Use <code>/compact</code> for safer space-saving.</p>
+</div>
+<hr>
+<h3 id="resume-autosave-load"><code>/resume</code>, <code>/autosave_load</code></h3>
+<p>Load a previously autosaved session interactively.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/resume
+/autosave_load</code></pre>
+<p><strong>What happens:</strong></p>
+<ol>
+<li>Shows a list of available autosave sessions</li>
+<li>You select one to load</li>
+<li>Conversation history is restored</li>
+</ol>
+<hr>
+<h3 id="dump-context"><code>/dump_context</code></h3>
+<p>Save the current message history to a file for later use.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/dump_context &lt;name&gt;</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>/dump_context my-project-session
+&gt; ✅ Context saved: 45 messages (32,000 tokens)
+&gt; 📁 Files: C:\code_puppy\.puppy\contexts\my-project-session.pkl</code></pre>
+<hr>
+<h3 id="load-context"><code>/load_context</code></h3>
+<p>Load a previously saved message history from a file.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/load_context &lt;name&gt;</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>/load_context my-project-session
+&gt; ✅ Context loaded: 45 messages (32,000 tokens)
+&gt; 📁 From: C:\code_puppy\.puppy\contexts\my-project-session.pkl</code></pre>
+<p><strong>List available contexts:</strong></p>
+<pre><code>/load_context
+&gt; Available contexts: my-project-session, another-session, ...</code></pre>
+<hr>
+<h2 id="clipboard-attachments">Clipboard &amp; Attachments</h2>
+<h3 id="paste-clipboard-cb"><code>/paste</code>, <code>/clipboard</code>, <code>/cb</code></h3>
+<p>Paste an image from the clipboard into the current conversation.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/paste
+/clipboard
+/cb</code></pre>
+<p><strong>What happens:</strong></p>
+<ol>
+<li>Checks if there's an image in your clipboard</li>
+<li>Attaches it to your next message</li>
+<li>Shows confirmation with pending image count</li>
+</ol>
+<p><strong>Example:</strong></p>
+<pre><code>/paste
+&gt; 📋 [image placeholder]
+&gt; Total pending clipboard images: 1
+&gt; Type your prompt and press Enter to send with the image(s)</code></pre>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>You can paste multiple images before sending. They'll all be included in your next message.</p>
+</div>
+<hr>
+<h2 id="exit">Exit</h2>
+<h3 id="exit-quit"><code>/exit</code>, <code>/quit</code></h3>
+<p>Exit the interactive Code Puppy session.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/exit
+/quit</code></pre>
+<hr>
+<h2 id="related-commands">Related Commands</h2>
+<p>These commands are provided by plugins and may not be available in all installations:</p>
+<table>
+<thead><tr>
+<th>Command</th>
+<th>Plugin</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>/skills</code></td>
+<td>Agent Skills</td>
+<td>Manage agent skills</td>
+</tr>
+<tr>
+<td><code>/scheduler</code></td>
+<td>Scheduler</td>
+<td>Manage scheduled tasks</td>
+</tr>
+<tr>
+<td><code>/mcp</code></td>
+<td>MCP Integration</td>
+<td>Manage MCP servers</td>
+</tr>
+<tr>
+<td><code>/hooks</code></td>
+<td>Hook Manager</td>
+<td>Manage hook configurations</td>
+</tr>
+<tr>
+<td><code>/uc</code></td>
+<td>Universal Constructor</td>
+<td>Advanced code generation</td>
+</tr>
+</tbody></table>
+<p>Use <code>/help</code> to see all available commands including custom ones from plugins.</p>
+<hr>
+<h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="ConfigReference.html">Configuration Reference</a> - Detailed config options</li>
+<li><a href="../Guides/Commands.html">Guide: How to use slash commands</a> - Practical command usage</li>
+<li><a href="../Tutorials/FirstTask.html">Tutorial: Your First Code Task</a> - Hands-on practice</li>
+<li><a href="MCPCommands.html">MCP Commands Reference</a> - MCP server management</li>
+<li><a href="SkillsCommands.html">Skills Commands Reference</a> - Agent skills management</li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

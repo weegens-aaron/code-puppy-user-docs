@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Use Slash Commands — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="index.html">Index</a>
+<a href="AddModels.html">Add Models</a>
+<a href="BlockToolCalls.html">Block Tool Calls</a>
+<a href="Commands.html" class="active">Commands</a>
+<a href="CreateAgents.html">Create Agents</a>
+<a href="CreateHooks.html">Create Hooks</a>
+<a href="CreateSkills.html">Create Skills</a>
+<a href="InstallSkills.html">Install Skills</a>
+<a href="ManageMCP.html">Manage MCP</a>
+<a href="ModelConfiguration.html">Model Configuration</a>
+<a href="RoundRobinModels.html">Round Robin Models</a>
+<a href="SwitchAgents.html">Switch Agents</a>
+<a href="UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="how-to-use-slash-commands">How to Use Slash Commands</h1>
+<h2 id="what-you-ll-learn">What You'll Learn</h2>
+<p>By the end of this guide, you'll be able to use all of Code Puppy's slash commands to control agents, manage sessions, configure settings, and interact with MCP servers.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Code Puppy installed and running</li>
+<li>Basic familiarity with the interactive prompt</li>
+</ul>
+<h2 id="quick-version">Quick Version</h2>
+<p>Type a command starting with <code>/</code> and press Enter:</p>
+<pre><code>/help          # Show all available commands
+/model         # Switch to a different model
+/agent         # Switch to a different agent
+/set yolo_mode true   # Enable YOLO mode</code></pre>
+<h2 id="detailed-steps">Detailed Steps</h2>
+<h3 id="1-understanding-command-syntax">1. Understanding Command Syntax</h3>
+<p>Slash commands always start with <code>/</code> followed by the command name:</p>
+<pre><code>/command_name
+/command_name argument1 argument2
+/command_name --flag value</code></pre>
+<p><strong>Aliases:</strong> Many commands have shorter aliases:</p>
+<ul>
+<li><code>/model</code> or <code>/m</code> - Set active model</li>
+<li><code>/agent</code> or <code>/a</code> - Switch agents</li>
+<li><code>/session</code> or <code>/s</code> - Manage sessions</li>
+<li><code>/help</code> or <code>/h</code> - Show help</li>
+</ul>
+<h3 id="2-getting-help">2. Getting Help</h3>
+<p><strong>Show all commands:</strong></p>
+<pre><code>/help</code></pre>
+<p>This displays:</p>
+<ul>
+<li>Built-in Commands (all core functionality)</li>
+<li>Custom Commands (from plugins)</li>
+<li>Shell Pass-through (run shell commands with <code>!</code>)</li>
+</ul>
+<h3 id="3-core-commands">3. Core Commands</h3>
+<h4 id="navigation-session">Navigation &amp; Session</h4>
+<table>
+<thead><tr>
+<th>Command</th>
+<th>Description</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>/cd &lt;dir&gt;</code></td>
+<td>Change working directory</td>
+<td><code>/cd ~/projects/my-app</code></td>
+</tr>
+<tr>
+<td><code>/tools</code></td>
+<td>Show available tools</td>
+<td><code>/tools</code></td>
+</tr>
+<tr>
+<td><code>/motd</code></td>
+<td>Show message of the day</td>
+<td><code>/motd</code></td>
+</tr>
+<tr>
+<td><code>/tutorial</code></td>
+<td>Run interactive tutorial</td>
+<td><code>/tutorial</code></td>
+</tr>
+<tr>
+<td><code>/exit</code> or <code>/quit</code></td>
+<td>Exit interactive mode</td>
+<td><code>/exit</code></td>
+</tr>
+</tbody></table>
+<h4 id="agent-model-control">Agent &amp; Model Control</h4>
+<table>
+<thead><tr>
+<th>Command</th>
+<th>Description</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>/agent</code> or <code>/a</code></td>
+<td>Show agent picker</td>
+<td><code>/agent</code></td>
+</tr>
+<tr>
+<td><code>/agent &lt;name&gt;</code></td>
+<td>Switch to specific agent</td>
+<td><code>/agent code_reviewer</code></td>
+</tr>
+<tr>
+<td><code>/model</code> or <code>/m</code></td>
+<td>Show model picker</td>
+<td><code>/model</code></td>
+</tr>
+<tr>
+<td><code>/model &lt;name&gt;</code></td>
+<td>Set active model</td>
+<td><code>/model claude-opus-4-6</code></td>
+</tr>
+<tr>
+<td><code>/add_model</code></td>
+<td>Browse models.dev catalog</td>
+<td><code>/add_model</code></td>
+</tr>
+<tr>
+<td><code>/model_settings</code> or <code>/ms</code></td>
+<td>Configure per-model settings</td>
+<td><code>/model_settings</code></td>
+</tr>
+</tbody></table>
+<h4 id="configuration">Configuration</h4>
+<table>
+<thead><tr>
+<th>Command</th>
+<th>Description</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>/show</code></td>
+<td>Display current configuration</td>
+<td><code>/show</code></td>
+</tr>
+<tr>
+<td><code>/set &lt;key&gt; &lt;value&gt;</code></td>
+<td>Set config value</td>
+<td><code>/set yolo_mode true</code></td>
+</tr>
+<tr>
+<td><code>/reasoning &lt;level&gt;</code></td>
+<td>Set reasoning effort (GPT-5)</td>
+<td><code>/reasoning high</code></td>
+</tr>
+<tr>
+<td><code>/verbosity &lt;level&gt;</code></td>
+<td>Set verbosity (GPT-5)</td>
+<td><code>/verbosity low</code></td>
+</tr>
+<tr>
+<td><code>/pin_model &lt;agent&gt; &lt;model&gt;</code></td>
+<td>Pin model to agent</td>
+<td><code>/pin_model code_reviewer claude-opus-4-6</code></td>
+</tr>
+<tr>
+<td><code>/unpin &lt;agent&gt;</code></td>
+<td>Unpin model from agent</td>
+<td><code>/unpin code_reviewer</code></td>
+</tr>
+<tr>
+<td><code>/diff</code></td>
+<td>Configure diff colors</td>
+<td><code>/diff</code></td>
+</tr>
+<tr>
+<td><code>/colors</code></td>
+<td>Configure banner colors</td>
+<td><code>/colors</code></td>
+</tr>
+</tbody></table>
+<h4 id="session-management">Session Management</h4>
+<table>
+<thead><tr>
+<th>Command</th>
+<th>Description</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>/session</code> or <code>/s</code></td>
+<td>Show current session ID</td>
+<td><code>/session</code></td>
+</tr>
+<tr>
+<td><code>/session new</code></td>
+<td>Create new session</td>
+<td><code>/session new</code></td>
+</tr>
+<tr>
+<td><code>/compact</code></td>
+<td>Compact message history</td>
+<td><code>/compact</code></td>
+</tr>
+<tr>
+<td><code>/truncate &lt;N&gt;</code></td>
+<td>Keep only N recent messages</td>
+<td><code>/truncate 10</code></td>
+</tr>
+<tr>
+<td><code>/autosave_load</code> or <code>/resume</code></td>
+<td>Load autosaved session</td>
+<td><code>/autosave_load</code></td>
+</tr>
+<tr>
+<td><code>/dump_context &lt;name&gt;</code></td>
+<td>Save context to file</td>
+<td><code>/dump_context my-work</code></td>
+</tr>
+<tr>
+<td><code>/load_context &lt;name&gt;</code></td>
+<td>Load context from file</td>
+<td><code>/load_context my-work</code></td>
+</tr>
+</tbody></table>
+<h4 id="mcp-server-management">MCP Server Management</h4>
+<table>
+<thead><tr>
+<th>Command</th>
+<th>Description</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>/mcp</code></td>
+<td>Show MCP dashboard</td>
+<td><code>/mcp</code></td>
+</tr>
+<tr>
+<td><code>/mcp list</code></td>
+<td>List all servers</td>
+<td><code>/mcp list</code></td>
+</tr>
+<tr>
+<td><code>/mcp search &lt;query&gt;</code></td>
+<td>Search registry</td>
+<td><code>/mcp search database</code></td>
+</tr>
+<tr>
+<td><code>/mcp install &lt;id&gt;</code></td>
+<td>Install from registry</td>
+<td><code>/mcp install postgres</code></td>
+</tr>
+<tr>
+<td><code>/mcp start &lt;name&gt;</code></td>
+<td>Start a server</td>
+<td><code>/mcp start filesystem</code></td>
+</tr>
+<tr>
+<td><code>/mcp start-all</code></td>
+<td>Start all servers</td>
+<td><code>/mcp start-all</code></td>
+</tr>
+<tr>
+<td><code>/mcp stop &lt;name&gt;</code></td>
+<td>Stop a server</td>
+<td><code>/mcp stop filesystem</code></td>
+</tr>
+<tr>
+<td><code>/mcp stop-all</code></td>
+<td>Stop all servers</td>
+<td><code>/mcp stop-all</code></td>
+</tr>
+<tr>
+<td><code>/mcp status</code></td>
+<td>Show status</td>
+<td><code>/mcp status</code></td>
+</tr>
+<tr>
+<td><code>/mcp test &lt;name&gt;</code></td>
+<td>Test connectivity</td>
+<td><code>/mcp test filesystem</code></td>
+</tr>
+<tr>
+<td><code>/mcp logs &lt;name&gt;</code></td>
+<td>Show server logs</td>
+<td><code>/mcp logs filesystem</code></td>
+</tr>
+<tr>
+<td><code>/mcp edit &lt;name&gt;</code></td>
+<td>Edit server config</td>
+<td><code>/mcp edit filesystem</code></td>
+</tr>
+<tr>
+<td><code>/mcp remove &lt;name&gt;</code></td>
+<td>Remove a server</td>
+<td><code>/mcp remove filesystem</code></td>
+</tr>
+<tr>
+<td><code>/mcp help</code></td>
+<td>Show MCP help</td>
+<td><code>/mcp help</code></td>
+</tr>
+</tbody></table>
+<h4 id="skills-management">Skills Management</h4>
+<table>
+<thead><tr>
+<th>Command</th>
+<th>Description</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>/skills</code></td>
+<td>Show skills TUI</td>
+<td><code>/skills</code></td>
+</tr>
+<tr>
+<td><code>/skills list</code></td>
+<td>List all skills</td>
+<td><code>/skills list</code></td>
+</tr>
+<tr>
+<td><code>/skills enable &lt;name&gt;</code></td>
+<td>Enable a skill</td>
+<td><code>/skills enable git</code></td>
+</tr>
+<tr>
+<td><code>/skills disable &lt;name&gt;</code></td>
+<td>Disable a skill</td>
+<td><code>/skills disable git</code></td>
+</tr>
+<tr>
+<td><code>/skills toggle</code></td>
+<td>Toggle skills system</td>
+<td><code>/skills toggle</code></td>
+</tr>
+<tr>
+<td><code>/skills refresh</code></td>
+<td>Refresh skill cache</td>
+<td><code>/skills refresh</code></td>
+</tr>
+</tbody></table>
+<h4 id="special-commands">Special Commands</h4>
+<table>
+<thead><tr>
+<th>Command</th>
+<th>Description</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>/paste</code> or <code>/clipboard</code> or <code>/cb</code></td>
+<td>Paste image from clipboard</td>
+<td><code>/paste</code></td>
+</tr>
+<tr>
+<td><code>/generate-pr-description</code></td>
+<td>Generate PR description</td>
+<td><code>/generate-pr-description</code></td>
+</tr>
+<tr>
+<td><code>/wiggum &lt;prompt&gt;</code></td>
+<td>Loop mode (re-run prompt)</td>
+<td><code>/wiggum say hello</code></td>
+</tr>
+<tr>
+<td><code>/wiggum_stop</code></td>
+<td>Stop wiggum loop</td>
+<td><code>/wiggum_stop</code></td>
+</tr>
+</tbody></table>
+<h3 id="4-shell-pass-through">4. Shell Pass-through</h3>
+<p>Run shell commands directly with <code>!</code>:</p>
+<pre><code>!git status
+!ls -la
+!pwd</code></pre>
+<h3 id="5-configuration-examples">5. Configuration Examples</h3>
+<p><strong>Enable YOLO mode (unrestricted execution):</strong></p>
+<pre><code>/set yolo_mode true</code></pre>
+<p><strong>Set reasoning effort for GPT-5:</strong></p>
+<pre><code>/reasoning high</code></pre>
+<p><strong>Set per-model temperature:</strong></p>
+<pre><code>/model_settings
+# Then select your model and adjust temperature</code></pre>
+<p><strong>Pin a model to a specific agent:</strong></p>
+<pre><code>/pin_model code_reviewer claude-opus-4-6</code></pre>
+<p><strong>Compact history to save tokens:</strong></p>
+<pre><code>/compact</code></pre>
+<h2 id="example-workflow">Example Workflow</h2>
+<p><strong>Scenario:</strong> You want to switch to a code reviewer agent with a specific model and start working.</p>
+<pre><code># 1. Check current configuration
+/show
+
+# 2. Switch to code reviewer agent
+/agent code_reviewer
+
+# 3. Set the model you want to use
+/model claude-opus-4-6
+
+# 4. Verify the switch
+/show
+
+# 5. Start your task
+# (Type your prompt and press Enter)</code></pre>
+<h2 id="options-variations">Options &amp; Variations</h2>
+<h3 id="config-keys-for-set">Config Keys for <code>/set</code></h3>
+<table>
+<thead><tr>
+<th>Key</th>
+<th>Values</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>yolo_mode</code></td>
+<td><code>true</code> / <code>false</code></td>
+<td>Enable unrestricted execution</td>
+</tr>
+<tr>
+<td><code>auto_save_session</code></td>
+<td><code>true</code> / <code>false</code></td>
+<td>Auto-save after each response</td>
+</tr>
+<tr>
+<td><code>enable_dbos</code></td>
+<td><code>true</code> / <code>false</code></td>
+<td>Enable DBOS (requires restart)</td>
+</tr>
+<tr>
+<td><code>cancel_agent_key</code></td>
+<td><code>ctrl+c</code>, <code>ctrl+k</code>, <code>ctrl+q</code></td>
+<td>Key to cancel agent</td>
+</tr>
+<tr>
+<td><code>protected_token_count</code></td>
+<td>Number</td>
+<td>Recent tokens to preserve</td>
+</tr>
+<tr>
+<td><code>compaction_threshold</code></td>
+<td>Percentage (0.0-1.0)</td>
+<td>When to compact</td>
+</tr>
+<tr>
+<td><code>compaction_strategy</code></td>
+<td><code>summarization</code> / <code>truncation</code></td>
+<td>How to compact</td>
+</tr>
+<tr>
+<td><code>resume_message_count</code></td>
+<td>Number</td>
+<td>Messages shown on resume</td>
+</tr>
+</tbody></table>
+<h3 id="reasoning-effort-levels">Reasoning Effort Levels</h3>
+<ul>
+<li><code>minimal</code> - Fastest, least reasoning</li>
+<li><code>low</code> - Quick reasoning</li>
+<li><code>medium</code> - Balanced (default)</li>
+<li><code>high</code> - Thorough reasoning</li>
+<li><code>xhigh</code> - Maximum reasoning</li>
+</ul>
+<h3 id="verbosity-levels">Verbosity Levels</h3>
+<ul>
+<li><code>low</code> - More concise responses</li>
+<li><code>medium</code> - Balanced (default)</li>
+<li><code>high</code> - More detailed responses</li>
+</ul>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead><tr>
+<th>Problem</th>
+<th>Cause</th>
+<th>Solution</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>Unknown command: /xyz</code></td>
+<td>Command doesn't exist</td>
+<td>Type <code>/help</code> to see available commands</td>
+</tr>
+<tr>
+<td>Command not working</td>
+<td>Agent may need reload</td>
+<td>Run <code>/show</code> to verify, or switch agents</td>
+</tr>
+<tr>
+<td>Model settings not applied</td>
+<td>Agent not reloaded</td>
+<td>The agent auto-reloads, or use <code>/agent</code> to force refresh</td>
+</tr>
+<tr>
+<td><code>/mcp</code> shows no servers</td>
+<td>No servers registered</td>
+<td>Use <code>/mcp search</code> to find servers, then <code>/mcp install</code></td>
+</tr>
+<tr>
+<td>Skills not showing</td>
+<td>Skills system disabled</td>
+<td>Use <code>/skills toggle</code> to enable</td>
+</tr>
+</tbody></table>
+<h2 id="related-guides">Related Guides</h2>
+<ul>
+<li><a href="SwitchAgents.html">How to switch agents</a> - Detailed agent switching</li>
+<li><a href="ModelConfiguration.html">How to configure models</a> - Model settings</li>
+<li><a href="ManageMCP.html">How to manage MCP servers</a> - MCP server management</li>
+<li><a href="InstallSkills.html">How to install skills</a> - Skills setup</li>
+<li><a href="../Reference/CoreCommands.html">Reference: Core Commands</a> - Complete command list</li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

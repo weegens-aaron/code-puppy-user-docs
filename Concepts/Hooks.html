@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Understanding Hooks — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="index.html">Index</a>
+<a href="AgentSkills.html">Agent Skills</a>
+<a href="Agents.html">Agents</a>
+<a href="Hooks.html" class="active">Hooks</a>
+<a href="MCP.html">MCP</a>
+<a href="Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="understanding-hooks">Understanding Hooks</h1>
+<h2 id="what-are-hooks">What Are Hooks?</h2>
+<p>Hooks are <strong>interception points</strong> in Code Puppy's execution flow that allow you to inspect, modify, or block operations before they happen. Think of them as security checkpoints or traffic controllers that sit between the agent's decisions and the actual actions.</p>
+<p>When an agent wants to do something—run a shell command, read a file, call another tool—hooks give you the opportunity to:</p>
+<ul>
+<li><strong>Inspect</strong> what's about to happen</li>
+<li><strong>Block</strong> dangerous or unwanted operations</li>
+<li><strong>Modify</strong> arguments before execution</li>
+<li><strong>Log</strong> everything for auditing</li>
+<li><strong>Extend</strong> functionality without changing core code</li>
+</ul>
+<h2 id="why-do-hooks-matter">Why Do Hooks Matter?</h2>
+<p>Hooks are essential for:</p>
+<table>
+<thead><tr>
+<th>Use Case</th>
+<th>Why It Matters</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>Safety</strong></td>
+<td>Prevent accidental <code>rm -rf</code> or destructive operations</td>
+</tr>
+<tr>
+<td><strong>Compliance</strong></td>
+<td>Enforce organizational policies (e.g., no git commands)</td>
+</tr>
+<tr>
+<td><strong>Observability</strong></td>
+<td>Log all agent actions for audit trails</td>
+</tr>
+<tr>
+<td><strong>Customization</strong></td>
+<td>Add your own commands and behaviors</td>
+</tr>
+<tr>
+<td><strong>Integration</strong></td>
+<td>Connect Code Puppy with external tools and workflows</td>
+</tr>
+</tbody></table>
+<p>Without hooks, the agent has unrestricted access to your system. With hooks, you maintain control while still benefiting from automation.</p>
+<h2 id="how-it-works-simplified">How It Works (Simplified)</h2>
+<pre class="mermaid">
+flowchart LR
+    A[Agent decides to run tool] --&gt; B{Hooks Check}
+    B --&gt;|Block| C[❌ Operation denied]
+    B --&gt;|Allow| D[✅ Tool executes]
+    D --&gt; E[Post-hook logs result]
+</pre>
+<p><strong>The flow:</strong></p>
+<ol>
+<li><strong>Agent requests action</strong> — e.g., "run <code>git commit</code>"</li>
+<li><strong>Pre-hook fires</strong> — Your code/script intercepts the request</li>
+<li><strong>Decision point</strong> — Allow, block, or modify the request</li>
+<li><strong>Action executes</strong> (if allowed) — The tool runs</li>
+<li><strong>Post-hook fires</strong> — Log the result, update metrics</li>
+</ol>
+<h2 id="key-terms">Key Terms</h2>
+<table>
+<thead><tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>Pre-hook</strong></td>
+<td>Fires <em>before</em> an operation (can block)</td>
+</tr>
+<tr>
+<td><strong>Post-hook</strong></td>
+<td>Fires <em>after</em> an operation (observation only)</td>
+</tr>
+<tr>
+<td><strong>Matcher</strong></td>
+<td>Pattern that determines which tools a hook applies to</td>
+</tr>
+<tr>
+<td><strong>Callback</strong></td>
+<td>Python function registered to handle a hook event</td>
+</tr>
+<tr>
+<td><strong>Tool</strong></td>
+<td>An action the agent can perform (run shell, read file, etc.)</td>
+</tr>
+</tbody></table>
+<h2 id="hook-types">Hook Types</h2>
+<p>Code Puppy supports <strong>two complementary hook systems</strong>:</p>
+<h3 id="1-script-based-hooks-claude-code-compatible">1. Script-Based Hooks (Claude Code Compatible)</h3>
+<p>These work like Claude Code's hooks—shell scripts that intercept tool calls via JSON on stdin.</p>
+<p><strong>Best for:</strong></p>
+<ul>
+<li>Blocking dangerous commands</li>
+<li>Simple validation logic</li>
+<li>Integrating with existing shell tools</li>
+<li>Cross-platform compatibility</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">#!/bin/bash
+# Block any command with 'rm -rf'
+input=$(cat)
+command=$(echo "$input" | jq -r '.tool_input.command')
+
+if echo "$command" | grep -q 'rm -rf'; then
+  echo "🛑 Blocked: Dangerous command" &gt;&amp;2
+  exit 1
+fi
+exit 0</code></pre>
+<h3 id="2-python-callback-hooks-code-puppy-native">2. Python Callback Hooks (Code Puppy Native)</h3>
+<p>These are Python functions registered with Code Puppy's callback system.</p>
+<p><strong>Best for:</strong></p>
+<ul>
+<li>Complex logic and data processing</li>
+<li>Integration with Python libraries</li>
+<li>Adding custom commands</li>
+<li>Real-time streaming events</li>
+<li>Full access to Code Puppy's internals</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">from code_puppy.callbacks import register_callback
+
+def log_tool_call(tool_name: str, tool_args: dict):
+    print(f"Tool called: {tool_name} with {tool_args}")
+
+register_callback("pre_tool_call", log_tool_call)</code></pre>
+<h2 id="examples">Examples</h2>
+<h3 id="example-1-safety-first-block-destructive-commands">Example 1: Safety First — Block Destructive Commands</h3>
+<p><strong>Scenario:</strong> You want to prevent the agent from accidentally deleting files.</p>
+<p><strong>Script-based hook</strong> (<code>.claude/hooks/safety.sh</code>):</p>
+<pre><code class="language-bash">#!/bin/bash
+input=$(cat)
+command=$(echo "$input" | jq -r '.tool_input.command // empty')
+
+# Block destructive patterns
+if echo "$command" | grep -qE '(rm -rf|sudo rm|mkfs|dd if=)'; then
+  echo "🛑 Safety check: Destructive command blocked" &gt;&amp;2
+  echo "Command: $command" &gt;&amp;2
+  exit 1
+fi
+exit 0</code></pre>
+<p><strong>Result:</strong> When the agent tries <code>rm -rf /tmp/cache</code>, the hook blocks it and shows:</p>
+<pre><code>🛑 Safety check: Destructive command blocked
+Command: rm -rf /tmp/cache</code></pre>
+<hr>
+<h3 id="example-2-audit-trail-log-all-file-operations">Example 2: Audit Trail — Log All File Operations</h3>
+<p><strong>Scenario:</strong> You need to track every file the agent reads or modifies.</p>
+<p><strong>Python callback hook</strong> (<code>~/.code_puppy/plugins/file_audit/register_callbacks.py</code>):</p>
+<pre><code class="language-python">import json
+from pathlib import Path
+from code_puppy.callbacks import register_callback
+
+AUDIT_LOG = Path.home() / ".code_puppy" / "file_audit.jsonl"
+
+def log_file_operation(tool_name: str, tool_args: dict):
+    """Log file read/write operations."""
+    if tool_name in ("Read", "Write", "Edit"):
+        entry = {
+            "tool": tool_name,
+            "path": tool_args.get("path"),
+            "timestamp": __import__("datetime").datetime.now().isoformat()
+        }
+        with open(AUDIT_LOG, "a") as f:
+            f.write(json.dumps(entry) + "\n")
+
+register_callback("pre_tool_call", log_file_operation)</code></pre>
+<p><strong>Result:</strong> Every file operation is logged to <code>~/.code_puppy/file_audit.jsonl</code>:</p>
+<pre><code class="language-json">{"tool": "Read", "path": "/project/src/main.py", "timestamp": "2025-01-15T10:30:00"}
+{"tool": "Write", "path": "/project/src/main.py", "timestamp": "2025-01-15T10:31:00"}</code></pre>
+<hr>
+<h3 id="example-3-custom-command-add-your-own-slash-command">Example 3: Custom Command — Add Your Own Slash Command</h3>
+<p><strong>Scenario:</strong> You want a <code>/status</code> command that shows project health.</p>
+<p><strong>Python callback hook</strong> (<code>~/.code_puppy/plugins/status_cmd/register_callbacks.py</code>):</p>
+<pre><code class="language-python">from code_puppy.callbacks import register_callback
+from code_puppy.messaging import emit_info
+
+def handle_status_command(command: str, name: str):
+    """Handle /status and related commands."""
+    if name == "status":
+        emit_info("📊 Project Status:")
+        emit_info("  - Files: 42")
+        emit_info("  - Tests: Passing ✓")
+        emit_info("  - Last commit: 2 hours ago")
+        return True  # Indicate we handled this
+    return None  # Not handled
+
+register_callback("custom_command", handle_status_command)</code></pre>
+<p><strong>Result:</strong> When you type <code>/status</code>, you see:</p>
+<pre><code>📊 Project Status:
+  - Files: 42
+  - Tests: Passing ✓
+  - Last commit: 2 hours ago</code></pre>
+<h2 id="common-misconceptions">Common Misconceptions</h2>
+<div class="callout callout-caution">
+<div class="callout-title">CAUTION</div>
+<p><strong>Misconception:</strong> Hooks are only for blocking commands <strong>Reality:</strong> Hooks can also log, modify, extend, and integrate—blocking is just one use case</p>
+</div>
+<div class="callout callout-caution">
+<div class="callout-title">CAUTION</div>
+<p><strong>Misconception:</strong> Python callbacks are always better than scripts <strong>Reality:</strong> Scripts are simpler for basic validation and work across different AI assistants</p>
+</div>
+<div class="callout callout-caution">
+<div class="callout-title">CAUTION</div>
+<p><strong>Misconception:</strong> Hooks slow down execution significantly <strong>Reality:</strong> Well-written hooks add minimal latency (&lt;10ms for most cases)</p>
+</div>
+<h2 id="tips">Tips</h2>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Start simple:</strong> Begin with script-based hooks for blocking dangerous commands, then add Python callbacks for complex logic</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Test your hooks:</strong> Run them standalone before relying on them: ``<code>bash echo '{"tool_input":{"command":"echo test"}}' | bash .claude/hooks/my-hook.sh </code>``</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Use meaningful matchers:</strong> Instead of <code>"*"</code> (matches everything), be specific: ``<code>json {"matcher": "Bash|agent_run_shell_command", ...}  // Only shell commands {"matcher": "Edit &amp;&amp; .py", ...}  // Only Python file edits </code>``</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Log failures:</strong> When blocking a command, always explain why in stderr so the agent understands: ``<code>bash echo "Blocked: $command violates security policy" &gt;&amp;2 </code>``</p>
+</div>
+<h2 id="learn-more">Learn More</h2>
+<ul>
+<li><a href="../Guides/CreateHooks.html">How to Create Hooks</a> — Step-by-step guide to building hooks</li>
+<li><a href="../Guides/BlockToolCalls.html">How to Block Tool Calls</a> — Deep dive on safety patterns</li>
+<li><a href="../Reference/ToolsReference.html">Reference: Available Tools</a> — All tools you can hook</li>
+<li><a href="AgentSkills.html">Concept: Understanding Agent Skills</a> — Another way to extend Code Puppy</li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

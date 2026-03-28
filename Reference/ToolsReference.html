@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Available Tools Reference — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="index.html">Index</a>
+<a href="ConfigCommands.html">Config Commands</a>
+<a href="ConfigReference.html">Config Reference</a>
+<a href="CoreCommands.html">Core Commands</a>
+<a href="EnvVars.html">Env Vars</a>
+<a href="MCPCommands.html">MCPCommands</a>
+<a href="RESTAPI.html">RESTAPI</a>
+<a href="SchedulerCommands.html">Scheduler Commands</a>
+<a href="SessionCommands.html">Session Commands</a>
+<a href="SkillsCommands.html">Skills Commands</a>
+<a href="ToolsReference.html" class="active">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="available-tools-reference">Available Tools Reference</h1>
+<h2 id="overview">Overview</h2>
+<p>This reference covers all tools available to Code Puppy agents. Tools are the building blocks that enable agents to interact with files, run commands, control browsers, and more.</p>
+<hr>
+<h2 id="tool-categories">Tool Categories</h2>
+<table>
+<thead><tr>
+<th>Category</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>Agent Tools</strong></td>
+<td>Invoke and manage sub-agents</td>
+</tr>
+<tr>
+<td><strong>File Operations</strong></td>
+<td>Read, list, and search files</td>
+</tr>
+<tr>
+<td><strong>File Modifications</strong></td>
+<td>Create, edit, and delete files</td>
+</tr>
+<tr>
+<td><strong>Command Runner</strong></td>
+<td>Execute shell commands</td>
+</tr>
+<tr>
+<td><strong>Browser Control</strong></td>
+<td>Automate web browsers</td>
+</tr>
+<tr>
+<td><strong>Terminal Tools</strong></td>
+<td>Manage terminal sessions</td>
+</tr>
+<tr>
+<td><strong>Skills Tools</strong></td>
+<td>Activate and use skills</td>
+</tr>
+<tr>
+<td><strong>Scheduler Tools</strong></td>
+<td>Manage scheduled tasks</td>
+</tr>
+<tr>
+<td><strong>Universal Constructor</strong></td>
+<td>Create custom tools at runtime</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="agent-tools">Agent Tools</h2>
+<h3 id="list-agents"><code>list_agents</code></h3>
+<p><strong>Description:</strong> List all available agents.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> List of agent names and descriptions</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">agents = list_agents()
+# Returns: {'code-puppy': 'Default agent', 'pack-leader': 'Coordinator...'}</code></pre>
+<hr>
+<h3 id="invoke-agent"><code>invoke_agent</code></h3>
+<p><strong>Description:</strong> Invoke a sub-agent with a specific prompt.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>agent_name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Name of the agent to invoke</td>
+</tr>
+<tr>
+<td><code>prompt</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Task description</td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td>string</td>
+<td>No</td>
+<td>Model to use (defaults to current)</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Agent response text</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">result = invoke_agent(
+    agent_name="bloodhound",
+    prompt="Find all TODO comments in the codebase",
+    model="gpt-5"
+)</code></pre>
+<hr>
+<h2 id="file-operations">File Operations</h2>
+<h3 id="list-files"><code>list_files</code></h3>
+<p><strong>Description:</strong> List files and directories with intelligent filtering.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>directory</code></td>
+<td>string</td>
+<td>No</td>
+<td><code>.</code></td>
+<td>Directory to list</td>
+</tr>
+<tr>
+<td><code>recursive</code></td>
+<td>boolean</td>
+<td>No</td>
+<td><code>true</code></td>
+<td>Include subdirectories</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> List of files and directories</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">files = list_files(directory="src", recursive=True)</code></pre>
+<hr>
+<h3 id="read-file"><code>read_file</code></h3>
+<p><strong>Description:</strong> Read file contents with optional line-range selection.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>file_path</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>-</td>
+<td>Path to the file</td>
+</tr>
+<tr>
+<td><code>start_line</code></td>
+<td>integer</td>
+<td>No</td>
+<td><code>null</code></td>
+<td>Starting line number</td>
+</tr>
+<tr>
+<td><code>num_lines</code></td>
+<td>integer</td>
+<td>No</td>
+<td><code>null</code></td>
+<td>Number of lines to read</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> File contents</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python"># Read entire file
+content = read_file(file_path="README.md")
+
+# Read specific lines
+content = read_file(
+    file_path="src/main.py",
+    start_line=10,
+    num_lines=50
+)</code></pre>
+<hr>
+<h3 id="grep"><code>grep</code></h3>
+<p><strong>Description:</strong> Recursively search for text patterns across files.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>search_string</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>-</td>
+<td>Pattern to search (supports regex)</td>
+</tr>
+<tr>
+<td><code>directory</code></td>
+<td>string</td>
+<td>No</td>
+<td><code>.</code></td>
+<td>Directory to search in</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> List of matches with file paths and line numbers</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python"># Simple search
+matches = grep(search_string="TODO", directory="src")
+
+# Regex search
+matches = grep(search_string="def\\s+\\w+\\(", directory="src")</code></pre>
+<hr>
+<h2 id="file-modifications">File Modifications</h2>
+<h3 id="create-file"><code>create_file</code></h3>
+<p><strong>Description:</strong> Create a new file or overwrite an existing one.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>file_path</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>-</td>
+<td>Path to the file</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>-</td>
+<td>File content</td>
+</tr>
+<tr>
+<td><code>overwrite</code></td>
+<td>boolean</td>
+<td>No</td>
+<td><code>false</code></td>
+<td>Allow overwriting existing files</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">create_file(
+    file_path="docs/README.md",
+    content="# Documentation\n\n...",
+    overwrite=False
+)</code></pre>
+<hr>
+<h3 id="replace-in-file"><code>replace_in_file</code></h3>
+<p><strong>Description:</strong> Apply targeted text replacements to an existing file.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>file_path</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Path to the file</td>
+</tr>
+<tr>
+<td><code>replacements</code></td>
+<td>array</td>
+<td>Yes</td>
+<td>List of <code>{old_str, new_str}</code> objects</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">replace_in_file(
+    file_path="src/config.py",
+    replacements=[
+        {"old_str": "DEBUG = False", "new_str": "DEBUG = True"},
+        {"old_str": "LOG_LEVEL = 'info'", "new_str": "LOG_LEVEL = 'debug'"}
+    ]
+)</code></pre>
+<hr>
+<h3 id="delete-snippet"><code>delete_snippet</code></h3>
+<p><strong>Description:</strong> Remove the first occurrence of a text snippet from a file.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>file_path</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Path to the file</td>
+</tr>
+<tr>
+<td><code>snippet</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Text to remove</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">delete_snippet(
+    file_path="src/main.py",
+    snippet="# Old comment to remove\n"
+)</code></pre>
+<hr>
+<h3 id="delete-file"><code>delete_file</code></h3>
+<p><strong>Description:</strong> Safely delete a file with comprehensive logging.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>file_path</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Path to the file</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status and diff output</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">delete_file(file_path="temp/old_file.txt")</code></pre>
+<hr>
+<h2 id="command-runner">Command Runner</h2>
+<h3 id="agent-run-shell-command"><code>agent_run_shell_command</code></h3>
+<p><strong>Description:</strong> Execute a shell command with monitoring and safety features.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>command</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>-</td>
+<td>Command to execute</td>
+</tr>
+<tr>
+<td><code>cwd</code></td>
+<td>string</td>
+<td>No</td>
+<td><code>null</code></td>
+<td>Working directory</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td>integer</td>
+<td>No</td>
+<td><code>60</code></td>
+<td>Timeout in seconds</td>
+</tr>
+<tr>
+<td><code>background</code></td>
+<td>boolean</td>
+<td>No</td>
+<td><code>false</code></td>
+<td>Run in background</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Command output and status</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python"># Simple command
+result = agent_run_shell_command(command="ls -la")
+
+# With timeout
+result = agent_run_shell_command(
+    command="npm install",
+    timeout=120
+)
+
+# Background execution
+result = agent_run_shell_command(
+    command="npm run dev",
+    background=True
+)</code></pre>
+<hr>
+<h3 id="agent-share-your-reasoning"><code>agent_share_your_reasoning</code></h3>
+<p><strong>Description:</strong> Request an agent to share its reasoning process.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>reasoning</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Reasoning to share</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Confirmation</p>
+<p><strong>Note:</strong> Not available when extended thinking is active for Anthropic models.</p>
+<hr>
+<h2 id="browser-control">Browser Control</h2>
+<h3 id="browser-initialize"><code>browser_initialize</code></h3>
+<p><strong>Description:</strong> Initialize browser automation.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> Browser instance</p>
+<hr>
+<h3 id="browser-close"><code>browser_close</code></h3>
+<p><strong>Description:</strong> Close the browser.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="browser-status"><code>browser_status</code></h3>
+<p><strong>Description:</strong> Get browser status information.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> Status object</p>
+<hr>
+<h3 id="browser-new-page"><code>browser_new_page</code></h3>
+<p><strong>Description:</strong> Create a new browser page.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> Page instance</p>
+<hr>
+<h3 id="browser-list-pages"><code>browser_list_pages</code></h3>
+<p><strong>Description:</strong> List all open browser pages.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> List of pages</p>
+<hr>
+<h2 id="browser-navigation">Browser Navigation</h2>
+<h3 id="browser-navigate"><code>browser_navigate</code></h3>
+<p><strong>Description:</strong> Navigate to a URL.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>url</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>URL to navigate to</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Page instance</p>
+<hr>
+<h3 id="browser-get-page-info"><code>browser_get_page_info</code></h3>
+<p><strong>Description:</strong> Get current page information.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> Page metadata (title, URL, etc.)</p>
+<hr>
+<h3 id="browser-go-back"><code>browser_go_back</code></h3>
+<p><strong>Description:</strong> Go back in browser history.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="browser-go-forward"><code>browser_go_forward</code></h3>
+<p><strong>Description:</strong> Go forward in browser history.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="browser-reload"><code>browser_reload</code></h3>
+<p><strong>Description:</strong> Reload the current page.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="browser-wait-for-load"><code>browser_wait_for_load</code></h3>
+<p><strong>Description:</strong> Wait for page to reach a load state.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td>string</td>
+<td>No</td>
+<td><code>load</code></td>
+<td>Load state to wait for</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h2 id="browser-element-discovery">Browser Element Discovery</h2>
+<h3 id="browser-find-by-role"><code>browser_find_by_role</code></h3>
+<p><strong>Description:</strong> Find elements by their ARIA role.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>role</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>ARIA role to find</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> List of matching elements</p>
+<hr>
+<h3 id="browser-find-by-text"><code>browser_find_by_text</code></h3>
+<p><strong>Description:</strong> Find elements by visible text.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>text</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Text to search for</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> List of matching elements</p>
+<hr>
+<h3 id="browser-find-by-label"><code>browser_find_by_label</code></h3>
+<p><strong>Description:</strong> Find elements by label.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Label text to find</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Matching element</p>
+<hr>
+<h3 id="browser-find-by-placeholder"><code>browser_find_by_placeholder</code></h3>
+<p><strong>Description:</strong> Find elements by placeholder text.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>placeholder</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Placeholder text</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Matching element</p>
+<hr>
+<h3 id="browser-find-by-test-id"><code>browser_find_by_test_id</code></h3>
+<p><strong>Description:</strong> Find elements by test ID attribute.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>test_id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Test ID value</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Matching element</p>
+<hr>
+<h3 id="browser-find-buttons"><code>browser_find_buttons</code></h3>
+<p><strong>Description:</strong> Find all buttons on the page.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> List of button elements</p>
+<hr>
+<h3 id="browser-find-links"><code>browser_find_links</code></h3>
+<p><strong>Description:</strong> Find all links on the page.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> List of link elements</p>
+<hr>
+<h3 id="browser-xpath-query"><code>browser_xpath_query</code></h3>
+<p><strong>Description:</strong> Execute an XPath query.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>xpath</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>XPath expression</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> List of matching elements</p>
+<hr>
+<h2 id="browser-element-interactions">Browser Element Interactions</h2>
+<h3 id="browser-click"><code>browser_click</code></h3>
+<p><strong>Description:</strong> Click an element.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>locator</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Element locator</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="browser-double-click"><code>browser_double_click</code></h3>
+<p><strong>Description:</strong> Double-click an element.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>locator</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Element locator</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="browser-hover"><code>browser_hover</code></h3>
+<p><strong>Description:</strong> Hover over an element.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>locator</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Element locator</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="browser-set-text"><code>browser_set_text</code></h3>
+<p><strong>Description:</strong> Set text content of an element.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>locator</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Element locator</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Text to set</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="browser-get-text"><code>browser_get_text</code></h3>
+<p><strong>Description:</strong> Get text content of an element.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>locator</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Element locator</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Element text</p>
+<hr>
+<h3 id="browser-get-value"><code>browser_get_value</code></h3>
+<p><strong>Description:</strong> Get value of an input element.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>locator</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Element locator</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Input value</p>
+<hr>
+<h3 id="browser-set-element-text"><code>browser_set_element_text</code></h3>
+<p><strong>Description:</strong> Set text content of an element.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>locator</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Element locator</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Text to set</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="browser-select-option"><code>browser_select_option</code></h3>
+<p><strong>Description:</strong> Select an option in a dropdown.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>locator</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Select element locator</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Option value to select</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="browser-check"><code>browser_check</code></h3>
+<p><strong>Description:</strong> Check a checkbox or radio button.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>locator</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Element locator</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="browser-uncheck"><code>browser_uncheck</code></h3>
+<p><strong>Description:</strong> Uncheck a checkbox.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>locator</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Element locator</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h2 id="browser-scripts-and-advanced-features">Browser Scripts and Advanced Features</h2>
+<h3 id="browser-execute-js"><code>browser_execute_js</code></h3>
+<p><strong>Description:</strong> Execute JavaScript in the browser context.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>script</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>JavaScript code to execute</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Script result</p>
+<hr>
+<h3 id="browser-scroll"><code>browser_scroll</code></h3>
+<p><strong>Description:</strong> Scroll the page.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>direction</code></td>
+<td>string</td>
+<td>No</td>
+<td><code>down</code></td>
+<td>Scroll direction</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="browser-scroll-to-element"><code>browser_scroll_to_element</code></h3>
+<p><strong>Description:</strong> Scroll to a specific element.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>locator</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Element locator</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="browser-set-viewport"><code>browser_set_viewport</code></h3>
+<p><strong>Description:</strong> Set the browser viewport size.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>width</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>Viewport width</td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>Viewport height</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="browser-wait-for-element"><code>browser_wait_for_element</code></h3>
+<p><strong>Description:</strong> Wait for an element to appear.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>locator</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Element locator</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Element or timeout</p>
+<hr>
+<h3 id="browser-highlight-element"><code>browser_highlight_element</code></h3>
+<p><strong>Description:</strong> Highlight an element on the page.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>locator</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Element locator</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="browser-clear-highlights"><code>browser_clear_highlights</code></h3>
+<p><strong>Description:</strong> Clear all element highlights.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="browser-screenshot-analyze"><code>browser_screenshot_analyze</code></h3>
+<p><strong>Description:</strong> Take a screenshot and analyze it.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> Screenshot data</p>
+<hr>
+<h2 id="browser-workflows">Browser Workflows</h2>
+<h3 id="browser-save-workflow"><code>browser_save_workflow</code></h3>
+<p><strong>Description:</strong> Save a browser workflow.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Workflow name</td>
+</tr>
+<tr>
+<td><code>steps</code></td>
+<td>array</td>
+<td>Yes</td>
+<td>List of workflow steps</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="browser-list-workflows"><code>browser_list_workflows</code></h3>
+<p><strong>Description:</strong> List all saved workflows.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> List of workflows</p>
+<hr>
+<h3 id="browser-read-workflow"><code>browser_read_workflow</code></h3>
+<p><strong>Description:</strong> Read a saved workflow.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Workflow name</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Workflow definition</p>
+<hr>
+<h2 id="terminal-tools">Terminal Tools</h2>
+<h3 id="terminal-check-server"><code>terminal_check_server</code></h3>
+<p><strong>Description:</strong> Check if a terminal server is running.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>server_id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Server identifier</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Server status</p>
+<hr>
+<h3 id="terminal-open"><code>terminal_open</code></h3>
+<p><strong>Description:</strong> Open a new terminal session.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>server_id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Server identifier</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Terminal instance</p>
+<hr>
+<h3 id="terminal-close"><code>terminal_close</code></h3>
+<p><strong>Description:</strong> Close a terminal session.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>server_id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Server identifier</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="start-api-server"><code>start_api_server</code></h3>
+<p><strong>Description:</strong> Start an API server in a terminal.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>command</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Server start command</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Server status</p>
+<hr>
+<h2 id="terminal-command-execution">Terminal Command Execution</h2>
+<h3 id="terminal-run-command"><code>terminal_run_command</code></h3>
+<p><strong>Description:</strong> Run a command in a terminal.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>server_id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Server identifier</td>
+</tr>
+<tr>
+<td><code>command</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Command to run</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Command output</p>
+<hr>
+<h3 id="terminal-send-keys"><code>terminal_send_keys</code></h3>
+<p><strong>Description:</strong> Send keys to a terminal.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>server_id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Server identifier</td>
+</tr>
+<tr>
+<td><code>keys</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Keys to send</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="terminal-wait-output"><code>terminal_wait_output</code></h3>
+<p><strong>Description:</strong> Wait for terminal output.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>server_id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Server identifier</td>
+</tr>
+<tr>
+<td><code>pattern</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Pattern to wait for</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Output matching pattern</p>
+<hr>
+<h2 id="terminal-screenshot-tools">Terminal Screenshot Tools</h2>
+<h3 id="terminal-screenshot-analyze"><code>terminal_screenshot_analyze</code></h3>
+<p><strong>Description:</strong> Take a terminal screenshot and analyze it.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>server_id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Server identifier</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Screenshot data</p>
+<hr>
+<h3 id="terminal-read-output"><code>terminal_read_output</code></h3>
+<p><strong>Description:</strong> Read terminal output.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>server_id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Server identifier</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Terminal output</p>
+<hr>
+<h3 id="terminal-compare-mockup"><code>terminal_compare_mockup</code></h3>
+<p><strong>Description:</strong> Compare terminal output with a mockup.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>server_id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Server identifier</td>
+</tr>
+<tr>
+<td><code>mockup</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Expected output</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Comparison result</p>
+<hr>
+<h3 id="load-image-for-analysis"><code>load_image_for_analysis</code></h3>
+<p><strong>Description:</strong> Load an image for analysis.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>image_path</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Path to image file</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Image data</p>
+<hr>
+<h2 id="skills-tools">Skills Tools</h2>
+<h3 id="activate-skill"><code>activate_skill</code></h3>
+<p><strong>Description:</strong> Activate a skill.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>skill_name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Name of the skill</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="list-or-search-skills"><code>list_or_search_skills</code></h3>
+<p><strong>Description:</strong> List or search available skills.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>query</code></td>
+<td>string</td>
+<td>No</td>
+<td><code>null</code></td>
+<td>Search query</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> List of skills</p>
+<hr>
+<h2 id="scheduler-tools">Scheduler Tools</h2>
+<h3 id="scheduler-list-tasks"><code>scheduler_list_tasks</code></h3>
+<p><strong>Description:</strong> List all scheduled tasks.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> List of tasks</p>
+<hr>
+<h3 id="scheduler-create-task"><code>scheduler_create_task</code></h3>
+<p><strong>Description:</strong> Create a new scheduled task.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Task name</td>
+</tr>
+<tr>
+<td><code>schedule_type</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Schedule type</td>
+</tr>
+<tr>
+<td><code>schedule_value</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Schedule value</td>
+</tr>
+<tr>
+<td><code>prompt</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Task prompt</td>
+</tr>
+<tr>
+<td><code>agent</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Agent to use</td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td>string</td>
+<td>No</td>
+<td>Model to use</td>
+</tr>
+<tr>
+<td><code>working_directory</code></td>
+<td>string</td>
+<td>No</td>
+<td>Working directory</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Task ID</p>
+<hr>
+<h3 id="scheduler-delete-task"><code>scheduler_delete_task</code></h3>
+<p><strong>Description:</strong> Delete a scheduled task.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>task_id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Task ID</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="scheduler-toggle-task"><code>scheduler_toggle_task</code></h3>
+<p><strong>Description:</strong> Toggle a task's enabled/disabled state.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>task_id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Task ID</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="scheduler-daemon-status"><code>scheduler_daemon_status</code></h3>
+<p><strong>Description:</strong> Get scheduler daemon status.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> Daemon status</p>
+<hr>
+<h3 id="scheduler-start-daemon"><code>scheduler_start_daemon</code></h3>
+<p><strong>Description:</strong> Start the scheduler daemon.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="scheduler-stop-daemon"><code>scheduler_stop_daemon</code></h3>
+<p><strong>Description:</strong> Stop the scheduler daemon.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="scheduler-run-task"><code>scheduler_run_task</code></h3>
+<p><strong>Description:</strong> Run a task immediately.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>task_id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Task ID</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Success status</p>
+<hr>
+<h3 id="scheduler-view-log"><code>scheduler_view_log</code></h3>
+<p><strong>Description:</strong> View a task's log.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>task_id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Task ID</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Task log</p>
+<hr>
+<h2 id="universal-constructor">Universal Constructor</h2>
+<h3 id="universal-constructor"><code>universal_constructor</code></h3>
+<p><strong>Description:</strong> Create custom tools at runtime.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>tool_name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Name of the new tool</td>
+</tr>
+<tr>
+<td><code>tool_definition</code></td>
+<td>object</td>
+<td>Yes</td>
+<td>Tool implementation</td>
+</tr>
+</tbody></table>
+<p><strong>Returns:</strong> Tool registration status</p>
+<p><strong>Note:</strong> Requires <code>enable_universal_constructor</code> to be <code>true</code> in config.</p>
+<hr>
+<h2 id="tool-registration">Tool Registration</h2>
+<p>Tools are registered through the <code>TOOL_REGISTRY</code> dictionary:</p>
+<pre><code class="language-python">TOOL_REGISTRY = {
+    "tool_name": register_function,
+    ...
+}</code></pre>
+<p><strong>Plugin Tools:</strong> Plugins can register additional tools via the <code>register_tools</code> callback.</p>
+<hr>
+<h2 id="tool-expansions">Tool Expansions</h2>
+<p>Some tools expand into multiple tools for backward compatibility:</p>
+<pre><code class="language-python">TOOL_EXPANSIONS = {
+    "edit_file": ["create_file", "replace_in_file", "delete_snippet"],
+}</code></pre>
+<p>When an agent requests <code>edit_file</code>, all expanded tools are registered instead.</p>
+<hr>
+<h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="../Guides/UseSkills.html">Guide: How to use skills</a></li>
+<li><a href="../Guides/CreateAgents.html">Guide: How to create custom agents</a></li>
+<li><a href="../Concepts/Hooks.html">Concept: Understanding Hooks</a></li>
+<li><a href="ConfigReference.html">Reference: Configuration Options</a></li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Add Models from models.dev — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="index.html">Index</a>
+<a href="AddModels.html" class="active">Add Models</a>
+<a href="BlockToolCalls.html">Block Tool Calls</a>
+<a href="Commands.html">Commands</a>
+<a href="CreateAgents.html">Create Agents</a>
+<a href="CreateHooks.html">Create Hooks</a>
+<a href="CreateSkills.html">Create Skills</a>
+<a href="InstallSkills.html">Install Skills</a>
+<a href="ManageMCP.html">Manage MCP</a>
+<a href="ModelConfiguration.html">Model Configuration</a>
+<a href="RoundRobinModels.html">Round Robin Models</a>
+<a href="SwitchAgents.html">Switch Agents</a>
+<a href="UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="how-to-add-models-from-models-dev">How to Add Models from models.dev</h1>
+<h2 id="what-you-ll-learn">What You'll Learn</h2>
+<p>By the end of this guide, you'll be able to browse and add new AI models from the models.dev catalog to expand your available model options in Code Puppy.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Code Puppy installed and running</li>
+<li>Basic familiarity with the <code>/add_model</code> command</li>
+<li>API credentials for the provider you want to add (you'll be prompted for these)</li>
+</ul>
+<h2 id="quick-version">Quick Version</h2>
+<pre><code class="language-bash"># Launch the model browser
+/add_model
+
+# Navigate with arrow keys, press Enter to add a model
+# Follow credential prompts if needed</code></pre>
+<h2 id="detailed-steps">Detailed Steps</h2>
+<h3 id="1-launch-the-model-browser">1. Launch the Model Browser</h3>
+<p>Type the following command in the Code Puppy terminal:</p>
+<pre><code>/add_model</code></pre>
+<p>You'll see a split-panel interface:</p>
+<ul>
+<li><strong>Left panel</strong>: List of AI providers (OpenAI, Anthropic, Groq, etc.)</li>
+<li><strong>Right panel</strong>: Details about the selected provider or model</li>
+</ul>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>The browser shows 1500+ models from the live models.dev database. It fetches fresh data on startup, with a bundled fallback if the API is unavailable.</p>
+</div>
+<h3 id="2-browse-providers">2. Browse Providers</h3>
+<p>Use the <strong>↑/↓ arrow keys</strong> to navigate through providers. Each provider shows:</p>
+<ul>
+<li>Name and model count</li>
+<li>⚠️ icon if the provider is unsupported (requires special authentication)</li>
+</ul>
+<p>Press <strong>→</strong> or <strong>Enter</strong> to view models for a provider.</p>
+<p><strong>Example:</strong></p>
+<pre><code> &gt; Groq (45 models)
+   Mistral (28 models)
+   TogetherAI (120 models)</code></pre>
+<h3 id="3-browse-models-for-a-provider">3. Browse Models for a Provider</h3>
+<p>Once you've selected a provider, you'll see its available models. Each model displays capability icons:</p>
+<ul>
+<li>👁 = Vision support</li>
+<li>🔧 = Tool calling support (important for coding tasks!)</li>
+<li>🧠 = Reasoning capabilities</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code> &gt; 🔧🧠 claude-3-7-sonnet-20250219
+   🔧 claude-3-5-sonnet-20241022
+   👁🔧 gemini-1-5-pro-latest</code></pre>
+<div class="callout callout-warning">
+<div class="callout-title">WARNING</div>
+<p>Models without tool calling (no 🔧 icon) will be very limited for coding tasks. They can't use file operations, shell commands, or other Code Puppy tools.</p>
+</div>
+<h3 id="4-review-model-details">4. Review Model Details</h3>
+<p>The right panel shows comprehensive information:</p>
+<ul>
+<li><strong>Capabilities</strong>: Vision, tool calling, reasoning, temperature control</li>
+<li><strong>Pricing</strong>: Input/output token costs (if available)</li>
+<li><strong>Limits</strong>: Context window size, max output tokens</li>
+<li><strong>Metadata</strong>: Model ID, release date, open weights status</li>
+</ul>
+<p>Use this to compare models before adding.</p>
+<h3 id="5-add-the-model">5. Add the Model</h3>
+<p>Press <strong>Enter</strong> on a model to add it to your configuration.</p>
+<p><strong>If credentials are missing</strong>, you'll be prompted:</p>
+<pre><code>🔑 Groq requires the following credentials:
+
+  💡 Get your API key from https://console.groq.com/keys
+
+  Enter GROQ_API_KEY (or press Enter to skip):</code></pre>
+<p>You can:</p>
+<ul>
+<li>Enter the API key (saved to your config)</li>
+<li>Press Enter to skip (set later with <code>/set GROQ_API_KEY=&lt;value&gt;</code>)</li>
+</ul>
+<p><strong>If all credentials are already set</strong>, you'll see:</p>
+<pre><code>✅ All required credentials for Groq are already set!</code></pre>
+<h3 id="6-add-a-custom-model-optional">6. Add a Custom Model (Optional)</h3>
+<p>At the bottom of each provider's model list, you'll see:</p>
+<pre><code> &gt; ✨ Custom model...</code></pre>
+<p>Select this to add a model not listed in models.dev:</p>
+<ol>
+<li>Enter the exact model ID (e.g., <code>gpt-4-turbo-preview</code>)</li>
+<li>Enter the context window size (e.g., <code>128000</code> or <code>128k</code>)</li>
+<li>Provide credentials if needed</li>
+</ol>
+<p><strong>Use cases for custom models:</strong></p>
+<ul>
+<li>Newly released models not yet in the catalog</li>
+<li>Fine-tuned models</li>
+<li>Preview/beta models</li>
+<li>Custom deployments</li>
+</ul>
+<h2 id="example-adding-groq-s-llama-3-1">Example: Adding Groq's Llama 3.1</h2>
+<p>Let's walk through a realistic example:</p>
+<p><strong>Step 1:</strong> Launch the browser</p>
+<pre><code>/add_model</code></pre>
+<p><strong>Step 2:</strong> Navigate to Groq</p>
+<pre><code> &gt; Groq (45 models)</code></pre>
+<p><strong>Step 3:</strong> Select a model</p>
+<pre><code> &gt; 🔧 llama-3.1-70b-versatile</code></pre>
+<p><strong>Step 4:</strong> Review details</p>
+<pre><code>MODEL DETAILS
+
+  Groq - llama-3.1-70b-versatile
+
+  Capabilities:
+    ✓ Vision
+    ✓ Tool Calling
+    ✓ Temperature
+
+  Pricing:
+    Input: $0.00000059/token
+    Output: $0.00000099/token
+
+  Limits:
+    Context: 131072 tokens</code></pre>
+<p><strong>Step 5:</strong> Add the model</p>
+<pre><code>✅ Added groq-llama-3.1-70b-versatile to extra_models.json</code></pre>
+<p><strong>Step 6:</strong> Set credentials (if prompted)</p>
+<pre><code>Enter GROQ_API_KEY: gsk_xxxxxxxxxxxxxxxxxx
+✅ Saved GROQ_API_KEY to config</code></pre>
+<p><strong>Result:</strong> The model is now available! You can select it with <code>/switch</code> or <code>/model</code>.</p>
+<h2 id="options-variations">Options &amp; Variations</h2>
+<table>
+<thead><tr>
+<th>Option</th>
+<th>Description</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>Custom endpoint</strong></td>
+<td>For providers with OpenAI-compatible APIs</td>
+<td>Uses <code>custom_openai</code> type automatically</td>
+</tr>
+<tr>
+<td><strong>Context size</strong></td>
+<td>Override default context window</td>
+<td>Enter <code>32k</code> or <code>32000</code> for custom models</td>
+</tr>
+<tr>
+<td><strong>Skip credentials</strong></td>
+<td>Add model config now, set API key later</td>
+<td>Press Enter when prompted, use <code>/set</code> command</td>
+</tr>
+</tbody></table>
+<h2 id="navigation-shortcuts">Navigation Shortcuts</h2>
+<table>
+<thead><tr>
+<th>Key</th>
+<th>Action</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>↑/↓</strong></td>
+<td>Navigate list</td>
+</tr>
+<tr>
+<td><strong>←/→</strong></td>
+<td>Change page</td>
+</tr>
+<tr>
+<td><strong>Enter</strong></td>
+<td>Select / Add model</td>
+</tr>
+<tr>
+<td><strong>Esc</strong></td>
+<td>Go back</td>
+</tr>
+<tr>
+<td><strong>Ctrl+C</strong></td>
+<td>Cancel and exit</td>
+</tr>
+</tbody></table>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead><tr>
+<th>Problem</th>
+<th>Cause</th>
+<th>Solution</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>Provider shows ⚠️</strong></td>
+<td>Requires special authentication (AWS SigV4, GCP, etc.)</td>
+<td>Use a different provider or set up custom credentials manually</td>
+</tr>
+<tr>
+<td><strong>Model has no 🔧 icon</strong></td>
+<td>Model doesn't support tool calling</td>
+<td>Choose a different model for coding tasks</td>
+</tr>
+<tr>
+<td><strong>Credentials prompt fails</strong></td>
+<td>Terminal input issue on Windows</td>
+<td>Set env vars manually: <code>set GROQ_API_KEY=xxx</code></td>
+</tr>
+<tr>
+<td><strong>Model not in catalog</strong></td>
+<td>Newly released or custom model</td>
+<td>Use "Custom model..." option at bottom of list</td>
+</tr>
+<tr>
+<td><strong>extra_models.json error</strong></td>
+<td>File format issue</td>
+<td>Check that it's a valid JSON dictionary, not a list</td>
+</tr>
+</tbody></table>
+<h2 id="what-happens-behind-the-scenes">What Happens Behind the Scenes</h2>
+<p>When you add a model:</p>
+<ol>
+<li>Code Puppy creates an entry in <code>extra_models.json</code></li>
+<li>The key is <code>{provider-id}-{model-id}</code> (e.g., <code>groq-llama-3.1-70b</code>)</li>
+<li>The value includes type, name, custom endpoint (if needed), and context length</li>
+<li>The model becomes immediately available for selection</li>
+</ol>
+<p>**Example entry in <code>extra_models.json</code>:**</p>
+<pre><code class="language-json">{
+  "groq-llama-3.1-70b-versatile": {
+    "type": "custom_openai",
+    "name": "llama-3.1-70b-versatile",
+    "custom_endpoint": {
+      "url": "https://api.groq.com/openai/v1",
+      "api_key": "$GROQ_API_KEY"
+    },
+    "context_length": 131072,
+    "supported_settings": ["temperature", "seed", "top_p"]
+  }
+}</code></pre>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><a href="ModelConfiguration.html">Guide: How to configure models</a> — Fine-tune model settings</li>
+<li><a href="SwitchAgents.html">Guide: How to switch agents</a> — Use your new model with different agents</li>
+<li><a href="../Reference/ConfigCommands.html">Reference: Configuration Commands</a> — Set API keys and other settings</li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

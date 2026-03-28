@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Understanding Agent Skills — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="index.html">Index</a>
+<a href="AgentSkills.html" class="active">Agent Skills</a>
+<a href="Agents.html">Agents</a>
+<a href="Hooks.html">Hooks</a>
+<a href="MCP.html">MCP</a>
+<a href="Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="understanding-agent-skills">Understanding Agent Skills</h1>
+<h2 id="what-are-agent-skills">What Are Agent Skills?</h2>
+<p><strong>Agent Skills</strong> are reusable, modular capabilities that extend what Code Puppy agents can do. Think of skills as "plugins" or "modules" that teach agents new specialized tasks.</p>
+<hr>
+<h2 id="why-does-it-matter">Why Does It Matter?</h2>
+<p>Skills allow you to:</p>
+<ul>
+<li><strong>Extend agent capabilities</strong>: Add new functionality without modifying core code</li>
+<li><strong>Share expertise</strong>: Create skills once, use them across multiple projects</li>
+<li><strong>Customize behavior</strong>: Tailor agents to your specific workflow</li>
+<li><strong>Collaborate</strong>: Share skills with your team or the community</li>
+</ul>
+<hr>
+<h2 id="how-it-works">How It Works</h2>
+<pre class="mermaid">
+flowchart LR
+    A[Skill Defined] --&gt; B[Skill Discovered]
+    B --&gt; C[Skill Activated]
+    C --&gt; D[Agent Uses Skill]
+    D --&gt; E[Task Completed]
+</pre>
+<p><strong>Step-by-step:</strong></p>
+<ol>
+<li><strong>Skill Definition</strong>: A skill is a folder with a <code>SKILL.md</code> file and optional resources</li>
+<li><strong>Skill Discovery</strong>: Code Puppy scans configured directories for skills</li>
+<li><strong>Skill Activation</strong>: Agent loads the skill's instructions when needed</li>
+<li><strong>Skill Execution</strong>: Agent follows the skill's guidance to complete tasks</li>
+<li><strong>Skill Completion</strong>: Agent uses the skill's knowledge to produce results</li>
+</ol>
+<hr>
+<h2 id="key-terms">Key Terms</h2>
+<table>
+<thead><tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>Skill</strong></td>
+<td>A reusable capability defined by SKILL.md and resources</td>
+</tr>
+<tr>
+<td><strong>SKILL.md</strong></td>
+<td>The main instruction file for a skill</td>
+</tr>
+<tr>
+<td><strong>Skill Directory</strong></td>
+<td>A folder containing a skill definition</td>
+</tr>
+<tr>
+<td><strong>Activate</strong></td>
+<td>Load a skill's instructions into the agent's context</td>
+</tr>
+<tr>
+<td><strong>Resource</strong></td>
+<td>Supporting files (examples, templates, configs)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="skill-structure">Skill Structure</h2>
+<p>A skill is a folder with this structure:</p>
+<pre><code>my-skill/
+├── SKILL.md          # Required: Main instructions
+├── README.md         # Optional: Documentation
+├── examples/         # Optional: Example files
+│   ├── example1.py
+│   └── example2.py
+├── templates/        # Optional: Templates
+│   └── template.txt
+└── config/           # Optional: Configuration
+    └── settings.json</code></pre>
+<hr>
+<h2 id="skill-md-format">SKILL.md Format</h2>
+<p>The <code>SKILL.md</code> file defines the skill:</p>
+<pre><code class="language-markdown"># Skill Name
+
+**Description:** What this skill does
+
+**Tags:** tag1, tag2, tag3
+
+**Version:** 1.0.0
+
+**Author:** Your Name
+
+---
+
+## Overview
+
+Detailed description of what this skill does.
+
+## When to Use
+
+Scenarios where this skill is appropriate.
+
+## How to Use
+
+Step-by-step instructions for using this skill.
+
+## Examples
+
+Concrete examples of the skill in action.
+
+## Resources
+
+Links to additional resources.</code></pre>
+<hr>
+<h2 id="built-in-skills">Built-in Skills</h2>
+<p>Code Puppy may include built-in skills for common tasks:</p>
+<table>
+<thead><tr>
+<th>Skill</th>
+<th>Purpose</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>code-review</code></td>
+<td>Systematic code review</td>
+</tr>
+<tr>
+<td><code>security-audit</code></td>
+<td>Security vulnerability scanning</td>
+</tr>
+<tr>
+<td><code>documentation</code></td>
+<td>Generate documentation</td>
+</tr>
+<tr>
+<td><code>testing</code></td>
+<td>Create and run tests</td>
+</tr>
+<tr>
+<td><code>refactoring</code></td>
+<td>Code refactoring guidance</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="creating-custom-skills">Creating Custom Skills</h2>
+<h3 id="step-1-create-skill-folder">Step 1: Create Skill Folder</h3>
+<pre><code class="language-bash">mkdir -p ~/.code_puppy/skills/my-custom-skill
+cd ~/.code_puppy/skills/my-custom-skill</code></pre>
+<h3 id="step-2-create-skill-md">Step 2: Create SKILL.md</h3>
+<pre><code class="language-markdown"># My Custom Skill
+
+**Description:** A skill that does something useful
+
+**Tags:** custom, utility
+
+**Version:** 1.0.0
+
+**Author:** Your Name
+
+---
+
+## Overview
+
+This skill helps you accomplish [task].
+
+## When to Use
+
+Use this skill when you need to [scenario].
+
+## How to Use
+
+1. Activate the skill
+2. Provide your input
+3. Follow the guidance
+
+## Examples
+
+Example usage here.</code></pre>
+<h3 id="step-3-add-resources-optional">Step 3: Add Resources (Optional)</h3>
+<p>Add any supporting files your skill needs.</p>
+<h3 id="step-4-test-your-skill">Step 4: Test Your Skill</h3>
+<pre><code class="language-bash">code_puppy
+/activate_skill my-custom-skill</code></pre>
+<p><strong>See:</strong> <a href="../Guides/CreateSkills.html">Guide: How to create custom skills</a></p>
+<hr>
+<h2 id="skill-directories">Skill Directories</h2>
+<p>Code Puppy searches for skills in these directories:</p>
+<table>
+<thead><tr>
+<th>Directory</th>
+<th>Path</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>User skills</td>
+<td><code>~/.code_puppy/skills/</code></td>
+</tr>
+<tr>
+<td>XDG data</td>
+<td><code>$XDG_DATA_HOME/code_puppy/skills/</code></td>
+</tr>
+<tr>
+<td>Project skills</td>
+<td><code>.code_puppy/skills/</code> (project-local)</td>
+</tr>
+</tbody></table>
+<p><strong>Configuration:</strong></p>
+<pre><code class="language-ini"># In puppy.cfg
+skill_directories = ~/.code_puppy/skills
+skill_directories = /usr/local/share/code_puppy/skills</code></pre>
+<hr>
+<h2 id="activating-skills">Activating Skills</h2>
+<h3 id="from-the-cli">From the CLI</h3>
+<pre><code class="language-bash"># Activate a skill
+/activate_skill my-custom-skill
+
+# List available skills
+/list_skills</code></pre>
+<h3 id="from-an-agent">From an Agent</h3>
+<pre><code class="language-python"># Agent can activate skills
+result = activate_skill("code-review")</code></pre>
+<h3 id="via-rest-api">Via REST API</h3>
+<pre><code class="language-bash">curl -X POST http://localhost:8765/api/commands/execute \
+  -H "Content-Type: application/json" \
+  -d '{"command": "/activate_skill my-custom-skill"}'</code></pre>
+<hr>
+<h2 id="searching-for-skills">Searching for Skills</h2>
+<h3 id="by-name">By Name</h3>
+<pre><code class="language-bash">/list_skills python</code></pre>
+<h3 id="by-tag">By Tag</h3>
+<pre><code class="language-bash">/list_skills security</code></pre>
+<h3 id="by-description">By Description</h3>
+<pre><code class="language-bash">/list_skills "code review"</code></pre>
+<hr>
+<h2 id="skill-lifecycle">Skill Lifecycle</h2>
+<pre class="mermaid">
+flowchart TD
+    A[Skill Created] --&gt; B[Skill Discovered]
+    B --&gt; C{Enabled?}
+    C --&gt;|Yes| D[Skill Available]
+    C --&gt;|No| E[Skill Disabled]
+    D --&gt; F[Skill Activated]
+    F --&gt; G[Agent Uses Skill]
+    G --&gt; H[Task Completed]
+    H --&gt; D
+</pre>
+<p><strong>States:</strong></p>
+<ol>
+<li><strong>Created</strong>: Skill folder exists with SKILL.md</li>
+<li><strong>Discovered</strong>: Code Puppy found the skill</li>
+<li><strong>Available</strong>: Skill is enabled and ready</li>
+<li><strong>Activated</strong>: Skill is loaded in agent context</li>
+<li><strong>Disabled</strong>: Skill is turned off in config</li>
+</ol>
+<hr>
+<h2 id="common-misconceptions">Common Misconceptions</h2>
+<div class="callout callout-caution">
+<div class="callout-title">CAUTION</div>
+<p><strong>Misconception</strong>: Skills are automatically loaded <strong>Reality</strong>: Skills must be explicitly activated with <code>/activate_skill</code></p>
+</div>
+<div class="callout callout-caution">
+<div class="callout-title">CAUTION</div>
+<p><strong>Misconception</strong>: All skills are always available <strong>Reality</strong>: Skills can be disabled in configuration</p>
+</div>
+<div class="callout callout-caution">
+<div class="callout-title">CAUTION</div>
+<p><strong>Misconception</strong>: Skills modify code directly <strong>Reality</strong>: Skills provide guidance; agents execute the changes</p>
+</div>
+<hr>
+<h2 id="tips">Tips</h2>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Use descriptive tags</strong>: Tags make skills easier to find</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Include examples</strong>: Examples help agents understand how to use the skill</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Version your skills</strong>: Track changes with version numbers</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Share skills</strong>: Put skills in shared directories for team use</p>
+</div>
+<hr>
+<h2 id="examples">Examples</h2>
+<h3 id="example-1-activating-a-skill">Example 1: Activating a Skill</h3>
+<pre><code>You: /activate_skill code-review
+
+Agent: Loading code-review skill...
+       Skill activated. Ready to review code.</code></pre>
+<h3 id="example-2-using-a-skill">Example 2: Using a Skill</h3>
+<pre><code>You: /think Review this file for security issues
+
+Agent: [Uses code-review skill guidance]
+       Found 3 potential security issues:
+       1. SQL injection vulnerability
+       2. Hardcoded credentials
+       3. Missing input validation</code></pre>
+<h3 id="example-3-searching-for-skills">Example 3: Searching for Skills</h3>
+<pre><code>You: /list_skills security
+
+Agent: Found 3 skills matching "security":
+       1. security-audit - Comprehensive security scanning
+       2. secret-detection - Find hardcoded secrets
+       3. dependency-check - Check for vulnerable dependencies</code></pre>
+<hr>
+<h2 id="skill-configuration">Skill Configuration</h2>
+<h3 id="enable-disable-skills">Enable/Disable Skills</h3>
+<pre><code class="language-ini"># In puppy.cfg
+skills_enabled = true
+disabled_skills = old-skill,deprecated-skill</code></pre>
+<h3 id="skill-directories">Skill Directories</h3>
+<pre><code class="language-ini"># Add custom skill directories
+skill_directories = ~/.code_puppy/skills
+skill_directories = ./project-skills</code></pre>
+<hr>
+<h2 id="sharing-skills">Sharing Skills</h2>
+<h3 id="team-sharing">Team Sharing</h3>
+<p>Put skills in a project-local directory:</p>
+<pre><code>project/
+├── .code_puppy/
+│   └── skills/
+│       └── team-skill/
+│           └── SKILL.md</code></pre>
+<h3 id="community-sharing">Community Sharing</h3>
+<p>Share skills via:</p>
+<ul>
+<li>Git repositories</li>
+<li>Package registries</li>
+<li>Community skill hubs</li>
+</ul>
+<hr>
+<h2 id="learn-more">Learn More</h2>
+<ul>
+<li><a href="../Guides/InstallSkills.html">Guide: How to install skills</a></li>
+<li><a href="../Guides/UseSkills.html">Guide: How to use skills</a></li>
+<li><a href="../Guides/CreateSkills.html">Guide: How to create custom skills</a></li>
+<li><a href="../Reference/SkillsCommands.html">Reference: Skills Commands</a></li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

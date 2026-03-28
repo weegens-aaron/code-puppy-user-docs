@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Create Custom Agents — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="index.html">Index</a>
+<a href="AddModels.html">Add Models</a>
+<a href="BlockToolCalls.html">Block Tool Calls</a>
+<a href="Commands.html">Commands</a>
+<a href="CreateAgents.html" class="active">Create Agents</a>
+<a href="CreateHooks.html">Create Hooks</a>
+<a href="CreateSkills.html">Create Skills</a>
+<a href="InstallSkills.html">Install Skills</a>
+<a href="ManageMCP.html">Manage MCP</a>
+<a href="ModelConfiguration.html">Model Configuration</a>
+<a href="RoundRobinModels.html">Round Robin Models</a>
+<a href="SwitchAgents.html">Switch Agents</a>
+<a href="UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="how-to-create-custom-agents">How to Create Custom Agents</h1>
+<h2 id="what-you-ll-learn">What You'll Learn</h2>
+<p>By the end of this guide, you'll be able to create your own custom agents with specialized expertise, tool access, and system prompts tailored to your specific needs.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Code Puppy installed and running</li>
+<li>Familiarity with <a href="Commands.html">slash commands</a> for switching agents</li>
+<li>Basic understanding of Python (for Python-based agents)</li>
+</ul>
+<h2 id="quick-version">Quick Version</h2>
+<p><strong>For JSON agents (simplest):</strong></p>
+<pre><code class="language-bash">mkdir -p ~/.code_puppy/agents/my-agent
+cat &gt; ~/.code_puppy/agents/my-agent/agent.json &lt;&lt; 'EOF'
+{
+  "name": "my-agent",
+  "display_name": "My Custom Agent",
+  "description": "Does something specific",
+  "system_prompt": "You are a helpful assistant...",
+  "tools": ["list_files", "read_file", "create_file"]
+}
+EOF</code></pre>
+<p><strong>For Python agents (advanced):</strong></p>
+<pre><code class="language-bash"># Create agent file
+cat &gt; code_puppy/agents/agent_my_agent.py &lt;&lt; 'EOF'
+from .base_agent import BaseAgent
+
+class MyAgent(BaseAgent):
+    @property
+    def name(self): return "my-agent"
+    
+    @property
+    def display_name(self): return "My Agent 🐾"
+    
+    @property
+    def description(self): return "Custom agent description"
+    
+    def get_system_prompt(self): return "Your system prompt here"
+    
+    def get_available_tools(self): return ["list_files", "read_file"]
+EOF
+
+# Restart Code Puppy</code></pre>
+<h2 id="detailed-steps">Detailed Steps</h2>
+<h3 id="1-choose-your-agent-type">1. Choose Your Agent Type</h3>
+<p>Code Puppy supports two types of custom agents:</p>
+<table>
+<thead><tr>
+<th>Type</th>
+<th>Best For</th>
+<th>Complexity</th>
+<th>Location</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>JSON Agent</strong></td>
+<td>Simple customizations, quick prototyping</td>
+<td>Easy</td>
+<td><code>~/.code_puppy/agents/</code></td>
+</tr>
+<tr>
+<td><strong>Python Agent</strong></td>
+<td>Complex logic, dynamic behavior</td>
+<td>Advanced</td>
+<td><code>code_puppy/agents/</code></td>
+</tr>
+</tbody></table>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>Start with JSON agents for simplicity. Use Python agents when you need dynamic behavior or complex tool logic.</p>
+</div>
+<hr>
+<h3 id="2-creating-a-json-agent">2. Creating a JSON Agent</h3>
+<p>JSON agents are the simplest way to create a custom agent.</p>
+<h4 id="step-2-1-create-the-agent-directory">Step 2.1: Create the Agent Directory</h4>
+<pre><code class="language-bash">mkdir -p ~/.code_puppy/agents/my-python-helper</code></pre>
+<h4 id="step-2-2-create-the-agent-json-file">Step 2.2: Create the agent.json File</h4>
+<p>Create <code>~/.code_puppy/agents/my-python-helper/agent.json</code>:</p>
+<pre><code class="language-json">{
+  "name": "my-python-helper",
+  "display_name": "Python Helper 🐍",
+  "description": "Specialized Python code reviewer and refactoring assistant",
+  "system_prompt": "You are an expert Python developer. Your job is to review code for Pythonic patterns, type safety, and performance. Always suggest improvements with concrete examples.",
+  "tools": [
+    "list_files",
+    "read_file",
+    "grep",
+    "replace_in_file",
+    "agent_run_shell_command"
+  ],
+  "user_prompt": "What Python code would you like me to review?"
+}</code></pre>
+<h4 id="step-2-3-verify-the-agent">Step 2.3: Verify the Agent</h4>
+<p>Restart Code Puppy and check if your agent appears:</p>
+<pre><code class="language-bash">/code_puppy
+# Then use /agents to list available agents</code></pre>
+<p>You should see "Python Helper 🐍" in the agent list.</p>
+<hr>
+<h3 id="3-creating-a-python-agent">3. Creating a Python Agent</h3>
+<p>Python agents give you full control over agent behavior.</p>
+<h4 id="step-3-1-create-the-agent-file">Step 3.1: Create the Agent File</h4>
+<p>Create a new file: <code>code_puppy/agents/agent_my_specialist.py</code></p>
+<pre><code class="language-python">"""My specialist agent for specific tasks."""
+
+from .base_agent import BaseAgent
+
+
+class MySpecialistAgent(BaseAgent):
+    """Custom agent for specialized tasks."""
+
+    @property
+    def name(self) -&gt; str:
+        return "my-specialist"
+
+    @property
+    def display_name(self) -&gt; str:
+        return "My Specialist 🎯"
+
+    @property
+    def description(self) -&gt; str:
+        return "Specialized agent for [your specific use case]"
+
+    def get_system_prompt(self) -&gt; str:
+        return """
+You are a [your role] expert. Your mission is to [your mission].
+
+Your expertise includes:
+
+### Core Skills
+- Skill 1: Description
+- Skill 2: Description
+- Skill 3: Description
+
+### Best Practices
+1. Always do X before Y
+2. Never forget to Z
+3. Prefer A over B when...
+
+### Workflow
+1. First, analyze the problem
+2. Then, propose a solution
+3. Finally, implement with tests
+
+### Personality
+- Be [trait 1]
+- Be [trait 2]
+- Use [tone/style]
+
+Remember: [key principle]
+"""
+
+    def get_available_tools(self) -&gt; list[str]:
+        """List tools this agent needs."""
+        return [
+            "list_files",
+            "read_file",
+            "create_file",
+            "replace_in_file",
+            "agent_run_shell_command",
+            # Add more tools as needed
+        ]
+
+    def get_user_prompt(self) -&gt; str:
+        """Optional: Custom user prompt."""
+        return "What would you like me to help you with?"</code></pre>
+<h4 id="step-3-2-follow-the-required-interface">Step 3.2: Follow the Required Interface</h4>
+<p>Every Python agent must implement these <strong>required</strong> properties and methods:</p>
+<table>
+<thead><tr>
+<th>Member</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>property</td>
+<td>Unique identifier (lowercase, hyphens)</td>
+</tr>
+<tr>
+<td><code>display_name</code></td>
+<td>property</td>
+<td>Human-readable name with emoji</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>property</td>
+<td>Brief description shown in agent list</td>
+</tr>
+<tr>
+<td><code>get_system_prompt()</code></td>
+<td>method</td>
+<td>Returns the system prompt string</td>
+</tr>
+<tr>
+<td><code>get_available_tools()</code></td>
+<td>method</td>
+<td>Returns list of tool names</td>
+</tr>
+</tbody></table>
+<p><strong>Optional methods:</strong></p>
+<table>
+<thead><tr>
+<th>Member</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>get_user_prompt()</code></td>
+<td>method</td>
+<td>Custom user prompt</td>
+</tr>
+<tr>
+<td><code>get_tools_config()</code></td>
+<td>method</td>
+<td>Tool configuration dict</td>
+</tr>
+</tbody></table>
+<h4 id="step-3-3-name-your-agent-file-correctly">Step 3.3: Name Your Agent File Correctly</h4>
+<p>Agent files must follow this naming pattern:</p>
+<pre><code>agent_&lt;agent-name&gt;.py</code></pre>
+<p>Examples:</p>
+<ul>
+<li><code>agent_python_reviewer.py</code> → agent name: <code>python-reviewer</code></li>
+<li><code>agent_security_auditor.py</code> → agent name: <code>security-auditor</code></li>
+<li><code>agent_my_custom.py</code> → agent name: <code>my-custom</code></li>
+</ul>
+<div class="callout callout-warning">
+<div class="callout-title">WARNING</div>
+<p>The filename determines the agent's <code>name</code> property. Use lowercase with hyphens.</p>
+</div>
+<h4 id="step-3-4-restart-code-puppy">Step 3.4: Restart Code Puppy</h4>
+<p>Python agents are discovered at startup. Restart Code Puppy to load your new agent:</p>
+<pre><code class="language-bash"># Exit current session (Ctrl+C or /quit)
+# Then restart
+code_puppy</code></pre>
+<hr>
+<h3 id="4-testing-your-agent">4. Testing Your Agent</h3>
+<h4 id="step-4-1-switch-to-your-agent">Step 4.1: Switch to Your Agent</h4>
+<p>Use the <code>/agents</code> command to switch:</p>
+<pre><code>/agents
+# Select your agent from the list</code></pre>
+<p>Or use the command directly:</p>
+<pre><code>/switch-agent my-specialist</code></pre>
+<h4 id="step-4-2-verify-tool-access">Step 4.2: Verify Tool Access</h4>
+<p>Ask your agent to use its tools:</p>
+<pre><code>Can you list the files in the current directory?</code></pre>
+<p>You should see the agent use the <code>list_files</code> tool.</p>
+<h4 id="step-4-3-check-the-system-prompt">Step 4.3: Check the System Prompt</h4>
+<p>Your agent should respond according to its specialized instructions. If it doesn't, verify:</p>
+<ol>
+<li>The <code>get_system_prompt()</code> method returns the correct string</li>
+<li>The file is in the correct location</li>
+<li>Code Puppy was restarted after creating the agent</li>
+</ol>
+<hr>
+<h2 id="example-security-audit-agent">Example: Security Audit Agent</h2>
+<p>Here's a complete example of a security-focused agent:</p>
+<pre><code class="language-python">"""Security audit agent for code reviews."""
+
+from .base_agent import BaseAgent
+
+
+class SecurityAuditorAgent(BaseAgent):
+    """Specialized security code reviewer."""
+
+    @property
+    def name(self) -&gt; str:
+        return "security-auditor"
+
+    @property
+    def display_name(self) -&gt; str:
+        return "Security Auditor 🔒"
+
+    @property
+    def description(self) -&gt; str:
+        return "Expert security reviewer for vulnerabilities, OWASP compliance, and secure coding"
+
+    def get_system_prompt(self) -&gt; str:
+        return """
+You are a cybersecurity expert specializing in application security.
+
+Your mission: Identify security vulnerabilities and recommend fixes.
+
+## Security Domains
+
+### Input Validation
+- SQL injection prevention
+- XSS (Cross-Site Scripting) mitigation
+- Command injection protection
+- Path traversal attacks
+
+### Authentication &amp; Authorization
+- Weak password policies
+- Session management flaws
+- Broken access control
+- Privilege escalation risks
+
+### Data Protection
+- Sensitive data exposure
+- Insecure cryptographic storage
+- Missing encryption in transit
+- Weak cryptographic algorithms
+
+### Configuration
+- Security misconfiguration
+- Default credentials
+- Unnecessary services enabled
+- Exposed sensitive data in configs
+
+## Review Process
+
+1. **Scan**: Identify all entry points and data flows
+2. **Analyze**: Look for security anti-patterns
+3. **Prioritize**: Rate findings by severity (Critical/High/Medium/Low)
+4. **Remediate**: Provide concrete fix examples
+
+## Output Format
+
+For each vulnerability found:
+</code></pre>
+<p><strong>[SEVERITY]</strong> Vulnerability Name</p>
+<ul>
+<li><strong>Location</strong>: file.py:line</li>
+<li><strong>Issue</strong>: Description of the problem</li>
+<li><strong>Risk</strong>: What could happen if exploited</li>
+<li><strong>Fix</strong>: Code example showing the fix</li>
+</ul>
+<pre><code>
+## Tone
+
+- Be direct and factual
+- Provide actionable recommendations
+- Explain the "why" behind security rules
+- Don't be alarmist, but don't downplay risks
+
+Remember: Security is about enabling safe innovation, not blocking progress.
+"""
+
+    def get_available_tools(self) -&gt; list[str]:
+        return [
+            "list_files",
+            "read_file",
+            "grep",
+            "agent_run_shell_command",  # For running security scanners
+            "create_file",  # For writing security reports
+        ]
+
+    def get_user_prompt(self) -&gt; str:
+        return "What codebase would you like me to audit for security vulnerabilities?"</code></pre>
+<hr>
+<h2 id="options-variations">Options &amp; Variations</h2>
+<h3 id="dynamic-tool-selection">Dynamic Tool Selection</h3>
+<p>Python agents can implement logic in <code>get_available_tools()</code>:</p>
+<pre><code class="language-python">def get_available_tools(self) -&gt; list[str]:
+    tools = ["list_files", "read_file"]
+    
+    # Add browser tools if available
+    if self._browser_available():
+        tools.append("browser_navigate")
+        tools.append("browser_screenshot")
+    
+    return tools
+
+def _browser_available(self) -&gt; bool:
+    # Check if browser tools are configured
+    from code_puppy.config import get_value
+    return get_value("browser_enabled", False)</code></pre>
+<h3 id="custom-tool-configuration">Custom Tool Configuration</h3>
+<p>Use <code>get_tools_config()</code> to customize tool behavior:</p>
+<pre><code class="language-python">def get_tools_config(self) -&gt; dict:
+    return {
+        "agent_run_shell_command": {
+            "timeout": 300,  # 5 minute timeout
+            "allow_dangerous": False,  # Block destructive commands
+        }
+    }</code></pre>
+<h3 id="multi-model-support">Multi-Model Support</h3>
+<p>Agents can work with different models:</p>
+<pre><code class="language-python">from code_puppy.config import get_agent_pinned_model
+
+def get_model_name(self) -&gt; str:
+    # Check if this agent has a pinned model
+    pinned = get_agent_pinned_model(self.name)
+    if pinned:
+        return pinned
+    # Otherwise use global default
+    from code_puppy.config import get_global_model_name
+    return get_global_model_name()</code></pre>
+<hr>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead><tr>
+<th>Problem</th>
+<th>Cause</th>
+<th>Solution</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Agent doesn't appear in list</td>
+<td>File not in correct location</td>
+<td>Move to <code>code_puppy/agents/</code> or <code>~/.code_puppy/agents/</code></td>
+</tr>
+<tr>
+<td>Agent appears but fails to load</td>
+<td>Syntax error in Python file</td>
+<td>Check <code>~/.code_puppy/error_logs/</code> for details</td>
+</tr>
+<tr>
+<td>Tools don't work</td>
+<td>Tool name misspelled</td>
+<td>Verify tool names match available tools</td>
+</tr>
+<tr>
+<td>System prompt not applied</td>
+<td>Method not implemented</td>
+<td>Ensure <code>get_system_prompt()</code> is defined</td>
+</tr>
+<tr>
+<td>JSON agent not loaded</td>
+<td>Invalid JSON</td>
+<td>Run `cat agent.json \</td>
+<td>python -m json.tool` to validate</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="related-guides">Related Guides</h2>
+<ul>
+<li><a href="SwitchAgents.html">Switching Agents</a> — How to use your new agent</li>
+<li><a href="ModelConfiguration.html">Model Configuration</a> — Pin models to specific agents</li>
+<li><a href="UseSkills.html">How to Use Skills</a> — Extend agent capabilities with skills</li>
+<li><a href="../Reference/ToolsReference.html">Reference: Available Tools</a> — Complete tool list</li>
+</ul>
+<hr>
+<h2 id="next-steps">Next Steps</h2>
+<p>Now that you've created your custom agent:</p>
+<ol>
+<li><strong>Test it</strong>: Switch to your agent and try some tasks</li>
+<li><strong>Refine it</strong>: Adjust the system prompt based on results</li>
+<li><strong>Share it</strong>: Consider open-sourcing your agent for others to use</li>
+<li><strong>Extend it</strong>: Add skills to give your agent more capabilities</li>
+</ol>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>Keep your agents focused. A specialized agent that does one thing well is better than a generalist that does everything poorly.</p>
+</div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

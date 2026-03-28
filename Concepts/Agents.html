@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Understanding Agents — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="index.html">Index</a>
+<a href="AgentSkills.html">Agent Skills</a>
+<a href="Agents.html" class="active">Agents</a>
+<a href="Hooks.html">Hooks</a>
+<a href="MCP.html">MCP</a>
+<a href="Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="understanding-agents">Understanding Agents</h1>
+<h2 id="what-is-an-agent">What Is an Agent?</h2>
+<p>An <strong>agent</strong> in Code Puppy is an autonomous AI assistant that can perform tasks on your behalf. Think of agents as specialized workers, each with their own expertise and capabilities.</p>
+<hr>
+<h2 id="why-does-it-matter">Why Does It Matter?</h2>
+<p>Agents are the core of Code Puppy's functionality. They:</p>
+<ul>
+<li><strong>Execute tasks</strong>: Run commands, edit files, search codebases</li>
+<li><strong>Make decisions</strong>: Choose which tools to use and when</li>
+<li><strong>Learn from context</strong>: Remember previous interactions and adapt</li>
+<li><strong>Work collaboratively</strong>: Can invoke other agents for specialized work</li>
+</ul>
+<hr>
+<h2 id="how-it-works">How It Works</h2>
+<pre class="mermaid">
+flowchart TB
+    A[You give a task] --&gt; B[Agent receives prompt]
+    B --&gt; C[Agent plans approach]
+    C --&gt; D[Agent uses tools]
+    D --&gt; E[Agent produces result]
+    E --&gt; F[You get the answer]
+</pre>
+<p><strong>Step-by-step:</strong></p>
+<ol>
+<li><strong>You provide a task</strong>: Give the agent a prompt describing what you want</li>
+<li><strong>Agent analyzes</strong>: The agent reads your prompt and understands the goal</li>
+<li><strong>Agent plans</strong>: The agent decides which tools to use and in what order</li>
+<li><strong>Agent executes</strong>: The agent uses tools (read files, run commands, etc.)</li>
+<li><strong>Agent reports</strong>: The agent provides you with the result</li>
+</ol>
+<hr>
+<h2 id="key-terms">Key Terms</h2>
+<table>
+<thead><tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>Agent</strong></td>
+<td>An AI worker that performs tasks</td>
+</tr>
+<tr>
+<td><strong>Prompt</strong></td>
+<td>The task description you give to an agent</td>
+</tr>
+<tr>
+<td><strong>Tool</strong></td>
+<td>A capability the agent can use (read files, run commands, etc.)</td>
+</tr>
+<tr>
+<td><strong>Session</strong></td>
+<td>A conversation history with an agent</td>
+</tr>
+<tr>
+<td><strong>Model</strong></td>
+<td>The AI model that powers the agent</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="available-agents">Available Agents</h2>
+<p>Code Puppy comes with several built-in agents:</p>
+<h3 id="code-puppy-default"><code>code-puppy</code> (Default)</h3>
+<p><strong>Description:</strong> The main Code Puppy agent for general-purpose coding tasks.</p>
+<p><strong>Capabilities:</strong></p>
+<ul>
+<li>Code review and analysis</li>
+<li>Refactoring and optimization</li>
+<li>Debugging and troubleshooting</li>
+<li>File operations and search</li>
+</ul>
+<hr>
+<h3 id="pack-agents">Pack Agents</h3>
+<p>When <code>enable_pack_agents = true</code>, additional specialized agents are available:</p>
+<table>
+<thead><tr>
+<th>Agent</th>
+<th>Role</th>
+<th>Best For</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>pack-leader</code></td>
+<td>Coordinator</td>
+<td>Orchestrating complex workflows</td>
+</tr>
+<tr>
+<td><code>bloodhound</code></td>
+<td>Searcher</td>
+<td>Finding patterns and information</td>
+</tr>
+<tr>
+<td><code>husky</code></td>
+<td>Heavy lifter</td>
+<td>Resource-intensive tasks</td>
+</tr>
+<tr>
+<td><code>shepherd</code></td>
+<td>Workflow manager</td>
+<td>Multi-step processes</td>
+</tr>
+<tr>
+<td><code>terrier</code></td>
+<td>Small tasks</td>
+<td>Quick, focused operations</td>
+</tr>
+<tr>
+<td><code>watchdog</code></td>
+<td>Monitor</td>
+<td>Continuous monitoring and alerts</td>
+</tr>
+<tr>
+<td><code>retriever</code></td>
+<td>Information fetcher</td>
+<td>Gathering data from multiple sources</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="creating-custom-agents">Creating Custom Agents</h2>
+<p>You can create your own agents with custom capabilities:</p>
+<pre><code class="language-python"># In a plugin or custom agent file
+from code_puppy.agents import register_agent
+
+def my_custom_agent():
+    return {
+        "name": "my-specialist",
+        "description": "Specialized for database migrations",
+        "capabilities": ["sql-analysis", "migration-planning"]
+    }
+
+register_agent("my-specialist", my_custom_agent)</code></pre>
+<p><strong>See:</strong> <a href="../Guides/CreateAgents.html">Guide: How to create custom agents</a></p>
+<hr>
+<h2 id="agent-sessions">Agent Sessions</h2>
+<h3 id="what-is-a-session">What Is a Session?</h3>
+<p>A <strong>session</strong> is a complete conversation with an agent, including:</p>
+<ul>
+<li>The initial prompt</li>
+<li>All messages exchanged</li>
+<li>Tools used and their results</li>
+<li>The final outcome</li>
+</ul>
+<h3 id="session-management">Session Management</h3>
+<p><strong>Save a session:</strong></p>
+<pre><code class="language-bash">/save my-session</code></pre>
+<p><strong>List saved sessions:</strong></p>
+<pre><code class="language-bash">/sessions list</code></pre>
+<p><strong>Load a session:</strong></p>
+<pre><code class="language-bash">/sessions load my-session</code></pre>
+<p><strong>See:</strong> <a href="../Reference/SessionCommands.html">Reference: Session Commands</a></p>
+<hr>
+<h2 id="choosing-the-right-agent">Choosing the Right Agent</h2>
+<h3 id="for-general-tasks">For General Tasks</h3>
+<p>Use the default <code>code-puppy</code> agent. It's versatile and handles most coding tasks well.</p>
+<h3 id="for-specialized-work">For Specialized Work</h3>
+<p>Consider using pack agents:</p>
+<table>
+<thead><tr>
+<th>Task Type</th>
+<th>Recommended Agent</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Code search</td>
+<td><code>bloodhound</code></td>
+</tr>
+<tr>
+<td>Complex refactoring</td>
+<td><code>pack-leader</code> + <code>husky</code></td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td><code>watchdog</code></td>
+</tr>
+<tr>
+<td>Quick fixes</td>
+<td><code>terrier</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="agent-configuration">Agent Configuration</h2>
+<p>Agents inherit settings from your configuration:</p>
+<pre><code class="language-ini"># In puppy.cfg
+model = gpt-5
+temperature = 0.7</code></pre>
+<p><strong>Per-agent settings:</strong></p>
+<pre><code class="language-ini"># Different model for specific agent
+model_settings_code_puppy_temperature = 0.7
+model_settings_bloodhound_temperature = 0.5</code></pre>
+<p><strong>See:</strong> <a href="../Reference/ConfigReference.html">Reference: Configuration Options</a></p>
+<hr>
+<h2 id="agent-invocation">Agent Invocation</h2>
+<h3 id="from-the-cli">From the CLI</h3>
+<pre><code class="language-bash"># Start Code Puppy
+code_puppy
+
+# The default agent starts automatically</code></pre>
+<h3 id="from-another-agent">From Another Agent</h3>
+<pre><code class="language-python"># Agents can invoke other agents
+result = invoke_agent(
+    agent_name="bloodhound",
+    prompt="Find all TODO comments in src/"
+)</code></pre>
+<h3 id="via-rest-api">Via REST API</h3>
+<pre><code class="language-bash">curl -X POST http://localhost:8765/api/agents/invoke \
+  -H "Content-Type: application/json" \
+  -d '{
+    "agent": "code-puppy",
+    "prompt": "Review this code",
+    "model": "gpt-5"
+  }'</code></pre>
+<p><strong>See:</strong> <a href="../Reference/RESTAPI.html">Reference: REST API</a></p>
+<hr>
+<h2 id="agent-lifecycle">Agent Lifecycle</h2>
+<pre class="mermaid">
+flowchart TD
+    A[Agent Created] --&gt; B[Session Started]
+    B --&gt; C[Task Assigned]
+    C --&gt; D[Tools Used]
+    D --&gt; E[Result Produced]
+    E --&gt; F[Session Saved]
+    F --&gt; G[Agent Idle]
+    G --&gt; B
+</pre>
+<p><strong>States:</strong></p>
+<ol>
+<li><strong>Created</strong>: Agent is initialized and ready</li>
+<li><strong>Active</strong>: Agent is working on a task</li>
+<li><strong>Idle</strong>: Agent is waiting for a new task</li>
+<li><strong>Completed</strong>: Agent finished and session is saved</li>
+</ol>
+<hr>
+<h2 id="common-misconceptions">Common Misconceptions</h2>
+<div class="callout callout-caution">
+<div class="callout-title">CAUTION</div>
+<p><strong>Misconception</strong>: Agents are always online <strong>Reality</strong>: Agents only run when you invoke them or when scheduled tasks are active</p>
+</div>
+<div class="callout callout-caution">
+<div class="callout-title">CAUTION</div>
+<p><strong>Misconception</strong>: All agents have the same capabilities <strong>Reality</strong>: Different agents may have different tool access and specializations</p>
+</div>
+<div class="callout callout-caution">
+<div class="callout-title">CAUTION</div>
+<p><strong>Misconception</strong>: Agents remember everything forever <strong>Reality</strong>: Each session is independent unless you explicitly save and load it</p>
+</div>
+<hr>
+<h2 id="tips">Tips</h2>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Use descriptive prompts</strong>: The more specific your task description, the better the agent can help</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Save important sessions</strong>: Use <code>/save</code> to preserve useful conversations for later</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Try different agents</strong>: If one agent isn't giving good results, try a different specialized agent</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Monitor agent usage</strong>: Check the scheduler and session logs to see what agents are doing</p>
+</div>
+<hr>
+<h2 id="examples">Examples</h2>
+<h3 id="example-1-basic-code-review">Example 1: Basic Code Review</h3>
+<pre><code>You: /think Review this file for security issues
+Agent: [Reads file, analyzes code, provides findings]</code></pre>
+<h3 id="example-2-multi-agent-workflow">Example 2: Multi-Agent Workflow</h3>
+<pre><code>You: /think Find all API endpoints and document them
+
+Agent (code-puppy):
+  → Invokes bloodhound to find endpoint definitions
+  → Receives list of endpoints
+  → Creates documentation
+  → Returns final document</code></pre>
+<h3 id="example-3-scheduled-task">Example 3: Scheduled Task</h3>
+<pre><code class="language-bash"># Create a daily task
+/scheduler create --name "daily-check" \
+  --schedule "0 9 * * *" \
+  --agent "watchdog" \
+  --prompt "Check for security vulnerabilities"</code></pre>
+<hr>
+<h2 id="learn-more">Learn More</h2>
+<ul>
+<li><a href="../Guides/SwitchAgents.html">Guide: How to switch agents</a></li>
+<li><a href="../Guides/CreateAgents.html">Guide: How to create custom agents</a></li>
+<li><a href="../Tutorials/CustomAgent.html">Tutorial: Creating a Custom Agent</a></li>
+<li><a href="../Reference/SessionCommands.html">Reference: Session Commands</a></li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Environment Variables Reference — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="index.html">Index</a>
+<a href="ConfigCommands.html">Config Commands</a>
+<a href="ConfigReference.html">Config Reference</a>
+<a href="CoreCommands.html">Core Commands</a>
+<a href="EnvVars.html" class="active">Env Vars</a>
+<a href="MCPCommands.html">MCPCommands</a>
+<a href="RESTAPI.html">RESTAPI</a>
+<a href="SchedulerCommands.html">Scheduler Commands</a>
+<a href="SessionCommands.html">Session Commands</a>
+<a href="SkillsCommands.html">Skills Commands</a>
+<a href="ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="environment-variables-reference">Environment Variables Reference</h1>
+<h2 id="overview">Overview</h2>
+<p>This reference covers all environment variables used by Code Puppy. Environment variables control behavior, authentication, and system configuration.</p>
+<hr>
+<h2 id="directory-configuration">Directory Configuration</h2>
+<h3 id="xdg-config-home"><code>XDG_CONFIG_HOME</code></h3>
+<p><strong>Description:</strong> Base directory for configuration files.</p>
+<p><strong>Default:</strong> <code>~/.code_puppy</code> (if not set)</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export XDG_CONFIG_HOME=/etc/xdg</code></pre>
+<p><strong>Effect:</strong></p>
+<ul>
+<li>Config file: <code>$XDG_CONFIG_HOME/code_puppy/puppy.cfg</code></li>
+<li>MCP servers: <code>$XDG_CONFIG_HOME/code_puppy/mcp_servers.json</code></li>
+</ul>
+<hr>
+<h3 id="xdg-data-home"><code>XDG_DATA_HOME</code></h3>
+<p><strong>Description:</strong> Base directory for data files.</p>
+<p><strong>Default:</strong> <code>~/.code_puppy</code> (if not set)</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export XDG_DATA_HOME=/usr/local/share</code></pre>
+<p><strong>Effect:</strong></p>
+<ul>
+<li>Models config: <code>$XDG_DATA_HOME/code_puppy/models.json</code></li>
+<li>Agents: <code>$XDG_DATA_HOME/code_puppy/agents/</code></li>
+<li>Skills: <code>$XDG_DATA_HOME/code_puppy/skills/</code></li>
+<li>Contexts: <code>$XDG_DATA_HOME/code_puppy/contexts/</code></li>
+</ul>
+<hr>
+<h3 id="xdg-cache-home"><code>XDG_CACHE_HOME</code></h3>
+<p><strong>Description:</strong> Base directory for cache files.</p>
+<p><strong>Default:</strong> <code>~/.code_puppy</code> (if not set)</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export XDG_CACHE_HOME=/tmp/cache</code></pre>
+<p><strong>Effect:</strong></p>
+<ul>
+<li>Autosaves: <code>$XDG_CACHE_HOME/code_puppy/autosaves/</code></li>
+</ul>
+<hr>
+<h3 id="xdg-state-home"><code>XDG_STATE_HOME</code></h3>
+<p><strong>Description:</strong> Base directory for state files.</p>
+<p><strong>Default:</strong> <code>~/.code_puppy</code> (if not set)</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export XDG_STATE_HOME=/var/lib/code_puppy</code></pre>
+<p><strong>Effect:</strong></p>
+<ul>
+<li>Command history: <code>$XDG_STATE_HOME/code_puppy/command_history.txt</code></li>
+</ul>
+<hr>
+<h2 id="database-configuration">Database Configuration</h2>
+<h3 id="dbos-system-database-url"><code>DBOS_SYSTEM_DATABASE_URL</code></h3>
+<p><strong>Description:</strong> Database connection URL for DBOS state storage.</p>
+<p><strong>Default:</strong> <code>sqlite:///~/.code_puppy/dbos_store.sqlite</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export DBOS_SYSTEM_DATABASE_URL=postgresql://user:pass@localhost/code_puppy</code></pre>
+<hr>
+<h2 id="http-proxy-configuration">HTTP &amp; Proxy Configuration</h2>
+<h3 id="http-proxy-http-proxy"><code>HTTP_PROXY</code> / <code>http_proxy</code></h3>
+<p><strong>Description:</strong> HTTP proxy URL for outgoing requests.</p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export HTTP_PROXY=http://proxy.example.com:8080</code></pre>
+<hr>
+<h3 id="https-proxy-https-proxy"><code>HTTPS_PROXY</code> / <code>https_proxy</code></h3>
+<p><strong>Description:</strong> HTTPS proxy URL for outgoing requests.</p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export HTTPS_PROXY=http://proxy.example.com:8080</code></pre>
+<hr>
+<h3 id="no-proxy"><code>NO_PROXY</code></h3>
+<p><strong>Description:</strong> Comma-separated list of hosts to bypass proxy.</p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export NO_PROXY=localhost,127.0.0.1,.example.com</code></pre>
+<hr>
+<h3 id="ssl-cert-file"><code>SSL_CERT_FILE</code></h3>
+<p><strong>Description:</strong> Path to custom SSL certificate bundle.</p>
+<p><strong>Default:</strong> System default</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export SSL_CERT_FILE=/etc/ssl/certs/custom-ca.pem</code></pre>
+<hr>
+<h3 id="code-puppy-no-retry"><code>CODE_PUPPY_NO_RETRY</code></h3>
+<p><strong>Description:</strong> Disable automatic retry for failed HTTP requests.</p>
+<p><strong>Values:</strong> <code>true</code>, <code>false</code>, <code>1</code>, <code>0</code></p>
+<p><strong>Default:</strong> <code>false</code> (retry enabled)</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export CODE_PUPPY_NO_RETRY=true</code></pre>
+<hr>
+<h2 id="ui-display-configuration">UI &amp; Display Configuration</h2>
+<h3 id="code-puppy-no-tui"><code>CODE_PUPPY_NO_TUI</code></h3>
+<p><strong>Description:</strong> Disable text user interface (TUI).</p>
+<p><strong>Values:</strong> <code>1</code>, <code>0</code></p>
+<p><strong>Default:</strong> Not set (TUI enabled)</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export CODE_PUPPY_NO_TUI=1</code></pre>
+<p><strong>Effect:</strong></p>
+<ul>
+<li>When set to <code>1</code>: Runs in non-interactive mode</li>
+</ul>
+<hr>
+<h3 id="code-puppy-no-color"><code>CODE_PUPPY_NO_COLOR</code></h3>
+<p><strong>Description:</strong> Disable colored output.</p>
+<p><strong>Values:</strong> <code>0</code>, <code>1</code></p>
+<p><strong>Default:</strong> <code>0</code> (colors enabled)</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export CODE_PUPPY_NO_COLOR=1</code></pre>
+<hr>
+<h3 id="no-color"><code>NO_COLOR</code></h3>
+<p><strong>Description:</strong> Standard no-color flag (also respected).</p>
+<p><strong>Values:</strong> Any value disables colors</p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export NO_COLOR=1</code></pre>
+<hr>
+<h3 id="colorterm"><code>COLORTERM</code></h3>
+<p><strong>Description:</strong> Terminal color support level.</p>
+<p><strong>Default:</strong> System default</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export COLORTERM=truecolor</code></pre>
+<hr>
+<h3 id="term"><code>TERM</code></h3>
+<p><strong>Description:</strong> Terminal type.</p>
+<p><strong>Default:</strong> System default</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export TERM=xterm-256color</code></pre>
+<hr>
+<h2 id="browser-headless-configuration">Browser &amp; Headless Configuration</h2>
+<h3 id="headless"><code>HEADLESS</code></h3>
+<p><strong>Description:</strong> Run browser in headless mode.</p>
+<p><strong>Values:</strong> <code>true</code>, <code>false</code></p>
+<p><strong>Default:</strong> <code>false</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export HEADLESS=true</code></pre>
+<hr>
+<h3 id="browser-headless"><code>BROWSER_HEADLESS</code></h3>
+<p><strong>Description:</strong> Browser headless mode setting.</p>
+<p><strong>Values:</strong> <code>true</code>, <code>false</code></p>
+<p><strong>Default:</strong> <code>true</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export BROWSER_HEADLESS=false</code></pre>
+<hr>
+<h3 id="chromium-headless"><code>CHROMIUM_HEADLESS</code></h3>
+<p><strong>Description:</strong> Chromium-specific headless mode.</p>
+<p><strong>Values:</strong> <code>true</code>, <code>false</code></p>
+<p><strong>Default:</strong> <code>false</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export CHROMIUM_HEADLESS=true</code></pre>
+<hr>
+<h2 id="ci-automation-configuration">CI &amp; Automation Configuration</h2>
+<h3 id="ci"><code>CI</code></h3>
+<p><strong>Description:</strong> Running in CI environment.</p>
+<p><strong>Values:</strong> <code>true</code>, <code>false</code></p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export CI=true</code></pre>
+<p><strong>Effect:</strong></p>
+<ul>
+<li>Disables interactive prompts</li>
+<li>Adjusts output formatting</li>
+</ul>
+<hr>
+<h3 id="code-puppy-skip-tutorial"><code>CODE_PUPPY_SKIP_TUTORIAL</code></h3>
+<p><strong>Description:</strong> Skip onboarding tutorial.</p>
+<p><strong>Values:</strong> Any value skips tutorial</p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export CODE_PUPPY_SKIP_TUTORIAL=1</code></pre>
+<hr>
+<h3 id="pytest-current-test"><code>PYTEST_CURRENT_TEST</code></h3>
+<p><strong>Description:</strong> Set by pytest during test execution.</p>
+<p><strong>Default:</strong> Not set (only during tests)</p>
+<p><strong>Effect:</strong></p>
+<ul>
+<li>Detected during test runs</li>
+<li>Adjusts behavior for testing</li>
+</ul>
+<hr>
+<h2 id="version-update-configuration">Version &amp; Update Configuration</h2>
+<h3 id="no-version-update"><code>NO_VERSION_UPDATE</code></h3>
+<p><strong>Description:</strong> Disable automatic version update checks.</p>
+<p><strong>Values:</strong> <code>true</code>, <code>false</code>, <code>1</code>, <code>0</code></p>
+<p><strong>Default:</strong> Not set (updates enabled)</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export NO_VERSION_UPDATE=1</code></pre>
+<hr>
+<h2 id="dbos-configuration">DBOS Configuration</h2>
+<h3 id="dbos-app-version"><code>DBOS_APP_VERSION</code></h3>
+<p><strong>Description:</strong> DBOS application version.</p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export DBOS_APP_VERSION=v1.0.0</code></pre>
+<hr>
+<h3 id="dbos-conductor-key"><code>DBOS_CONDUCTOR_KEY</code></h3>
+<p><strong>Description:</strong> DBOS conductor key for distributed execution.</p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export DBOS_CONDUCTOR_KEY=your-conductor-key</code></pre>
+<hr>
+<h3 id="dbos-log-level"><code>DBOS_LOG_LEVEL</code></h3>
+<p><strong>Description:</strong> DBOS logging level.</p>
+<p><strong>Values:</strong> <code>debug</code>, <code>info</code>, <code>warn</code>, <code>error</code></p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export DBOS_LOG_LEVEL=debug</code></pre>
+<hr>
+<h2 id="shell-configuration">Shell Configuration</h2>
+<h3 id="shell"><code>SHELL</code></h3>
+<p><strong>Description:</strong> Default shell for command execution.</p>
+<p><strong>Default:</strong> System default (e.g., <code>/bin/bash</code>)</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export SHELL=/bin/zsh</code></pre>
+<hr>
+<h3 id="comspec"><code>COMSPEC</code></h3>
+<p><strong>Description:</strong> Windows command interpreter.</p>
+<p><strong>Default:</strong> <code>cmd.exe</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export COMSPEC=C:\Windows\System32\powershell.exe</code></pre>
+<hr>
+<h2 id="terminal-emulator-detection">Terminal Emulator Detection</h2>
+<p>These variables are <strong>read-only</strong> and detected automatically:</p>
+<table>
+<thead><tr>
+<th>Variable</th>
+<th>Terminal</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>ITERM_SESSION_ID</code></td>
+<td>iTerm2 (macOS)</td>
+</tr>
+<tr>
+<td><code>KITTY_WINDOW_ID</code></td>
+<td>Kitty</td>
+</tr>
+<tr>
+<td><code>ALACRITTY_SOCKET</code></td>
+<td>Alacritty</td>
+</tr>
+<tr>
+<td><code>WT_SESSION</code></td>
+<td>Windows Terminal</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="model-api-key-environment-variables">Model API Key Environment Variables</h2>
+<p>Code Puppy loads API keys from both <code>puppy.cfg</code> and environment variables. Environment variables take precedence.</p>
+<p><strong>Common API Key Variables:</strong></p>
+<table>
+<thead><tr>
+<th>Provider</th>
+<th>Environment Variable</th>
+<th>Config Key</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>OpenAI</td>
+<td><code>OPENAI_API_KEY</code></td>
+<td><code>openai_api_key</code></td>
+</tr>
+<tr>
+<td>Anthropic</td>
+<td><code>ANTHROPIC_API_KEY</code></td>
+<td><code>anthropic_api_key</code></td>
+</tr>
+<tr>
+<td>Google</td>
+<td><code>GOOGLE_API_KEY</code></td>
+<td><code>google_api_key</code></td>
+</tr>
+<tr>
+<td>Azure</td>
+<td><code>AZURE_API_KEY</code></td>
+<td><code>azure_api_key</code></td>
+</tr>
+<tr>
+<td>Ollama</td>
+<td><code>OLLAMA_API_KEY</code></td>
+<td><code>ollama_api_key</code></td>
+</tr>
+<tr>
+<td>Groq</td>
+<td><code>GROQ_API_KEY</code></td>
+<td><code>groq_api_key</code></td>
+</tr>
+<tr>
+<td>DeepSeek</td>
+<td><code>DEEPSEEK_API_KEY</code></td>
+<td><code>deepseek_api_key</code></td>
+</tr>
+<tr>
+<td>Zai</td>
+<td><code>ZAI_API_KEY</code></td>
+<td><code>zai_api_key</code></td>
+</tr>
+<tr>
+<td>ChatGLM</td>
+<td><code>CHATGLM_API_KEY</code></td>
+<td><code>chatglm_api_key</code></td>
+</tr>
+<tr>
+<td>OpenRouter</td>
+<td><code>OPENROUTER_API_KEY</code></td>
+<td><code>openrouter_api_key</code></td>
+</tr>
+<tr>
+<td>Together</td>
+<td><code>TOGETHER_API_KEY</code></td>
+<td><code>together_api_key</code></td>
+</tr>
+<tr>
+<td>Fireworks</td>
+<td><code>FIREWORKS_API_KEY</code></td>
+<td><code>fireworks_api_key</code></td>
+</tr>
+<tr>
+<td>Cohere</td>
+<td><code>COHERE_API_KEY</code></td>
+<td><code>cohere_api_key</code></td>
+</tr>
+<tr>
+<td>Perplexity</td>
+<td><code>PERPLEXITY_API_KEY</code></td>
+<td><code>perplexity_api_key</code></td>
+</tr>
+<tr>
+<td>xAI</td>
+<td><code>XAI_API_KEY</code></td>
+<td><code>xai_api_key</code></td>
+</tr>
+</tbody></table>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">export OPENAI_API_KEY=sk-your-openai-key
+export ANTHROPIC_API_KEY=sk-ant-your-key</code></pre>
+<hr>
+<h2 id="mcp-server-environment-variables">MCP Server Environment Variables</h2>
+<p>MCP servers may require environment variables for authentication:</p>
+<table>
+<thead><tr>
+<th>Server</th>
+<th>Environment Variable</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>GitHub</td>
+<td><code>GITHUB_TOKEN</code></td>
+</tr>
+<tr>
+<td>GitLab</td>
+<td><code>GITLAB_TOKEN</code></td>
+</tr>
+<tr>
+<td>Slack</td>
+<td><code>SLACK_TOKEN</code></td>
+</tr>
+<tr>
+<td>Discord</td>
+<td><code>DISCORD_TOKEN</code></td>
+</tr>
+<tr>
+<td>Jira</td>
+<td><code>JIRA_TOKEN</code></td>
+</tr>
+<tr>
+<td>Confluence</td>
+<td><code>CONFLUENCE_TOKEN</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="oauth-plugin-environment-variables">OAuth Plugin Environment Variables</h2>
+<p>OAuth plugins store tokens in environment variables:</p>
+<table>
+<thead><tr>
+<th>Plugin</th>
+<th>Environment Variable</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>ChatGPT</td>
+<td><code>CHATGPT_OAUTH_API_KEY</code></td>
+</tr>
+<tr>
+<td>Gemini</td>
+<td><code>GEMINI_OAUTH_API_KEY</code></td>
+</tr>
+<tr>
+<td>Claude</td>
+<td><code>CLAUDE_OAUTH_API_KEY</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="env-file-support">.env File Support</h2>
+<p>Code Puppy automatically loads <code>.env</code> files from the current working directory.</p>
+<p><strong>Priority Order:</strong></p>
+<ol>
+<li>Environment variables (highest)</li>
+<li><code>.env</code> file</li>
+<li><code>puppy.cfg</code> (lowest)</li>
+</ol>
+<p>**Example <code>.env</code> file:**</p>
+<pre><code class="language-bash"># API Keys
+OPENAI_API_KEY=sk-your-key
+ANTHROPIC_API_KEY=sk-ant-key
+
+# Configuration
+XDG_CONFIG_HOME=/etc/xdg</code></pre>
+<hr>
+<h2 id="setting-environment-variables">Setting Environment Variables</h2>
+<h3 id="temporary-current-session">Temporary (Current Session)</h3>
+<pre><code class="language-bash">export VARIABLE_NAME=value</code></pre>
+<h3 id="permanent-shell-profile">Permanent (Shell Profile)</h3>
+<p>Add to <code>~/.bashrc</code>, <code>~/.zshrc</code>, or <code>~/.profile</code>:</p>
+<pre><code class="language-bash">export VARIABLE_NAME=value</code></pre>
+<h3 id="permanent-windows">Permanent (Windows)</h3>
+<pre><code class="language-powershell">[System.Environment]::SetEnvironmentVariable("VARIABLE_NAME", "value", "User")</code></pre>
+<hr>
+<h2 id="verifying-environment-variables">Verifying Environment Variables</h2>
+<pre><code class="language-bash"># Check if set
+echo $VARIABLE_NAME
+
+# Check all Code Puppy variables
+env | grep CODE_PUPPY
+env | grep XDG
+env | grep DBOS</code></pre>
+<hr>
+<h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="ConfigReference.html">Reference: Configuration Options</a></li>
+<li><a href="Models.html">Reference: Models</a></li>
+<li><a href="MCPCommands.html">Reference: MCP Commands</a></li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

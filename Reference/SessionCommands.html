@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session Commands Reference — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="index.html">Index</a>
+<a href="ConfigCommands.html">Config Commands</a>
+<a href="ConfigReference.html">Config Reference</a>
+<a href="CoreCommands.html">Core Commands</a>
+<a href="EnvVars.html">Env Vars</a>
+<a href="MCPCommands.html">MCPCommands</a>
+<a href="RESTAPI.html">RESTAPI</a>
+<a href="SchedulerCommands.html">Scheduler Commands</a>
+<a href="SessionCommands.html" class="active">Session Commands</a>
+<a href="SkillsCommands.html">Skills Commands</a>
+<a href="ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="session-commands-reference">Session Commands Reference</h1>
+<h2 id="overview">Overview</h2>
+<p>This reference covers all <code>/session</code> and related commands for managing conversation history, autosave sessions, and context files in Code Puppy.</p>
+<hr>
+<h2 id="session"><code>/session</code></h2>
+<p><strong>Description:</strong> Show or rotate the autosave session ID.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/session [id|new]</code></pre>
+<p><strong>Subcommands:</strong></p>
+<table>
+<thead><tr>
+<th>Subcommand</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>/session</code> or <code>/session id</code></td>
+<td>Display current autosave session ID</td>
+</tr>
+<tr>
+<td><code>/session new</code></td>
+<td>Create a new session and rotate the ID</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Show current session
+/session</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Autosave Session: abc123-def456
+Files prefix: code_puppy_autosave_abc123-def456</code></pre>
+<pre><code class="language-bash"># Create new session
+/session new</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>New autosave session id: xyz789-ghi012</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/Commands.html">Guide: How to use slash commands</a></li>
+<li><a href="../Guides/InstallSkills.html">Guide: How to install skills</a></li>
+</ul>
+<hr>
+<h2 id="compact"><code>/compact</code></h2>
+<p><strong>Description:</strong> Summarize and compact current chat history using the configured <code>compaction_strategy</code>.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/compact</code></pre>
+<p><strong>How It Works:</strong></p>
+<p>Code Puppy supports two compaction strategies (configured in <code>config.py</code>):</p>
+<ol>
+<li><strong>Truncation</strong> - Removes older messages while protecting a minimum token count</li>
+<li><strong>Summarization</strong> - Uses the LLM to summarize older messages into a condensed form</li>
+</ol>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Compact history
+/compact</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>✨ Done! History: 50 → 25 messages using summarization
+🏦 Tokens: 125,000 → 62,500 (50.0% reduction)</code></pre>
+<p><strong>Related Configuration:</strong></p>
+<ul>
+<li><code>compaction_strategy</code> - Either <code>"truncation"</code> or <code>"summarization"</code></li>
+<li><code>protected_token_count</code> - Minimum tokens to preserve from truncation</li>
+</ul>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Concepts/Agents.html">Concept: Understanding Agents</a></li>
+<li><a href="ConfigReference.html">Reference: Configuration Options</a></li>
+</ul>
+<hr>
+<h2 id="truncate"><code>/truncate</code></h2>
+<p><strong>Description:</strong> Truncate history to N most recent messages (keeps system message + N-1 recent messages).</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/truncate &lt;N&gt;</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>&lt;N&gt;</code></td>
+<td>Number of messages to keep (must be positive integer)</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Keep system message + 10 most recent messages
+/truncate 11</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Truncated message history from 50 to 11 messages (keeping system message and 10 most recent)</code></pre>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>Always keeps the first message (system prompt)</li>
+<li>Keeps the N-1 most recent user/assistant messages</li>
+<li>Discards all messages in between</li>
+</ul>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/Commands.html">Guide: How to use slash commands</a></li>
+</ul>
+<hr>
+<h2 id="autosave-load-alias-resume"><code>/autosave_load</code> (alias: <code>/resume</code>)</h2>
+<p><strong>Description:</strong> Load an autosave session interactively.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/autosave_load</code></pre>
+<p><strong>Aliases:</strong></p>
+<ul>
+<li><code>/resume</code></li>
+</ul>
+<p><strong>How It Works:</strong></p>
+<p>This command opens an interactive menu showing all available autosave sessions. Select one to resume that conversation.</p>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Open autosave session picker
+/autosave_load</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Select an autosave session to resume:
+  1. code_puppy_autosave_abc123-def456 (2024-01-15 14:30)
+  2. code_puppy_autosave_xyz789-ghi012 (2024-01-15 10:15)
+  3. code_puppy_autosave_mno345-pqr678 (2024-01-14 18:45)</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Tutorials/FirstTask.html">Tutorial: Your First Code Task</a></li>
+</ul>
+<hr>
+<h2 id="dump-context"><code>/dump_context</code></h2>
+<p><strong>Description:</strong> Save current message history to a context file.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/dump_context &lt;name&gt;</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>&lt;name&gt;</code></td>
+<td>Name for the context file (stored in <code>contexts/</code> directory)</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Save current conversation as "project_review"
+/dump_context project_review</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>✅ Context saved: 45 messages (98,500 tokens)
+📁 Files: contexts/project_review.pkl, contexts/project_review.json</code></pre>
+<p><strong>File Format:</strong></p>
+<ul>
+<li><code>.pkl</code> - Pickle file with full message history</li>
+<li><code>.json</code> - Metadata including message count, token count, timestamp</li>
+</ul>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/Commands.html">Guide: How to use slash commands</a></li>
+</ul>
+<hr>
+<h2 id="load-context"><code>/load_context</code></h2>
+<p><strong>Description:</strong> Load message history from a context file.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/load_context &lt;name&gt;</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>&lt;name&gt;</code></td>
+<td>Name of the context file (without extension)</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Load previously saved context
+/load_context project_review</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>✅ Context loaded: 45 messages (98,500 tokens)
+📁 From: contexts/project_review.pkl
+
+Autosave session rotated to: new-session-id</code></pre>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>Loads the message history into the current agent</li>
+<li>Automatically rotates the autosave session ID to prevent overwriting</li>
+<li>Displays recent message history for context</li>
+</ul>
+<p><strong>Available Contexts:</strong> If the specified context doesn't exist, Code Puppy will show available contexts:</p>
+<pre><code>Context file not found: contexts/project_review.pkl
+Available contexts: project_review, code_analysis, bug_fix_session</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/Commands.html">Guide: How to use slash commands</a></li>
+<li><a href="../Tutorials/FirstTask.html">Tutorial: Your First Code Task</a></li>
+</ul>
+<hr>
+<h2 id="session-storage-locations">Session Storage Locations</h2>
+<table>
+<thead><tr>
+<th>Type</th>
+<th>Location</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Autosave sessions</td>
+<td><code>~/.code_puppy/autosave/</code></td>
+</tr>
+<tr>
+<td>Context files</td>
+<td><code>~/.code_puppy/contexts/</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="../Guides/Commands.html">Guide: How to use slash commands</a></li>
+<li><a href="../Tutorials/FirstTask.html">Tutorial: Your First Code Task</a></li>
+<li><a href="CoreCommands.html">Reference: Core Commands</a></li>
+<li><a href="ConfigCommands.html">Reference: Configuration Commands</a></li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

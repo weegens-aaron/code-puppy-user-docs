@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REST API Reference — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="index.html">Index</a>
+<a href="ConfigCommands.html">Config Commands</a>
+<a href="ConfigReference.html">Config Reference</a>
+<a href="CoreCommands.html">Core Commands</a>
+<a href="EnvVars.html">Env Vars</a>
+<a href="MCPCommands.html">MCPCommands</a>
+<a href="RESTAPI.html" class="active">RESTAPI</a>
+<a href="SchedulerCommands.html">Scheduler Commands</a>
+<a href="SessionCommands.html">Session Commands</a>
+<a href="SkillsCommands.html">Skills Commands</a>
+<a href="ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="rest-api-reference">REST API Reference</h1>
+<h2 id="overview">Overview</h2>
+<p>Code Puppy provides a FastAPI-based REST API for programmatic access to configuration, sessions, commands, and agents. The API also supports WebSocket for real-time communication.</p>
+<hr>
+<h2 id="server-setup">Server Setup</h2>
+<h3 id="starting-the-api-server">Starting the API Server</h3>
+<pre><code class="language-bash"># Start the API server
+code_puppy api-server
+
+# Or run directly
+python -m code_puppy.api.main</code></pre>
+<p><strong>Default Address:</strong> <code>http://localhost:8765</code></p>
+<p><strong>WebSocket Address:</strong> <code>ws://localhost:8765/ws/terminal</code></p>
+<hr>
+<h2 id="authentication">Authentication</h2>
+<p>The API currently runs locally without authentication. For production deployments, consider:</p>
+<ol>
+<li>Using a reverse proxy with authentication</li>
+<li>Implementing API key authentication</li>
+<li>Restricting access to localhost only</li>
+</ol>
+<hr>
+<h2 id="endpoints">Endpoints</h2>
+<h3 id="configuration-api">Configuration API</h3>
+<h4 id="get-api-config"><code>GET /api/config/</code></h4>
+<p><strong>Description:</strong> List all configuration keys and their values.</p>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  "config": {
+    "puppy_name": "Code Puppy",
+    "owner_name": "John Doe",
+    "model": "gpt-5",
+    "temperature": "0.7",
+    ...
+  }
+}</code></pre>
+<hr>
+<h4 id="get-api-config-keys"><code>GET /api/config/keys</code></h4>
+<p><strong>Description:</strong> Get list of all valid configuration keys.</p>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">[
+  "puppy_name",
+  "owner_name",
+  "model",
+  "temperature",
+  ...
+]</code></pre>
+<hr>
+<h4 id="get-api-config-key"><code>GET /api/config/{key}</code></h4>
+<p><strong>Description:</strong> Get a specific configuration value.</p>
+<p><strong>Path Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>key</code></td>
+<td>string</td>
+<td>Configuration key name</td>
+</tr>
+</tbody></table>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  "key": "model",
+  "value": "gpt-5"
+}</code></pre>
+<p><strong>Status Codes:</strong></p>
+<table>
+<thead><tr>
+<th>Code</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>Success</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Key not found</td>
+</tr>
+</tbody></table>
+<hr>
+<h4 id="put-api-config-key"><code>PUT /api/config/{key}</code></h4>
+<p><strong>Description:</strong> Set a configuration value.</p>
+<p><strong>Path Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>key</code></td>
+<td>string</td>
+<td>Configuration key name</td>
+</tr>
+</tbody></table>
+<p><strong>Request Body:</strong></p>
+<pre><code class="language-json">{
+  "value": "new-value"
+}</code></pre>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  "key": "model",
+  "value": "gpt-5"
+}</code></pre>
+<p><strong>Status Codes:</strong></p>
+<table>
+<thead><tr>
+<th>Code</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>Success</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Key not found</td>
+</tr>
+</tbody></table>
+<hr>
+<h4 id="delete-api-config-key"><code>DELETE /api/config/{key}</code></h4>
+<p><strong>Description:</strong> Reset a configuration value to default.</p>
+<p><strong>Path Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>key</code></td>
+<td>string</td>
+<td>Configuration key name</td>
+</tr>
+</tbody></table>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  "message": "Config key 'model' reset to default"
+}</code></pre>
+<hr>
+<h3 id="sessions-api">Sessions API</h3>
+<h4 id="get-api-sessions"><code>GET /api/sessions/</code></h4>
+<p><strong>Description:</strong> List all available sessions.</p>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">[
+  {
+    "session_id": "abc123",
+    "agent_name": "code-puppy",
+    "initial_prompt": "Review this code...",
+    "created_at": "2024-01-15T10:00:00",
+    "last_updated": "2024-01-15T10:30:00",
+    "message_count": 15
+  },
+  ...
+]</code></pre>
+<hr>
+<h4 id="get-api-sessions-session-id"><code>GET /api/sessions/{session_id}</code></h4>
+<p><strong>Description:</strong> Get session metadata.</p>
+<p><strong>Path Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>session_id</code></td>
+<td>string</td>
+<td>Session identifier</td>
+</tr>
+</tbody></table>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  "session_id": "abc123",
+  "agent_name": "code-puppy",
+  "initial_prompt": "Review this code...",
+  "created_at": "2024-01-15T10:00:00",
+  "last_updated": "2024-01-15T10:30:00",
+  "message_count": 15
+}</code></pre>
+<p><strong>Status Codes:</strong></p>
+<table>
+<thead><tr>
+<th>Code</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>Success</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Session not found</td>
+</tr>
+<tr>
+<td>504</td>
+<td>Timeout reading session</td>
+</tr>
+</tbody></table>
+<hr>
+<h4 id="get-api-sessions-session-id-messages"><code>GET /api/sessions/{session_id}/messages</code></h4>
+<p><strong>Description:</strong> Get the full message history for a session.</p>
+<p><strong>Path Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>session_id</code></td>
+<td>string</td>
+<td>Session identifier</td>
+</tr>
+</tbody></table>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">[
+  {
+    "role": "user",
+    "content": "Review this code...",
+    "timestamp": "2024-01-15T10:00:00"
+  },
+  {
+    "role": "assistant",
+    "content": "Here's my review...",
+    "timestamp": "2024-01-15T10:00:05"
+  },
+  ...
+]</code></pre>
+<p><strong>Status Codes:</strong></p>
+<table>
+<thead><tr>
+<th>Code</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>Success</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Session messages not found</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Error loading messages</td>
+</tr>
+<tr>
+<td>504</td>
+<td>Timeout loading messages</td>
+</tr>
+</tbody></table>
+<hr>
+<h4 id="delete-api-sessions-session-id"><code>DELETE /api/sessions/{session_id}</code></h4>
+<p><strong>Description:</strong> Delete a session and its data.</p>
+<p><strong>Path Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>session_id</code></td>
+<td>string</td>
+<td>Session identifier</td>
+</tr>
+</tbody></table>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  "message": "Session 'abc123' deleted"
+}</code></pre>
+<p><strong>Status Codes:</strong></p>
+<table>
+<thead><tr>
+<th>Code</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>Success</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Session not found</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="commands-api">Commands API</h3>
+<h4 id="get-api-commands"><code>GET /api/commands/</code></h4>
+<p><strong>Description:</strong> List available commands.</p>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  "commands": [
+    {
+      "name": "/think",
+      "description": "Enter thinking mode",
+      "aliases": []
+    },
+    {
+      "name": "/save",
+      "description": "Save current session",
+      "aliases": []
+    },
+    ...
+  ]
+}</code></pre>
+<hr>
+<h4 id="post-api-commands-execute"><code>POST /api/commands/execute</code></h4>
+<p><strong>Description:</strong> Execute a slash command.</p>
+<p><strong>Request Body:</strong></p>
+<pre><code class="language-json">{
+  "command": "/save my-session"
+}</code></pre>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  "success": true,
+  "result": "Session saved as 'my-session'"
+}</code></pre>
+<hr>
+<h3 id="agents-api">Agents API</h3>
+<h4 id="get-api-agents"><code>GET /api/agents/</code></h4>
+<p><strong>Description:</strong> List available agents.</p>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  "agents": [
+    {
+      "name": "code-puppy",
+      "description": "Default Code Puppy agent",
+      "capabilities": ["code-review", "refactoring", "debugging"]
+    },
+    ...
+  ]
+}</code></pre>
+<hr>
+<h4 id="post-api-agents-invoke"><code>POST /api/agents/invoke</code></h4>
+<p><strong>Description:</strong> Invoke an agent with a prompt.</p>
+<p><strong>Request Body:</strong></p>
+<pre><code class="language-json">{
+  "agent": "code-puppy",
+  "model": "gpt-5",
+  "prompt": "Review this code for security issues",
+  "working_directory": "/path/to/project"
+}</code></pre>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  "session_id": "abc123",
+  "status": "started",
+  "message": "Agent invocation started"
+}</code></pre>
+<hr>
+<h3 id="websocket-api">WebSocket API</h3>
+<h4 id="ws-localhost-8765-ws-terminal"><code>ws://localhost:8765/ws/terminal</code></h4>
+<p><strong>Description:</strong> Interactive terminal WebSocket connection.</p>
+<p><strong>Connection:</strong></p>
+<pre><code class="language-javascript">const ws = new WebSocket('ws://localhost:8765/ws/terminal');
+
+ws.onopen = () =&gt; {
+  console.log('Connected to Code Puppy terminal');
+};
+
+ws.onmessage = (event) =&gt; {
+  const data = JSON.parse(event.data);
+  console.log('Received:', data);
+};
+
+// Send commands
+ws.send(JSON.stringify({
+  type: 'command',
+  command: '/think'
+}));</code></pre>
+<p><strong>Message Types:</strong></p>
+<table>
+<thead><tr>
+<th>Type</th>
+<th>Direction</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>command</code></td>
+<td>Client → Server</td>
+<td>Execute a slash command</td>
+</tr>
+<tr>
+<td><code>input</code></td>
+<td>Client → Server</td>
+<td>Send text input</td>
+</tr>
+<tr>
+<td><code>output</code></td>
+<td>Server → Client</td>
+<td>Terminal output</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>Server → Client</td>
+<td>Connection status</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="health-check">Health Check</h3>
+<h4 id="get-health"><code>GET /health</code></h4>
+<p><strong>Description:</strong> Check API server health.</p>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  "status": "healthy"
+}</code></pre>
+<hr>
+<h3 id="documentation">Documentation</h3>
+<h4 id="get-docs"><code>GET /docs</code></h4>
+<p><strong>Description:</strong> OpenAPI documentation (Swagger UI).</p>
+<p><strong>Access:</strong> <code>http://localhost:8765/docs</code></p>
+<hr>
+<h4 id="get-redoc"><code>GET /redoc</code></h4>
+<p><strong>Description:</strong> ReDoc documentation.</p>
+<p><strong>Access:</strong> <code>http://localhost:8765/redoc</code></p>
+<hr>
+<h2 id="error-handling">Error Handling</h2>
+<p>All errors return a consistent format:</p>
+<pre><code class="language-json">{
+  "detail": "Error description",
+  "error": "error_code"
+}</code></pre>
+<p><strong>Common Error Codes:</strong></p>
+<table>
+<thead><tr>
+<th>Code</th>
+<th>HTTP Status</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>not_found</code></td>
+<td>404</td>
+<td>Resource not found</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td>504</td>
+<td>Request timed out</td>
+</tr>
+<tr>
+<td><code>internal_error</code></td>
+<td>500</td>
+<td>Internal server error</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="request-timeout">Request Timeout</h2>
+<p><strong>Default:</strong> 30 seconds</p>
+<p><strong>Override:</strong> Set <code>REQUEST_TIMEOUT</code> in the API configuration.</p>
+<p><strong>Exceptions:</strong> WebSocket upgrades and streaming endpoints bypass the timeout.</p>
+<hr>
+<h2 id="cors-configuration">CORS Configuration</h2>
+<p>The API includes CORS middleware for frontend access:</p>
+<pre><code class="language-python">allow_origins=["*"]  # Local/trusted
+allow_credentials=True
+allow_methods=["*"]
+allow_headers=["*"]</code></pre>
+<p><strong>For Production:</strong> Restrict <code>allow_origins</code> to specific domains.</p>
+<hr>
+<h2 id="pid-file">PID File</h2>
+<p><strong>Location:</strong> <code>~/.code_puppy/api_server.pid</code></p>
+<p><strong>Purpose:</strong> Tracks running API server process.</p>
+<p><strong>Management:</strong></p>
+<ul>
+<li>Created when server starts</li>
+<li>Removed when server stops</li>
+<li>Can be used to check if server is running</li>
+</ul>
+<hr>
+<h2 id="example-using-the-api">Example: Using the API</h2>
+<h3 id="python-example">Python Example</h3>
+<pre><code class="language-python">import requests
+
+# Get configuration
+response = requests.get('http://localhost:8765/api/config/')
+config = response.json()['config']
+print(f"Current model: {config.get('model')}")
+
+# Set a configuration value
+response = requests.put(
+    'http://localhost:8765/api/config/model',
+    json={'value': 'gpt-5'}
+)
+print(response.json())
+
+# List sessions
+response = requests.get('http://localhost:8765/api/sessions/')
+sessions = response.json()
+print(f"Found {len(sessions)} sessions")
+
+# Get session messages
+response = requests.get('http://localhost:8765/api/sessions/abc123/messages')
+messages = response.json()
+for msg in messages:
+    print(f"{msg['role']}: {msg['content'][:50]}...")</code></pre>
+<h3 id="curl-example">cURL Example</h3>
+<pre><code class="language-bash"># Get configuration
+curl http://localhost:8765/api/config/
+
+# Set model
+curl -X PUT http://localhost:8765/api/config/model \
+  -H "Content-Type: application/json" \
+  -d '{"value": "gpt-5"}'
+
+# List sessions
+curl http://localhost:8765/api/sessions/
+
+# Delete a session
+curl -X DELETE http://localhost:8765/api/sessions/abc123</code></pre>
+<hr>
+<h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="ConfigReference.html">Reference: Configuration Options</a></li>
+<li><a href="CoreCommands.html">Reference: Core Commands</a></li>
+<li><a href="SessionCommands.html">Reference: Session Commands</a></li>
+<li><a href="../Concepts/Agents.html">Concept: Understanding Agents</a></li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

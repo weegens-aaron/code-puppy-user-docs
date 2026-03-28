@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Install Skills — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="index.html">Index</a>
+<a href="AddModels.html">Add Models</a>
+<a href="BlockToolCalls.html">Block Tool Calls</a>
+<a href="Commands.html">Commands</a>
+<a href="CreateAgents.html">Create Agents</a>
+<a href="CreateHooks.html">Create Hooks</a>
+<a href="CreateSkills.html">Create Skills</a>
+<a href="InstallSkills.html" class="active">Install Skills</a>
+<a href="ManageMCP.html">Manage MCP</a>
+<a href="ModelConfiguration.html">Model Configuration</a>
+<a href="RoundRobinModels.html">Round Robin Models</a>
+<a href="SwitchAgents.html">Switch Agents</a>
+<a href="UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="how-to-install-skills">How to Install Skills</h1>
+<h2 id="what-you-ll-learn">What You'll Learn</h2>
+<p>By the end of this guide, you'll be able to browse, install, and manage agent skills that extend Code Puppy's capabilities.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Code Puppy installed and running</li>
+<li>Basic familiarity with the <code>/skills</code> command</li>
+</ul>
+<h2 id="quick-version">Quick Version</h2>
+<pre><code class="language-bash"># Launch the skills browser
+/skills
+
+# Install from remote catalog
+/skills install</code></pre>
+<h2 id="what-are-skills">What Are Skills?</h2>
+<p>Skills are reusable, community-shared extensions that teach Code Puppy new capabilities. Each skill can include:</p>
+<ul>
+<li><strong>Scripts</strong> - Shell commands or Python scripts the agent can run</li>
+<li><strong>References</strong> - Documentation, guidelines, or context files</li>
+<li><strong>Metadata</strong> - Name, description, tags for discovery</li>
+</ul>
+<p>When a skill is installed and enabled, Code Puppy automatically knows about it and can use it when appropriate.</p>
+<hr>
+<h2 id="installing-skills-from-the-remote-catalog">Installing Skills from the Remote Catalog</h2>
+<h3 id="step-1-launch-the-skills-browser">Step 1: Launch the Skills Browser</h3>
+<p>Open Code Puppy and run:</p>
+<pre><code>/skills install</code></pre>
+<p>You'll see a split-panel interface:</p>
+<ul>
+<li><strong>Left panel</strong>: Skill categories</li>
+<li><strong>Right panel</strong>: Details for the selected item</li>
+</ul>
+<h3 id="step-2-browse-categories">Step 2: Browse Categories</h3>
+<p>Use the arrow keys to navigate through available categories:</p>
+<table>
+<thead><tr>
+<th>Category</th>
+<th>Icon</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Data</td>
+<td>📊</td>
+<td>Data analysis and processing</td>
+</tr>
+<tr>
+<td>Finance</td>
+<td>💰</td>
+<td>Financial calculations and reporting</td>
+</tr>
+<tr>
+<td>Legal</td>
+<td>⚖️</td>
+<td>Legal document review</td>
+</tr>
+<tr>
+<td>Office</td>
+<td>📄</td>
+<td>Office productivity tasks</td>
+</tr>
+<tr>
+<td>Product Management</td>
+<td>📦</td>
+<td>Product development workflows</td>
+</tr>
+<tr>
+<td>Sales</td>
+<td>💼</td>
+<td>Sales and CRM tasks</td>
+</tr>
+<tr>
+<td>Biology</td>
+<td>🧬</td>
+<td>Biological and scientific tasks</td>
+</tr>
+</tbody></table>
+<p>Press <strong>Enter</strong> on a category to see its skills.</p>
+<h3 id="step-3-select-a-skill">Step 3: Select a Skill</h3>
+<p>Navigate to a skill you want to install. The right panel shows:</p>
+<ul>
+<li><strong>Description</strong> - What the skill does</li>
+<li><strong>ID</strong> - Unique identifier</li>
+<li><strong>Category &amp; Tags</strong> - For organization</li>
+<li><strong>Contents</strong> - Scripts, references, file count</li>
+<li><strong>Download Size</strong> - How much to download</li>
+</ul>
+<p>Skills already installed show a ✓ icon.</p>
+<h3 id="step-4-install">Step 4: Install</h3>
+<p>Press <strong>Enter</strong> on a skill to install it. You'll see:</p>
+<pre><code>Install skill 'data-csv-parser' (245 KB)? [y/N]</code></pre>
+<p>Type <code>y</code> and press Enter to confirm.</p>
+<p>You should see:</p>
+<pre><code>✓ Successfully installed skill: data-csv-parser
+Installed to: ~/.code_puppy/skills/data-csv-parser</code></pre>
+<h3 id="step-5-verify-installation">Step 5: Verify Installation</h3>
+<p>Run <code>/skills</code> to see your installed skills. The skill should appear with a ✓ icon.</p>
+<hr>
+<h2 id="managing-local-skills">Managing Local Skills</h2>
+<h3 id="viewing-all-skills">Viewing All Skills</h3>
+<pre><code>/skills list</code></pre>
+<p>This shows all discovered skills with their status:</p>
+<pre><code>🛠️ Skills (integration: enabled)
+Found 3 skill(s):
+
+  🟢 enabled data-csv-parser v1.0.0 by John Doe
+      Parse and manipulate CSV files
+      tags: data, csv, parsing
+
+  🟢 enabled pdf-analyzer v2.1.0
+      Extract text and metadata from PDFs
+      tags: pdf, documents, analysis
+
+  🔴 disabled legacy-tool v0.5.0
+      Deprecated utility (disabled)</code></pre>
+<h3 id="enabling-disabling-skills">Enabling/Disabling Skills</h3>
+<p>In the <code>/skills</code> browser:</p>
+<ul>
+<li>Navigate to a skill</li>
+<li>Press <strong>Enter</strong> to toggle enabled/disabled</li>
+</ul>
+<p>Or use commands:</p>
+<pre><code>/skills enable data-csv-parser
+/skills disable legacy-tool</code></pre>
+<h3 id="adding-custom-skill-directories">Adding Custom Skill Directories</h3>
+<p>By default, Code Puppy looks for skills in:</p>
+<ul>
+<li><code>~/.code_puppy/skills/</code></li>
+<li><code>./.code_puppy/skills/</code></li>
+<li><code>./skills/</code></li>
+</ul>
+<p>To add a custom directory:</p>
+<ol>
+<li>Run <code>/skills</code></li>
+<li>Press <strong>Ctrl+A</strong></li>
+<li>Enter the directory path</li>
+<li>Press Enter to confirm</li>
+</ol>
+<p>Example:</p>
+<pre><code>Directory path: /opt/shared-skills</code></pre>
+<h3 id="removing-skill-directories">Removing Skill Directories</h3>
+<ol>
+<li>Run <code>/skills</code></li>
+<li>Press <strong>Ctrl+D</strong></li>
+<li>Enter the number of the directory to remove</li>
+<li>Confirm with <code>y</code></li>
+</ol>
+<hr>
+<h2 id="creating-your-own-skills">Creating Your Own Skills</h2>
+<h3 id="basic-skill-structure">Basic Skill Structure</h3>
+<p>Create a directory with this structure:</p>
+<pre><code>my-skill/
+├── SKILL.md          # Required: metadata and description
+├── scripts/          # Optional: executable scripts
+│   └── my_script.sh
+└── references/       # Optional: documentation files
+    └── guide.md</code></pre>
+<h3 id="skill-md-format">SKILL.md Format</h3>
+<pre><code class="language-markdown">---
+name: my-skill
+version: 1.0.0
+author: Your Name
+description: Does something useful
+tags:
+  - utility
+  - helper
+---
+
+# My Skill
+
+Detailed description of what this skill does.
+Include usage examples and any prerequisites.</code></pre>
+<h3 id="example-a-simple-git-helper-skill">Example: A Simple Git Helper Skill</h3>
+<p>Create <code>~/.code_puppy/skills/git-helper/</code>:</p>
+<p><strong>SKILL.md:</strong></p>
+<pre><code class="language-markdown">---
+name: git-helper
+version: 1.0.0
+author: You
+description: Common Git operations helper
+tags:
+  - git
+  - version-control
+---
+
+# Git Helper
+
+Provides common Git operations like status checks, branch management, and commit helpers.</code></pre>
+<p><strong>scripts/git-status.sh:</strong></p>
+<pre><code class="language-bash">#!/bin/bash
+git status --short</code></pre>
+<h3 id="installing-your-local-skill">Installing Your Local Skill</h3>
+<ol>
+<li>Create the skill directory structure</li>
+<li>Run <code>/skills</code> to refresh</li>
+<li>Your skill should appear in the list</li>
+<li>Press <strong>Enter</strong> to enable it</li>
+</ol>
+<hr>
+<h2 id="tips-best-practices">Tips &amp; Best Practices</h2>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Skill Discovery</strong>: Skills with complete <code>SKILL.md</code> metadata are easier to find and use. Always include name, description, and tags.</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Disable Instead of Delete</strong>: If you're not sure about a skill, disable it rather than deleting. You can re-enable it anytime.</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Custom Directories</strong>: Use custom skill directories to share skills across projects or with your team.</p>
+</div>
+<hr>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead><tr>
+<th>Problem</th>
+<th>Cause</th>
+<th>Solution</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>"No skills found"</td>
+<td>No skills installed</td>
+<td>Use <code>/skills install</code> to browse the catalog</td>
+</tr>
+<tr>
+<td>Skill not appearing</td>
+<td>Missing SKILL.md</td>
+<td>Add a valid SKILL.md file to the skill directory</td>
+</tr>
+<tr>
+<td>Installation fails</td>
+<td>Network issue</td>
+<td>Check your internet connection and try again</td>
+</tr>
+<tr>
+<td>Skill shows as disabled</td>
+<td>Explicitly disabled</td>
+<td>Run <code>/skills enable &lt;skill-name&gt;</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><a href="UseSkills.html">How to Use Skills</a> - Learn how skills work in practice</li>
+<li><a href="../Concepts/AgentSkills.html">Concept: Understanding Agent Skills</a> - Deep dive into how skills work</li>
+<li><a href="../Reference/SkillsCommands.html">Reference: Skills Commands</a> - All available commands</li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

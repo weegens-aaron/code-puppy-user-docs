@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Configuration — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="index.html">Index</a>
+<a href="Configuration.html" class="active">Configuration</a>
+<a href="Installation.html">Installation</a>
+<a href="QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="configuration">Configuration</h1>
+<h2 id="overview">Overview</h2>
+<p>This guide shows you how to configure Code Puppy to work with your preferred models, agents, and settings. Configuration is persistent and stored in <code>~/.code_puppy/puppy.cfg</code>.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Before you begin, make sure you have:</p>
+<ul>
+<li><a href="Installation.html">Code Puppy installed</a></li>
+<li>API keys set for your chosen AI provider(s)</li>
+</ul>
+<h2 id="quick-configuration">Quick Configuration</h2>
+<h3 id="view-current-configuration">View Current Configuration</h3>
+<p>Use the <code>/show</code> command to see your current settings:</p>
+<pre><code class="language-bash">/show</code></pre>
+<p>You'll see output like:</p>
+<pre><code>🐶 Puppy Status
+
+puppy_name:            Puppy
+owner_name:            Master
+current_agent:         Code Puppy
+default_agent:         code_puppy
+model:                 gpt-5
+YOLO_MODE:             off
+DBOS:                  enabled
+auto_save_session:     enabled
+protected_tokens:      20,000 recent tokens preserved
+compaction_threshold:  80.0% context usage triggers compaction
+compaction_strategy:   summarization
+reasoning_effort:      medium
+verbosity:             medium
+temperature:           0.7
+cancel_agent_key:      ctrl+c</code></pre>
+<h3 id="set-configuration-values">Set Configuration Values</h3>
+<p>Use the <code>/set</code> command to change settings:</p>
+<pre><code class="language-bash">/set &lt;key&gt; &lt;value&gt;</code></pre>
+<p>Or use the <code>=</code> syntax:</p>
+<pre><code class="language-bash">/set key=value</code></pre>
+<h2 id="configuration-options">Configuration Options</h2>
+<h3 id="basic-settings">Basic Settings</h3>
+<table>
+<thead><tr>
+<th>Key</th>
+<th>Description</th>
+<th>Default</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>puppy_name</code></td>
+<td>Your Code Puppy's name</td>
+<td><code>Puppy</code></td>
+<td><code>/set puppy_name Fido</code></td>
+</tr>
+<tr>
+<td><code>owner_name</code></td>
+<td>Your name</td>
+<td><code>Master</code></td>
+<td><code>/set owner_name Alice</code></td>
+</tr>
+<tr>
+<td><code>default_agent</code></td>
+<td>Default agent to use</td>
+<td><code>code_puppy</code></td>
+<td><code>/set default_agent planner</code></td>
+</tr>
+</tbody></table>
+<h3 id="model-settings">Model Settings</h3>
+<table>
+<thead><tr>
+<th>Key</th>
+<th>Description</th>
+<th>Default</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>model</code></td>
+<td>Current model name</td>
+<td>First in models.json</td>
+<td><code>/set model claude-3-5-sonnet</code></td>
+</tr>
+<tr>
+<td><code>temperature</code></td>
+<td>Global temperature (0.0-1.0)</td>
+<td>Model default</td>
+<td><code>/set temperature 0.7</code></td>
+</tr>
+<tr>
+<td><code>openai_reasoning_effort</code></td>
+<td>Reasoning effort for GPT-5</td>
+<td><code>medium</code></td>
+<td><code>/set openai_reasoning_effort high</code></td>
+</tr>
+<tr>
+<td><code>openai_verbosity</code></td>
+<td>Response verbosity</td>
+<td><code>medium</code></td>
+<td><code>/set openai_verbosity low</code></td>
+</tr>
+</tbody></table>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>Reasoning effort options: <code>minimal</code>, <code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code> Verbosity options: <code>low</code>, <code>medium</code>, <code>high</code></p>
+</div>
+<h3 id="context-management">Context Management</h3>
+<table>
+<thead><tr>
+<th>Key</th>
+<th>Description</th>
+<th>Default</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>protected_token_count</code></td>
+<td>Recent tokens to preserve</td>
+<td>20,000</td>
+<td><code>/set protected_token_count 30000</code></td>
+</tr>
+<tr>
+<td><code>compaction_threshold</code></td>
+<td>Context usage % to trigger compaction</td>
+<td>0.8</td>
+<td><code>/set compaction_threshold 0.9</code></td>
+</tr>
+<tr>
+<td><code>compaction_strategy</code></td>
+<td>How to compact context</td>
+<td><code>summarization</code></td>
+<td><code>/set compaction_strategy truncation</code></td>
+</tr>
+<tr>
+<td><code>message_limit</code></td>
+<td>Maximum messages in history</td>
+<td>Unlimited</td>
+<td><code>/set message_limit 100</code></td>
+</tr>
+</tbody></table>
+<h3 id="session-management">Session Management</h3>
+<table>
+<thead><tr>
+<th>Key</th>
+<th>Description</th>
+<th>Default</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>auto_save_session</code></td>
+<td>Auto-save after each response</td>
+<td><code>true</code></td>
+<td><code>/set auto_save_session false</code></td>
+</tr>
+<tr>
+<td><code>max_saved_sessions</code></td>
+<td>Maximum saved sessions</td>
+<td>10</td>
+<td><code>/set max_saved_sessions 20</code></td>
+</tr>
+<tr>
+<td><code>resume_message_count</code></td>
+<td>Messages shown on /resume</td>
+<td>10</td>
+<td><code>/set resume_message_count 20</code></td>
+</tr>
+</tbody></table>
+<h3 id="agent-behavior">Agent Behavior</h3>
+<table>
+<thead><tr>
+<th>Key</th>
+<th>Description</th>
+<th>Default</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>yolo_mode</code></td>
+<td>Allow risky operations</td>
+<td><code>false</code></td>
+<td><code>/set yolo_mode true</code></td>
+</tr>
+<tr>
+<td><code>allow_recursion</code></td>
+<td>Allow recursive agent calls</td>
+<td><code>true</code></td>
+<td><code>/set allow_recursion false</code></td>
+</tr>
+<tr>
+<td><code>enable_pack_agents</code></td>
+<td>Enable pack agents</td>
+<td><code>false</code></td>
+<td><code>/set enable_pack_agents true</code></td>
+</tr>
+<tr>
+<td><code>enable_universal_constructor</code></td>
+<td>Enable dynamic tool creation</td>
+<td><code>true</code></td>
+<td><code>/set enable_universal_constructor false</code></td>
+</tr>
+<tr>
+<td><code>enable_streaming</code></td>
+<td>Enable streaming responses</td>
+<td><code>true</code></td>
+<td><code>/set enable_streaming false</code></td>
+</tr>
+<tr>
+<td><code>enable_dbos</code></td>
+<td>Enable durable execution</td>
+<td><code>true</code></td>
+<td><code>/set enable_dbos false</code></td>
+</tr>
+</tbody></table>
+<div class="callout callout-warning">
+<div class="callout-title">WARNING</div>
+<p><strong>DBOS changes require restart</strong>: When you change <code>enable_dbos</code>, you must restart Code Puppy for the change to take effect.</p>
+</div>
+<h3 id="keyboard-shortcuts">Keyboard Shortcuts</h3>
+<table>
+<thead><tr>
+<th>Key</th>
+<th>Description</th>
+<th>Default</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>cancel_agent_key</code></td>
+<td>Key to cancel agent tasks</td>
+<td><code>ctrl+c</code></td>
+<td><code>/set cancel_agent_key ctrl+k</code></td>
+</tr>
+</tbody></table>
+<div class="callout callout-warning">
+<div class="callout-title">WARNING</div>
+<p><strong>Cancel key changes require restart</strong>: When you change <code>cancel_agent_key</code>, you must restart Code Puppy for the change to take effect. Valid options: <code>ctrl+c</code>, <code>ctrl+k</code>, <code>ctrl+q</code></p>
+</div>
+<h3 id="appearance">Appearance</h3>
+<table>
+<thead><tr>
+<th>Key</th>
+<th>Description</th>
+<th>Default</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>banner_color_{name}</code></td>
+<td>Custom banner colors</td>
+<td>See defaults</td>
+<td><code>/set banner_color_primary #ff00ff</code></td>
+</tr>
+</tbody></table>
+<h3 id="mcp-http">MCP &amp; HTTP</h3>
+<table>
+<thead><tr>
+<th>Key</th>
+<th>Description</th>
+<th>Default</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>http2</code></td>
+<td>Use HTTP/2 for requests</td>
+<td><code>true</code></td>
+<td><code>/set http2 false</code></td>
+</tr>
+<tr>
+<td><code>diff_context_lines</code></td>
+<td>Lines of context in diffs</td>
+<td>3</td>
+<td><code>/set diff_context_lines 5</code></td>
+</tr>
+</tbody></table>
+<h2 id="environment-variables">Environment Variables</h2>
+<p>You can also configure Code Puppy using environment variables:</p>
+<h3 id="api-keys">API Keys</h3>
+<pre><code class="language-bash"># OpenAI
+export OPENAI_API_KEY=sk-...
+
+# Anthropic
+export ANTHROPIC_API_KEY=sk-ant-...
+
+# Google
+export GEMINI_API_KEY=AIza...
+
+# Cerebras
+export CEREBRAS_API_KEY=csk-...</code></pre>
+<h3 id="dbos-configuration">DBOS Configuration</h3>
+<pre><code class="language-bash"># DBOS conductor key (for DBOS Management Console)
+export DBOS_CONDUCTOR_KEY=your_conductor_key
+
+# DBOS logging level
+export DBOS_LOG_LEVEL=INFO
+
+# Custom database URL
+export DBOS_SYSTEM_DATABASE_URL=postgresql://user:pass@localhost:5432/db
+
+# DBOS app version (for workflow recovery)
+export DBOS_APP_VERSION=1.0.0</code></pre>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>Add environment variables to your shell profile (<code>~/.bashrc</code>, <code>~/.zshrc</code>, or <code>~/.config/fish/config.fish</code>) to persist them across sessions.</p>
+</div>
+<h2 id="model-configuration">Model Configuration</h2>
+<h3 id="adding-models-from-models-dev">Adding Models from models.dev</h3>
+<p>The easiest way to add models is using the <code>/add_model</code> command:</p>
+<pre><code class="language-bash">/add_model</code></pre>
+<p>This opens an interactive menu where you can:</p>
+<ol>
+<li>Browse 65+ AI providers</li>
+<li>Preview model details (pricing, context length, capabilities)</li>
+<li>Add models with one click</li>
+</ol>
+<h3 id="manual-model-configuration">Manual Model Configuration</h3>
+<p>You can also add models manually to <code>models.json</code> (located in <code>~/.code_puppy/</code>). See the <a href="../Guides/AddModels.html">AddModels guide</a> for details.</p>
+<h2 id="agent-configuration">Agent Configuration</h2>
+<h3 id="available-agents">Available Agents</h3>
+<p>Code Puppy comes with many built-in agents:</p>
+<ul>
+<li><code>code_puppy</code> - General purpose coding agent</li>
+<li><code>planner</code> - Task planning and decomposition</li>
+<li><code>code_reviewer</code> - Code review and feedback</li>
+<li><code>security_auditor</code> - Security analysis</li>
+<li><code>qa_expert</code> - Testing and quality assurance</li>
+<li>And many more specialized agents</li>
+</ul>
+<h3 id="switching-agents">Switching Agents</h3>
+<p>Use the <code>/agent</code> command to switch agents:</p>
+<pre><code class="language-bash">/agent</code></pre>
+<p>Or specify an agent directly:</p>
+<pre><code class="language-bash">/agent code_reviewer</code></pre>
+<h3 id="pinning-models-to-agents">Pinning Models to Agents</h3>
+<p>You can pin specific models to agents using <code>/pin_model</code>:</p>
+<pre><code class="language-bash">/pin_model code_reviewer claude-3-5-sonnet</code></pre>
+<p>To unpin:</p>
+<pre><code class="language-bash">/pin_model code_reviewer (unpin)</code></pre>
+<h2 id="mcp-server-configuration">MCP Server Configuration</h2>
+<p>MCP (Model Context Protocol) servers extend Code Puppy's capabilities. Configure them using:</p>
+<pre><code class="language-bash">/mcp</code></pre>
+<p>See the <a href="../Guides/ManageMCP.html">ManageMCP guide</a> for details.</p>
+<h2 id="hooks-configuration">Hooks Configuration</h2>
+<p>Hooks let you customize Code Puppy's behavior. See the <a href="../Guides/CreateHooks.html">CreateHooks guide</a> for details.</p>
+<h2 id="verify-configuration">Verify Configuration</h2>
+<p>After making changes, verify they took effect:</p>
+<pre><code class="language-bash">/show</code></pre>
+<h2 id="common-issues">Common Issues</h2>
+<table>
+<thead><tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Changes not taking effect</td>
+<td>Some settings require <code>/reload</code> or restart</td>
+</tr>
+<tr>
+<td>Invalid config key</td>
+<td>Use <code>/show</code> to see available keys</td>
+</tr>
+<tr>
+<td>API key not working</td>
+<td>Check environment variable is set correctly</td>
+</tr>
+<tr>
+<td>Model not found</td>
+<td>Add it using <code>/add_model</code> or check models.json</td>
+</tr>
+</tbody></table>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><a href="QuickStart.html">Quick Start</a> - Your first task with Code Puppy</li>
+<li><a href="../Guides/Commands.html">Commands Guide</a> - Learn all available commands</li>
+<li><a href="../Guides/ModelConfiguration.html">Model Configuration</a> - Deep dive into model setup</li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

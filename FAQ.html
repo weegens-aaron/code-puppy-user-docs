@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frequently Asked Questions — Code Puppy Docs</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="index.html">Index</a>
+<a href="FAQ.html" class="active">FAQ</a>
+<a href="Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="Concepts/index.html">Index</a>
+<a href="Concepts/AgentSkills.html">Agent Skills</a>
+<a href="Concepts/Agents.html">Agents</a>
+<a href="Concepts/Hooks.html">Hooks</a>
+<a href="Concepts/MCP.html">MCP</a>
+<a href="Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="Getting-Started/index.html">Index</a>
+<a href="Getting-Started/Configuration.html">Configuration</a>
+<a href="Getting-Started/Installation.html">Installation</a>
+<a href="Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="Guides/index.html">Index</a>
+<a href="Guides/AddModels.html">Add Models</a>
+<a href="Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="Guides/Commands.html">Commands</a>
+<a href="Guides/CreateAgents.html">Create Agents</a>
+<a href="Guides/CreateHooks.html">Create Hooks</a>
+<a href="Guides/CreateSkills.html">Create Skills</a>
+<a href="Guides/InstallSkills.html">Install Skills</a>
+<a href="Guides/ManageMCP.html">Manage MCP</a>
+<a href="Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="Guides/SwitchAgents.html">Switch Agents</a>
+<a href="Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="Reference/index.html">Index</a>
+<a href="Reference/ConfigCommands.html">Config Commands</a>
+<a href="Reference/ConfigReference.html">Config Reference</a>
+<a href="Reference/CoreCommands.html">Core Commands</a>
+<a href="Reference/EnvVars.html">Env Vars</a>
+<a href="Reference/MCPCommands.html">MCPCommands</a>
+<a href="Reference/RESTAPI.html">RESTAPI</a>
+<a href="Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="Reference/SessionCommands.html">Session Commands</a>
+<a href="Reference/SkillsCommands.html">Skills Commands</a>
+<a href="Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="Tutorials/index.html">Index</a>
+<a href="Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="Tutorials/FirstTask.html">First Task</a>
+<a href="Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="frequently-asked-questions">Frequently Asked Questions</h1>
+<h2 id="getting-started">Getting Started</h2>
+<h3 id="how-do-i-install-code-puppy">How do I install Code Puppy?</h3>
+<p>The recommended way is using <code>uv</code>:</p>
+<pre><code class="language-bash">uvx code-puppy -i</code></pre>
+<p>See the <a href="Getting-Started/Installation.html">Installation Guide</a> for detailed instructions.</p>
+<h3 id="what-are-the-system-requirements">What are the system requirements?</h3>
+<ul>
+<li><strong>OS</strong>: macOS, Linux, or Windows (PowerShell)</li>
+<li><strong>Python</strong>: 3.11 or higher</li>
+<li><strong>Package Manager</strong>: <code>uv</code> (recommended) or pip</li>
+<li><strong>AI Provider</strong>: At least one API key (OpenAI, Anthropic, Google, Cerebras, or local model)</li>
+</ul>
+<p>See <a href="Overview.html#requirements">Requirements</a> for details.</p>
+<h3 id="how-do-i-get-started-quickly">How do I get started quickly?</h3>
+<ol>
+<li>Install: <code>uvx code-puppy -i</code></li>
+<li>Add a model: <code>/add_model</code></li>
+<li>Start coding!</li>
+</ol>
+<p>See the <a href="Getting-Started/QuickStart.html">Quick Start Tutorial</a> for a 5-minute walkthrough.</p>
+<h2 id="common-tasks">Common Tasks</h2>
+<h3 id="how-do-i-switch-between-agents">How do I switch between agents?</h3>
+<p>Use the <code>/agent</code> command:</p>
+<pre><code class="language-bash">/agent code-puppy          # Switch to default agent
+/agent code-reviewer       # Switch to code reviewer
+/agent                     # Show available agents</code></pre>
+<p>See <a href="Guides/SwitchAgents.html">Switch Agents Guide</a> for more details.</p>
+<h3 id="how-do-i-add-a-new-ai-model">How do I add a new AI model?</h3>
+<p>Use the interactive <code>/add_model</code> command:</p>
+<pre><code class="language-bash">/add_model</code></pre>
+<p>This opens a TUI browser for models.dev where you can browse 65+ providers and add models with one click.</p>
+<p>See <a href="Guides/AddModels.html">Add Models Guide</a> for more details.</p>
+<h3 id="how-do-i-install-a-skill">How do I install a skill?</h3>
+<ol>
+<li>Download or clone the skill into <code>~/.code_puppy/skills/</code></li>
+<li>Refresh: <code>/skills refresh</code></li>
+<li>The skill is now available!</li>
+</ol>
+<p>See <a href="Guides/InstallSkills.html">Install Skills Guide</a> for detailed instructions.</p>
+<h3 id="how-do-i-create-a-custom-agent">How do I create a custom agent?</h3>
+<p>You can create JSON agents manually or use the Agent Creator:</p>
+<pre><code class="language-bash">/agent agent-creator       # Use the guided creation wizard</code></pre>
+<p>See <a href="Guides/CreateAgents.html">Create Agents Guide</a> for step-by-step instructions.</p>
+<h3 id="how-do-i-set-up-multiple-models-for-load-balancing">How do I set up multiple models for load balancing?</h3>
+<p>Create a round-robin configuration in <code>~/.code_puppy/extra_models.json</code>:</p>
+<pre><code class="language-json">{
+  "model1": { ... },
+  "model2": { ... },
+  "my_round_robin": {
+    "type": "round_robin",
+    "models": ["model1", "model2"],
+    "rotate_every": 5
+  }
+}</code></pre>
+<p>See <a href="Guides/RoundRobinModels.html">Round-Robin Models Guide</a> for a complete tutorial.</p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="i-m-getting-no-models-configured">I'm getting "No models configured"</h3>
+<p><strong>Cause</strong>: No AI provider API keys are set.</p>
+<p><strong>Fix</strong>:</p>
+<ol>
+<li>Set an environment variable for your provider: ```bash export OPENAI_API_KEY=sk-... ```</li>
+<li>Or use <code>/add_model</code> to add a model from models.dev</li>
+</ol>
+<h3 id="the-agent-isn-t-responding">The agent isn't responding</h3>
+<p><strong>Try these steps</strong>:</p>
+<ol>
+<li>Check your API key is valid</li>
+<li>Verify network connectivity</li>
+<li>Try switching models: <code>/model &lt;different-model&gt;</code></li>
+<li>Check if the model supports tool calling (some models don't)</li>
+</ol>
+<h3 id="a-command-isn-t-working">A command isn't working</h3>
+<p><strong>Try these steps</strong>:</p>
+<ol>
+<li>Check the command syntax: <code>/help</code></li>
+<li>Verify you're in the right context (some commands only work in interactive mode)</li>
+<li>Check for typos in the command name</li>
+</ol>
+<h3 id="i-m-getting-authentication-errors">I'm getting authentication errors</h3>
+<p><strong>Cause</strong>: Your API key is invalid or expired.</p>
+<p><strong>Fix</strong>:</p>
+<ol>
+<li>Re-authenticate: <code>/chatgpt-auth</code>, <code>/claude-code-auth</code>, or <code>/antigravity-auth</code></li>
+<li>Check your environment variables</li>
+<li>Verify the API key hasn't expired</li>
+</ol>
+<h2 id="configuration">Configuration</h2>
+<h3 id="how-do-i-change-settings">How do I change settings?</h3>
+<p>Use the <code>/set</code> command:</p>
+<pre><code class="language-bash">/set yolo_mode true        # Enable yolo mode
+/set skills_enabled false  # Disable skills</code></pre>
+<p>See <a href="Reference/ConfigReference.html">Configuration Reference</a> for all available settings.</p>
+<h3 id="where-is-my-configuration-stored">Where is my configuration stored?</h3>
+<p>Configuration is stored in <code>~/.code_puppy/puppy.cfg</code>.</p>
+<h3 id="how-do-i-reset-to-defaults">How do I reset to defaults?</h3>
+<p>Delete or rename the config file:</p>
+<pre><code class="language-bash">mv ~/.code_puppy/puppy.cfg ~/.code_puppy/puppy.cfg.backup</code></pre>
+<h2 id="advanced">Advanced</h2>
+<h3 id="how-do-i-create-hooks">How do I create hooks?</h3>
+<p>Create a <code>.claude/settings.json</code> file with hook configurations:</p>
+<pre><code class="language-json">{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|agent_run_shell_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/my-hook.sh"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+<p>See <a href="Guides/CreateHooks.html">Create Hooks Guide</a> for detailed instructions.</p>
+<h3 id="how-does-the-multi-agent-system-work">How does the multi-agent system work?</h3>
+<p>Code Puppy has 20+ built-in agents, each specialized for different tasks:</p>
+<ul>
+<li><strong>code-puppy</strong>: General-purpose coding</li>
+<li><strong>code-reviewer</strong>: Code quality reviews</li>
+<li><strong>security-auditor</strong>: Security analysis</li>
+<li><strong>python-programmer</strong>: Python-specific tasks</li>
+<li>And many more!</li>
+</ul>
+<p>See <a href="Concepts/Agents.html">Concepts: Agents</a> for a detailed explanation.</p>
+<h3 id="can-i-run-code-puppy-locally-without-external-apis">Can I run Code Puppy locally without external APIs?</h3>
+<p>Yes! Configure a local model server (like Ollama, vLLM, or SGLang) and point Code Puppy to it:</p>
+<pre><code class="language-json">{
+  "my-local-model": {
+    "type": "custom_openai",
+    "name": "local-model",
+    "custom_endpoint": {
+      "url": "http://localhost:11434/v1",
+      "api_key": "ollama"
+    }
+  }
+}</code></pre>
+<p>See <a href="Guides/ModelConfiguration.html">Model Configuration Guide</a> for details.</p>
+<h2 id="privacy">Privacy</h2>
+<h3 id="does-code-puppy-collect-my-data">Does Code Puppy collect my data?</h3>
+<p><strong>No.</strong> Code Puppy has a zero-compromise privacy policy:</p>
+<ul>
+<li>❌ No telemetry or analytics</li>
+<li>❌ No prompt logging</li>
+<li>❌ No behavioral tracking</li>
+<li>❌ No third-party data sharing</li>
+</ul>
+<p>Your code and conversations stay on your machine unless you choose an external AI provider.</p>
+<p>See <a href="Concepts/Privacy.html">Concepts: Privacy</a> for details.</p>
+<h3 id="how-can-i-ensure-maximum-privacy">How can I ensure maximum privacy?</h3>
+<ol>
+<li>Use local models (Ollama, vLLM, etc.)</li>
+<li>Don't set external API keys</li>
+<li>Run Code Puppy in an isolated environment</li>
+</ol>
+<h2 id="community-support">Community &amp; Support</h2>
+<h3 id="where-can-i-get-help">Where can I get help?</h3>
+<ul>
+<li><strong>GitHub Issues</strong>: <a href="https://github.com/mpfaffenberger/code_puppy/issues">github.com/mpfaffenberger/code_puppy/issues</a></li>
+<li><strong>Discord</strong>: <a href="https://discord.gg/eAGdE4J7Ca">Community Server</a></li>
+<li><strong>Documentation</strong>: This guide!</li>
+</ul>
+<h3 id="how-do-i-report-a-bug">How do I report a bug?</h3>
+<p>Open an issue on GitHub with:</p>
+<ol>
+<li>Steps to reproduce</li>
+<li>Expected behavior</li>
+<li>Actual behavior</li>
+<li>Code Puppy version (<code>/help</code> shows version)</li>
+</ol>
+<h3 id="how-do-i-contribute">How do I contribute?</h3>
+<p>See the <a href="https://github.com/mpfaffenberger/code_puppy/blob/main/CONTRIBUTING.md">Contributing Guide</a> on GitHub.</p>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

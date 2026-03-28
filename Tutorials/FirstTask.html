@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tutorial: Your First Code Task — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="index.html">Index</a>
+<a href="CustomAgent.html">Custom Agent</a>
+<a href="FirstTask.html" class="active">First Task</a>
+<a href="MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="tutorial-your-first-code-task">Tutorial: Your First Code Task</h1>
+<h2 id="what-you-ll-achieve">What You'll Achieve</h2>
+<p>By the end of this tutorial, you'll have completed your first coding task with Code Puppy and learned the basic interaction patterns you'll use every day.</p>
+<p><strong>Time needed:</strong> ~10 minutes</p>
+<p><strong>You'll need:</strong></p>
+<ul>
+<li>Code Puppy installed and configured</li>
+<li>An API key for any supported AI provider (OpenAI, Anthropic, Cerebras, Google, etc.)</li>
+</ul>
+<p><strong>You should already know:</strong></p>
+<ul>
+<li><a href="../Getting-Started/Installation.html">Installation</a> - How to install Code Puppy</li>
+<li><a href="../Getting-Started/Configuration.html">Configuration</a> - How to set up API keys</li>
+</ul>
+<h2 id="the-scenario">The Scenario</h2>
+<p>You're starting a new project and want to create a simple Python utility: a command-line todo list manager. This is a perfect first task because it:</p>
+<ul>
+<li>Creates a new file from scratch</li>
+<li>Uses basic shell commands</li>
+<li>Shows how Code Puppy explains its work</li>
+<li>Demonstrates the interactive nature of the tool</li>
+</ul>
+<h2 id="step-1-launch-code-puppy">Step 1: Launch Code Puppy</h2>
+<p>Open your terminal and run:</p>
+<pre><code class="language-bash">uvx code-puppy -i</code></pre>
+<p><strong>What happened:</strong> Code Puppy starts up, loads your configuration, and displays a welcome banner. You'll see something like:</p>
+<pre><code>🐶 Code Puppy vX.Y.Z
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+👋 Hello! I'm Puppy, your sassy code assistant.
+   Ready to plow through some code with 1024 puppies?
+
+Current agent: Code Puppy 🐶
+Model: gpt-5
+Type /help for commands or just start typing!</code></pre>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>The <code>-i</code> flag launches interactive mode. You can also run <code>uvx code-puppy</code> without it, but <code>-i</code> gives you the full TUI experience.</p>
+</div>
+<h2 id="step-2-give-your-first-task">Step 2: Give Your First Task</h2>
+<p>Type your request directly into the prompt:</p>
+<pre><code>Create a simple Python todo list manager as a command-line tool. It should support adding, listing, and completing tasks. Save it as todo.py</code></pre>
+<p>Press Enter.</p>
+<p><strong>What happened:</strong> Code Puppy receives your request, analyzes what needs to be done, and starts working. You'll see:</p>
+<ol>
+<li><strong>Thinking indicator</strong> - A spinner showing Code Puppy is processing</li>
+<li><strong>Reasoning</strong> - Code Puppy explains its approach</li>
+<li><strong>Action</strong> - It creates the file using its file tools</li>
+</ol>
+<h2 id="step-3-watch-code-puppy-work">Step 3: Watch Code Puppy Work</h2>
+<p>As Code Puppy works, you'll see streaming output like:</p>
+<pre><code>🤔 Analyzing requirements...
+
+I'll create a todo list manager with:
+- A Todo class to represent individual tasks
+- A TodoList class to manage the collection
+- CLI commands for add, list, and complete
+- JSON file persistence to save tasks between runs
+
+📝 Creating todo.py...</code></pre>
+<p>Then Code Puppy will show you the code it's creating.</p>
+<div class="callout callout-note">
+<div class="callout-title">NOTE</div>
+<p>Code Puppy doesn't just dump code - it explains what it's doing and why. This helps you understand and learn from the process.</p>
+</div>
+<h2 id="step-4-test-the-result">Step 4: Test the Result</h2>
+<p>Code Puppy will typically test what it creates. You'll see:</p>
+<pre><code>🧪 Testing the todo list manager...
+
+$ python todo.py add "Buy groceries"
+✓ Added task #1: Buy groceries
+
+$ python todo.py add "Walk the dog"
+✓ Added task #2: Walk the dog
+
+$ python todo.py list
+○ #1: Buy groceries
+○ #2: Walk the dog
+
+$ python todo.py complete 1
+✓ Completed task #1
+
+$ python todo.py list
+✓ #1: Buy groceries
+○ #2: Walk the dog</code></pre>
+<p><strong>What happened:</strong> Code Puppy ran shell commands to verify the code works correctly. It shows you the commands it ran and their output.</p>
+<h2 id="step-5-review-and-iterate">Step 5: Review and Iterate</h2>
+<p>Code Puppy will present the result and ask if you want changes:</p>
+<pre><code>✨ Done! I've created todo.py with a fully functional todo list manager.
+
+Features:
+✓ Add tasks with descriptions
+✓ List all tasks with completion status
+✓ Mark tasks as complete
+✓ Persistent storage in todos.json
+
+Want me to add anything? Maybe due dates, priorities, or categories?</code></pre>
+<p>You can now:</p>
+<ul>
+<li><strong>Accept</strong> - Say "Looks good!" to finish</li>
+<li><strong>Request changes</strong> - Say "Add due dates and priorities"</li>
+<li><strong>Ask questions</strong> - Say "How does the JSON persistence work?"</li>
+</ul>
+<h2 id="step-6-try-a-follow-up-task">Step 6: Try a Follow-up Task</h2>
+<p>Let's add a feature:</p>
+<pre><code>Add due dates and priorities. Tasks should sort by priority (high first) then due date.</code></pre>
+<p><strong>What happened:</strong> Code Puppy reads the existing file, understands the changes needed, and updates it while preserving existing functionality. This is called <strong>incremental development</strong> - Code Puppy builds on what already exists.</p>
+<h2 id="what-you-learned">What You Learned</h2>
+<ul>
+<li><strong>Natural language tasks</strong> - Just describe what you want in plain English</li>
+<li><strong>Streaming feedback</strong> - You see Code Puppy's thinking in real-time</li>
+<li><strong>Automatic testing</strong> - Code Puppy verifies its work</li>
+<li><strong>Incremental changes</strong> - You can refine and add features iteratively</li>
+<li><strong>Explanations</strong> - Code Puppy tells you what it's doing and why</li>
+</ul>
+<h2 id="common-first-time-patterns">Common First-Time Patterns</h2>
+<h3 id="asking-questions">Asking Questions</h3>
+<pre><code>How does the JSON persistence work?</code></pre>
+<p>Code Puppy will explain the code it just created.</p>
+<h3 id="requesting-changes">Requesting Changes</h3>
+<pre><code>Add error handling for invalid task IDs</code></pre>
+<p>Code Puppy will update the code with better error handling.</p>
+<h3 id="exploring-options">Exploring Options</h3>
+<pre><code>What other features could I add?</code></pre>
+<p>Code Puppy will suggest enhancements based on common todo app patterns.</p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead><tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Code Puppy doesn't respond</td>
+<td>Check your API key is set correctly</td>
+</tr>
+<tr>
+<td>Slow response time</td>
+<td>First run takes longer as dependencies load</td>
+</tr>
+<tr>
+<td>Code has errors</td>
+<td>Tell Code Puppy "There's an error: [paste error]"</td>
+</tr>
+<tr>
+<td>Task takes too long</td>
+<td>Press <code>Ctrl+C</code> to cancel and try a simpler request</td>
+</tr>
+</tbody></table>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><a href="../Guides/Commands.html">Guide: How to use slash commands</a> - Learn the <code>/</code> commands for configuration</li>
+<li><a href="../Guides/SwitchAgents.html">Guide: How to switch agents</a> - Try different specialized agents</li>
+<li><a href="MultiModelSetup.html">Tutorial: Setting Up Multi-Model Distribution</a> - Configure multiple AI providers</li>
+<li><a href="../Reference/CoreCommands.html">Reference: Core Commands</a> - Complete command reference</li>
+</ul>
+<h2 id="tips-for-success">Tips for Success</h2>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Be specific but not prescriptive</strong> - Tell Code Puppy what you want, not exactly how to implement it. Let it use its expertise.</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Iterate in small steps</strong> - It's better to ask for one feature at a time than to request a massive rewrite.</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Ask questions</strong> - If you don't understand something Code Puppy did, just ask! It's a great learning tool.</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Use agents for specialized tasks</strong> - Try <code>/agent code_reviewer</code> before accepting major changes for a code review.</p>
+</div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

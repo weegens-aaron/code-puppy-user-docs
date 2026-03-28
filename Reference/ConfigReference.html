@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Configuration Reference — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="index.html">Index</a>
+<a href="ConfigCommands.html">Config Commands</a>
+<a href="ConfigReference.html" class="active">Config Reference</a>
+<a href="CoreCommands.html">Core Commands</a>
+<a href="EnvVars.html">Env Vars</a>
+<a href="MCPCommands.html">MCPCommands</a>
+<a href="RESTAPI.html">RESTAPI</a>
+<a href="SchedulerCommands.html">Scheduler Commands</a>
+<a href="SessionCommands.html">Session Commands</a>
+<a href="SkillsCommands.html">Skills Commands</a>
+<a href="ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="configuration-reference">Configuration Reference</h1>
+<h2 id="overview">Overview</h2>
+<p>This reference covers all configuration options in Code Puppy's <code>puppy.cfg</code> file. Configuration controls agent behavior, model settings, and system features.</p>
+<hr>
+<h2 id="configuration-file-location">Configuration File Location</h2>
+<table>
+<thead><tr>
+<th>Location</th>
+<th>Path</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Default</td>
+<td><code>~/.code_puppy/puppy.cfg</code></td>
+</tr>
+<tr>
+<td>XDG Config</td>
+<td><code>$XDG_CONFIG_HOME/code_puppy/puppy.cfg</code></td>
+</tr>
+</tbody></table>
+<p><strong>Format:</strong> INI-style configuration file</p>
+<hr>
+<h2 id="core-settings">Core Settings</h2>
+<h3 id="puppy-name"><code>puppy_name</code></h3>
+<p><strong>Description:</strong> Name for your Code Puppy instance.</p>
+<p><strong>Required:</strong> Yes</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">puppy_name = Code Puppy</code></pre>
+<hr>
+<h3 id="owner-name"><code>owner_name</code></h3>
+<p><strong>Description:</strong> Your name (so Code Puppy knows its owner).</p>
+<p><strong>Required:</strong> Yes</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">owner_name = John Doe</code></pre>
+<hr>
+<h3 id="model"><code>model</code></h3>
+<p><strong>Description:</strong> Default model to use for agent responses.</p>
+<p><strong>Default:</strong> First model in <code>models.json</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">model = gpt-5</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="Models.html">Reference: Models</a></li>
+</ul>
+<hr>
+<h3 id="temperature"><code>temperature</code></h3>
+<p><strong>Description:</strong> Global model temperature (creativity level).</p>
+<p><strong>Range:</strong> 0.0 to 2.0</p>
+<p><strong>Default:</strong> Model-specific default</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">temperature = 0.7</code></pre>
+<p><strong>Per-Model Alternative:</strong></p>
+<pre><code class="language-ini">model_settings_gpt_5_temperature = 0.7
+model_settings_claude_4_5_sonnet_temperature = 0.5</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="#per-model-settings">Reference: Model Settings</a></li>
+</ul>
+<hr>
+<h3 id="yolo-mode"><code>yolo_mode</code></h3>
+<p><strong>Description:</strong> Enable "YOLO mode" for aggressive code changes.</p>
+<p><strong>Values:</strong> <code>true</code>, <code>false</code>, <code>1</code>, <code>0</code>, <code>yes</code>, <code>no</code>, <code>on</code>, <code>off</code></p>
+<p><strong>Default:</strong> <code>true</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">yolo_mode = true</code></pre>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>When <code>true</code>: Code Puppy makes changes without additional confirmation</li>
+<li>When <code>false</code>: Requires confirmation for potentially destructive operations</li>
+</ul>
+<hr>
+<h3 id="enable-dbos"><code>enable_dbos</code></h3>
+<p><strong>Description:</strong> Enable DBOS (Durable Object State) for state persistence.</p>
+<p><strong>Values:</strong> <code>true</code>, <code>false</code>, <code>1</code>, <code>0</code>, <code>yes</code>, <code>no</code>, <code>on</code>, <code>off</code></p>
+<p><strong>Default:</strong> <code>true</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">enable_dbos = true</code></pre>
+<hr>
+<h3 id="enable-pack-agents"><code>enable_pack_agents</code></h3>
+<p><strong>Description:</strong> Enable pack agents (specialized sub-agents).</p>
+<p><strong>Values:</strong> <code>true</code>, <code>false</code>, <code>1</code>, <code>0</code>, <code>yes</code>, <code>no</code>, <code>on</code>, <code>off</code></p>
+<p><strong>Default:</strong> <code>false</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">enable_pack_agents = true</code></pre>
+<p><strong>Pack Agents:</strong></p>
+<ul>
+<li><code>pack-leader</code>: Coordinates pack operations</li>
+<li><code>bloodhound</code>: Searches and discovers</li>
+<li><code>husky</code>: Handles heavy lifting</li>
+<li><code>shepherd</code>: Manages workflows</li>
+<li><code>terrier</code>: Small, focused tasks</li>
+<li><code>watchdog</code>: Monitors and alerts</li>
+<li><code>retriever</code>: Fetches information</li>
+</ul>
+<hr>
+<h3 id="enable-universal-constructor"><code>enable_universal_constructor</code></h3>
+<p><strong>Description:</strong> Enable the Universal Constructor tool for dynamic tool creation.</p>
+<p><strong>Values:</strong> <code>true</code>, <code>false</code>, <code>1</code>, <code>0</code>, <code>yes</code>, <code>no</code>, <code>on</code>, <code>off</code></p>
+<p><strong>Default:</strong> <code>true</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">enable_universal_constructor = true</code></pre>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>When <code>true</code>: Agents can create custom tools at runtime</li>
+<li>When <code>false</code>: Universal Constructor tool is not available</li>
+</ul>
+<hr>
+<h3 id="enable-streaming"><code>enable_streaming</code></h3>
+<p><strong>Description:</strong> Enable streaming (SSE) for model responses.</p>
+<p><strong>Values:</strong> <code>true</code>, <code>false</code>, <code>1</code>, <code>0</code>, <code>yes</code>, <code>no</code>, <code>on</code>, <code>off</code></p>
+<p><strong>Default:</strong> <code>true</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">enable_streaming = true</code></pre>
+<hr>
+<h2 id="sub-agent-settings">Sub-Agent Settings</h2>
+<h3 id="subagent-verbose"><code>subagent_verbose</code></h3>
+<p><strong>Description:</strong> Enable verbose output for sub-agents.</p>
+<p><strong>Values:</strong> <code>true</code>, <code>false</code>, <code>1</code>, <code>0</code>, <code>yes</code>, <code>no</code>, <code>on</code>, <code>off</code></p>
+<p><strong>Default:</strong> <code>false</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">subagent_verbose = false</code></pre>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>When <code>false</code>: Sub-agents produce quiet, sparse output</li>
+<li>When <code>true</code>: Sub-agents produce full verbose output (useful for debugging)</li>
+</ul>
+<hr>
+<h2 id="openai-specific-settings">OpenAI-Specific Settings</h2>
+<h3 id="openai-reasoning-effort"><code>openai_reasoning_effort</code></h3>
+<p><strong>Description:</strong> Reasoning effort level for OpenAI models.</p>
+<p><strong>Values:</strong> <code>minimal</code>, <code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code></p>
+<p><strong>Default:</strong> <code>medium</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">openai_reasoning_effort = high</code></pre>
+<hr>
+<h3 id="openai-verbosity"><code>openai_verbosity</code></h3>
+<p><strong>Description:</strong> Verbosity level for OpenAI model responses.</p>
+<p><strong>Values:</strong> <code>low</code>, <code>medium</code>, <code>high</code></p>
+<p><strong>Default:</strong> <code>medium</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">openai_verbosity = low</code></pre>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li><code>low</code>: More concise responses</li>
+<li><code>medium</code>: Balanced responses</li>
+<li><code>high</code>: More verbose responses</li>
+</ul>
+<hr>
+<h2 id="session-history-settings">Session &amp; History Settings</h2>
+<h3 id="auto-save-session"><code>auto_save_session</code></h3>
+<p><strong>Description:</strong> Automatically save session state.</p>
+<p><strong>Values:</strong> <code>true</code>, <code>false</code>, <code>1</code>, <code>0</code>, <code>yes</code>, <code>no</code>, <code>on</code>, <code>off</code></p>
+<p><strong>Default:</strong> <code>true</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">auto_save_session = true</code></pre>
+<hr>
+<h3 id="max-saved-sessions"><code>max_saved_sessions</code></h3>
+<p><strong>Description:</strong> Maximum number of sessions to keep saved.</p>
+<p><strong>Default:</strong> Not set (unlimited)</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">max_saved_sessions = 10</code></pre>
+<hr>
+<h3 id="cancel-agent-key"><code>cancel_agent_key</code></h3>
+<p><strong>Description:</strong> Key sequence to cancel an agent.</p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">cancel_agent_key = Ctrl+C</code></pre>
+<hr>
+<h2 id="token-context-settings">Token &amp; Context Settings</h2>
+<h3 id="protected-token-count"><code>protected_token_count</code></h3>
+<p><strong>Description:</strong> Number of tokens to protect from compaction.</p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">protected_token_count = 10000</code></pre>
+<hr>
+<h3 id="compaction-threshold"><code>compaction_threshold</code></h3>
+<p><strong>Description:</strong> Threshold for triggering message compaction.</p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">compaction_threshold = 100000</code></pre>
+<hr>
+<h3 id="compaction-strategy"><code>compaction_strategy</code></h3>
+<p><strong>Description:</strong> Strategy for message compaction.</p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">compaction_strategy = summarize</code></pre>
+<hr>
+<h3 id="message-limit"><code>message_limit</code></h3>
+<p><strong>Description:</strong> Maximum number of messages to keep in history.</p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">message_limit = 100</code></pre>
+<hr>
+<h2 id="mcp-settings">MCP Settings</h2>
+<h3 id="disable-mcp"><code>disable_mcp</code></h3>
+<p><strong>Description:</strong> Disable all MCP servers.</p>
+<p><strong>Values:</strong> <code>true</code>, <code>false</code>, <code>1</code>, <code>0</code>, <code>yes</code>, <code>no</code>, <code>on</code>, <code>off</code></p>
+<p><strong>Default:</strong> <code>false</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">disable_mcp = false</code></pre>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>When <code>true</code>: Code Puppy skips loading MCP servers entirely</li>
+<li>When <code>false</code>: MCP servers are loaded normally</li>
+</ul>
+<hr>
+<h2 id="output-settings">Output Settings</h2>
+<h3 id="grep-output-verbose"><code>grep_output_verbose</code></h3>
+<p><strong>Description:</strong> Enable verbose output for grep operations.</p>
+<p><strong>Values:</strong> <code>true</code>, <code>false</code>, <code>1</code>, <code>0</code>, <code>yes</code>, <code>no</code>, <code>on</code>, <code>off</code></p>
+<p><strong>Default:</strong> <code>false</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">grep_output_verbose = true</code></pre>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>When <code>false</code>: Shows only file names with match counts</li>
+<li>When <code>true</code>: Shows full output with line numbers and content</li>
+</ul>
+<hr>
+<h3 id="diff-context-lines"><code>diff_context_lines</code></h3>
+<p><strong>Description:</strong> Number of context lines to show in diffs.</p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">diff_context_lines = 3</code></pre>
+<hr>
+<h2 id="frontend-settings">Frontend Settings</h2>
+<h3 id="frontend-emitter-enabled"><code>frontend_emitter_enabled</code></h3>
+<p><strong>Description:</strong> Enable frontend event emitter.</p>
+<p><strong>Values:</strong> <code>true</code>, <code>false</code>, <code>1</code>, <code>0</code>, <code>yes</code>, <code>no</code>, <code>on</code>, <code>off</code></p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">frontend_emitter_enabled = true</code></pre>
+<hr>
+<h3 id="frontend-emitter-max-recent-events"><code>frontend_emitter_max_recent_events</code></h3>
+<p><strong>Description:</strong> Maximum number of recent events to keep.</p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">frontend_emitter_max_recent_events = 100</code></pre>
+<hr>
+<h3 id="frontend-emitter-queue-size"><code>frontend_emitter_queue_size</code></h3>
+<p><strong>Description:</strong> Size of the event queue.</p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">frontend_emitter_queue_size = 1000</code></pre>
+<hr>
+<h2 id="agent-settings">Agent Settings</h2>
+<h3 id="default-agent"><code>default_agent</code></h3>
+<p><strong>Description:</strong> Default agent to use.</p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">default_agent = code-puppy</code></pre>
+<hr>
+<h2 id="model-specific-settings">Model-Specific Settings</h2>
+<h3 id="per-model-settings">Per-Model Settings</h3>
+<p>You can configure settings for specific models using the pattern:</p>
+<pre><code class="language-ini">model_settings_&lt;model_name&gt;_&lt;setting&gt; = &lt;value&gt;</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini"># Temperature for gpt-5
+model_settings_gpt_5_temperature = 0.7
+
+# Temperature for claude-4-5-sonnet
+model_settings_claude_4_5_sonnet_temperature = 0.5
+
+# Top-p for gpt-5
+model_settings_gpt_5_top_p = 0.9
+
+# Seed for reproducible results
+model_settings_gpt-5_seed = 42</code></pre>
+<p><strong>Supported Settings:</strong></p>
+<table>
+<thead><tr>
+<th>Setting</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>temperature</code></td>
+<td>float</td>
+<td>Creativity (0.0-2.0)</td>
+</tr>
+<tr>
+<td><code>top_p</code></td>
+<td>float</td>
+<td>Nucleus sampling (0.0-1.0)</td>
+</tr>
+<tr>
+<td><code>seed</code></td>
+<td>int</td>
+<td>Reproducible randomness</td>
+</tr>
+<tr>
+<td><code>budget_tokens</code></td>
+<td>int</td>
+<td>Extended thinking budget</td>
+</tr>
+<tr>
+<td><code>clear_thinking</code></td>
+<td>bool</td>
+<td>Enable clear thinking (GLM models)</td>
+</tr>
+</tbody></table>
+<p><strong>Model Name Sanitization:</strong></p>
+<ul>
+<li>Dots (<code>.</code>) become underscores (<code>_</code>)</li>
+<li>Hyphens (<code>-</code>) become underscores (<code>_</code>)</li>
+<li>Forward slashes (<code>/</code>) become underscores (<code>_</code>)</li>
+<li>Converted to lowercase</li>
+</ul>
+<p><strong>Examples:</strong></p>
+<table>
+<thead><tr>
+<th>Model Name</th>
+<th>Config Key Prefix</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>gpt-5</code></td>
+<td><code>model_settings_gpt_5_</code></td>
+</tr>
+<tr>
+<td><code>claude-4-5-sonnet</code></td>
+<td><code>model_settings_claude_4_5_sonnet_</code></td>
+</tr>
+<tr>
+<td><code>gemini-2.5-flash</code></td>
+<td><code>model_settings_gemini_2_5_flash_</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="banner-settings">Banner Settings</h2>
+<h3 id="banner-color-name"><code>banner_color_&lt;name&gt;</code></h3>
+<p><strong>Description:</strong> Custom banner color.</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">banner_color_default = magenta
+banner_color_error = red
+banner_color_success = green</code></pre>
+<hr>
+<h2 id="resume-settings">Resume Settings</h2>
+<h3 id="resume-message-count"><code>resume_message_count</code></h3>
+<p><strong>Description:</strong> Number of messages to show when resuming a session.</p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">resume_message_count = 10</code></pre>
+<hr>
+<h2 id="safety-settings">Safety Settings</h2>
+<h3 id="safety-permission-level"><code>safety_permission_level</code></h3>
+<p><strong>Description:</strong> Safety permission level for risky operations.</p>
+<p><strong>Values:</strong> <code>none</code>, <code>low</code>, <code>medium</code>, <code>high</code>, <code>critical</code></p>
+<p><strong>Default:</strong> <code>medium</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">safety_permission_level = high</code></pre>
+<p><strong>Levels:</strong></p>
+<ul>
+<li><code>none</code>: No safety checks</li>
+<li><code>low</code>: Minimal safety checks</li>
+<li><code>medium</code>: Standard safety checks</li>
+<li><code>high</code>: Strict safety checks</li>
+<li><code>critical</code>: Maximum safety checks</li>
+</ul>
+<hr>
+<h2 id="allow-settings">Allow Settings</h2>
+<h3 id="allow-recursion"><code>allow_recursion</code></h3>
+<p><strong>Description:</strong> Allow recursive agent calls.</p>
+<p><strong>Values:</strong> <code>true</code>, <code>false</code>, <code>1</code>, <code>0</code>, <code>yes</code>, <code>no</code>, <code>on</code>, <code>off</code></p>
+<p><strong>Default:</strong> <code>true</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">allow_recursion = true</code></pre>
+<hr>
+<h2 id="http-settings">HTTP Settings</h2>
+<h3 id="http2"><code>http2</code></h3>
+<p><strong>Description:</strong> Enable HTTP/2 support.</p>
+<p><strong>Values:</strong> <code>true</code>, <code>false</code>, <code>1</code>, <code>0</code>, <code>yes</code>, <code>no</code>, <code>on</code>, <code>off</code></p>
+<p><strong>Default:</strong> Not set</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">http2 = true</code></pre>
+<hr>
+<h2 id="authentication">Authentication</h2>
+<h3 id="puppy-token"><code>puppy_token</code></h3>
+<p><strong>Description:</strong> Authentication token for Code Puppy services.</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-ini">puppy_token = your_token_here</code></pre>
+<hr>
+<h2 id="example-configuration">Example Configuration</h2>
+<pre><code class="language-ini">[puppy]
+# Core settings (required)
+puppy_name = Code Puppy
+owner_name = John Doe
+
+# Model settings
+model = gpt-5
+temperature = 0.7
+
+# Behavior settings
+yolo_mode = true
+enable_dbos = true
+enable_pack_agents = false
+enable_universal_constructor = true
+enable_streaming = true
+
+# Sub-agent settings
+subagent_verbose = false
+
+# OpenAI settings
+openai_reasoning_effort = medium
+openai_verbosity = medium
+
+# Session settings
+auto_save_session = true
+max_saved_sessions = 10
+
+# Token settings
+protected_token_count = 10000
+compaction_threshold = 100000
+
+# MCP settings
+disable_mcp = false
+
+# Output settings
+grep_output_verbose = false
+diff_context_lines = 3
+
+# Safety settings
+safety_permission_level = medium
+
+# Allow settings
+allow_recursion = true
+
+# Per-model settings
+model_settings_gpt_5_temperature = 0.7
+model_settings_claude_4_5_sonnet_temperature = 0.5</code></pre>
+<hr>
+<h2 id="managing-configuration">Managing Configuration</h2>
+<h3 id="view-current-settings">View Current Settings</h3>
+<pre><code class="language-bash"># View all settings
+cat ~/.code_puppy/puppy.cfg</code></pre>
+<h3 id="set-a-setting">Set a Setting</h3>
+<pre><code class="language-bash"># Using the CLI
+/code_puppy config set model gpt-5
+/code_puppy config set temperature 0.7</code></pre>
+<h3 id="reset-a-setting">Reset a Setting</h3>
+<pre><code class="language-bash"># Remove a setting to reset to default
+/code_puppy config reset model</code></pre>
+<hr>
+<h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="Models.html">Reference: Models</a></li>
+<li><a href="MCPCommands.html">Reference: MCP Commands</a></li>
+<li><a href="CoreCommands.html">Reference: Core Commands</a></li>
+<li><a href="../Concepts/Hooks.html">Concept: Understanding Hooks</a></li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Switch Agents — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="index.html">Index</a>
+<a href="AddModels.html">Add Models</a>
+<a href="BlockToolCalls.html">Block Tool Calls</a>
+<a href="Commands.html">Commands</a>
+<a href="CreateAgents.html">Create Agents</a>
+<a href="CreateHooks.html">Create Hooks</a>
+<a href="CreateSkills.html">Create Skills</a>
+<a href="InstallSkills.html">Install Skills</a>
+<a href="ManageMCP.html">Manage MCP</a>
+<a href="ModelConfiguration.html">Model Configuration</a>
+<a href="RoundRobinModels.html">Round Robin Models</a>
+<a href="SwitchAgents.html" class="active">Switch Agents</a>
+<a href="UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="how-to-switch-agents">How to Switch Agents</h1>
+<h2 id="what-you-ll-learn">What You'll Learn</h2>
+<p>By the end of this guide, you'll be able to switch between different specialized agents and configure which AI model each agent uses.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Code Puppy installed and running</li>
+<li>Familiarity with basic slash commands (see <a href="Commands.html">Commands Guide</a>)</li>
+</ul>
+<h2 id="quick-version">Quick Version</h2>
+<pre><code class="language-bash">/agent</code></pre>
+<p>Press Enter to open the interactive agent picker, then navigate and select an agent.</p>
+<h2 id="detailed-steps">Detailed Steps</h2>
+<h3 id="1-open-the-agent-picker">1. Open the Agent Picker</h3>
+<p>Type <code>/agent</code> (or the shortcut <code>/a</code>) and press Enter:</p>
+<pre><code>/agent</code></pre>
+<p>This opens an interactive terminal UI with two panels:</p>
+<ul>
+<li><strong>Left panel</strong>: List of all available agents</li>
+<li><strong>Right panel</strong>: Details about the currently selected agent</li>
+</ul>
+<h3 id="2-navigate-the-agent-list">2. Navigate the Agent List</h3>
+<p>Use these keys to browse:</p>
+<table>
+<thead><tr>
+<th>Key</th>
+<th>Action</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>↑</code> <code>↓</code></td>
+<td>Move selection up/down</td>
+</tr>
+<tr>
+<td><code>←</code> <code>→</code></td>
+<td>Change page (10 agents per page)</td>
+</tr>
+<tr>
+<td><code>Enter</code></td>
+<td>Switch to selected agent</td>
+</tr>
+<tr>
+<td><code>Ctrl+C</code></td>
+<td>Cancel without switching</td>
+</tr>
+</tbody></table>
+<p>The current active agent is marked with <code>← current</code>.</p>
+<h3 id="3-view-agent-details">3. View Agent Details</h3>
+<p>As you navigate, the right panel shows:</p>
+<ul>
+<li><strong>Name</strong>: Internal identifier (e.g., <code>code_puppy</code>)</li>
+<li><strong>Display Name</strong>: Human-readable name (e.g., <code>Code Puppy</code>)</li>
+<li><strong>Pinned Model</strong>: The AI model assigned to this agent (or "default")</li>
+<li><strong>Description</strong>: What the agent specializes in</li>
+</ul>
+<h3 id="4-pin-a-model-to-an-agent">4. Pin a Model to an Agent</h3>
+<p>You can assign a specific AI model to an agent so it always uses that model:</p>
+<ol>
+<li>Navigate to the agent you want to configure</li>
+<li>Press <code>P</code> to open the model picker</li>
+<li>Select a model from the list</li>
+<li>The model is saved and the agent is reloaded if it's currently active</li>
+</ol>
+<p>To unpin a model, press <code>P</code> again and select <code>(unpin)</code>.</p>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>Pinned models persist across sessions. The agent will always use your pinned model until you unpin it.</p>
+</div>
+<h3 id="5-clone-an-agent">5. Clone an Agent</h3>
+<p>Create a custom copy of an agent with its own settings:</p>
+<ol>
+<li>Navigate to the agent you want to clone</li>
+<li>Press <code>C</code> to create a clone</li>
+<li>The clone is created with a unique name (e.g., <code>code_puppy_copy_1</code>)</li>
+<li>You can now pin a different model to the clone</li>
+</ol>
+<h3 id="6-delete-a-clone">6. Delete a Clone</h3>
+<p>Remove a cloned agent you no longer need:</p>
+<ol>
+<li>Navigate to the clone you want to delete</li>
+<li>Press <code>D</code> to delete it</li>
+<li>Confirm the deletion</li>
+</ol>
+<div class="callout callout-warning">
+<div class="callout-title">WARNING</div>
+<p>- Only cloned agents can be deleted - You cannot delete the currently active agent - You cannot delete built-in agents</p>
+</div>
+<h2 id="example-switching-to-a-specialized-agent">Example: Switching to a Specialized Agent</h2>
+<p>Let's say you're working on a C++ project and want to use the C++ reviewer:</p>
+<pre><code>/agent</code></pre>
+<p>Navigate to <code>cpp_reviewer</code> using the arrow keys, then press Enter:</p>
+<pre><code>✓ Switched to agent: C++ Reviewer
+C++ code review specialist with focus on memory safety and performance
+Auto-save session rotated to: abc123-def456</code></pre>
+<p>Now all your interactions will be handled by the C++ Reviewer agent.</p>
+<h2 id="available-agents">Available Agents</h2>
+<p>Code Puppy comes with several built-in agents:</p>
+<table>
+<thead><tr>
+<th>Agent</th>
+<th>Purpose</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>code_puppy</code></td>
+<td>General-purpose coding assistant</td>
+</tr>
+<tr>
+<td><code>code_reviewer</code></td>
+<td>Multi-language code review</td>
+</tr>
+<tr>
+<td><code>c_reviewer</code></td>
+<td>C language specialist</td>
+</tr>
+<tr>
+<td><code>cpp_reviewer</code></td>
+<td>C++ language specialist</td>
+</tr>
+<tr>
+<td><code>golang_reviewer</code></td>
+<td>Go language specialist</td>
+</tr>
+<tr>
+<td><code>javascript_reviewer</code></td>
+<td>JavaScript/Node.js specialist</td>
+</tr>
+<tr>
+<td><code>typescript_reviewer</code></td>
+<td>TypeScript specialist</td>
+</tr>
+<tr>
+<td><code>python_reviewer</code></td>
+<td>Python language specialist</td>
+</tr>
+<tr>
+<td><code>python_programmer</code></td>
+<td>Python code generation</td>
+</tr>
+<tr>
+<td><code>security_auditor</code></td>
+<td>Security-focused code analysis</td>
+</tr>
+<tr>
+<td><code>qa_expert</code></td>
+<td>Quality assurance and testing</td>
+</tr>
+<tr>
+<td><code>terminal_qa</code></td>
+<td>Command-line and shell expert</td>
+</tr>
+<tr>
+<td><code>planning</code></td>
+<td>Task planning and breakdown</td>
+</tr>
+<tr>
+<td><code>scheduler</code></td>
+<td>Task scheduling and coordination</td>
+</tr>
+</tbody></table>
+<p>You can also create custom agents using JSON configuration files (see <a href="CreateAgents.html">Create Agents Guide</a>).</p>
+<h2 id="options-variations">Options &amp; Variations</h2>
+<h3 id="direct-agent-switching">Direct Agent Switching</h3>
+<p>You can switch to an agent directly by name:</p>
+<pre><code class="language-bash">/agent cpp_reviewer</code></pre>
+<p>This skips the picker and immediately switches to the C++ Reviewer.</p>
+<h3 id="model-distribution">Model Distribution</h3>
+<p>For advanced multi-model setups, see <a href="RoundRobinModels.html">Round-Robin Models Guide</a>.</p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead><tr>
+<th>Problem</th>
+<th>Cause</th>
+<th>Solution</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>"No agents found"</td>
+<td>Agent registry issue</td>
+<td>Restart Code Puppy</td>
+</tr>
+<tr>
+<td>Agent picker doesn't open</td>
+<td>Terminal compatibility</td>
+<td>Try <code>/agent &lt;name&gt;</code> directly</td>
+</tr>
+<tr>
+<td>"Cannot delete the active agent"</td>
+<td>Trying to delete current agent</td>
+<td>Switch to a different agent first</td>
+</tr>
+<tr>
+<td>Model picker shows no models</td>
+<td>No models configured</td>
+<td>Add models via <code>/add-model</code></td>
+</tr>
+</tbody></table>
+<h2 id="related-guides">Related Guides</h2>
+<ul>
+<li><a href="Commands.html">Commands Guide</a> — All slash commands</li>
+<li><a href="ModelConfiguration.html">Model Configuration Guide</a> — Configure model settings</li>
+<li><a href="CreateAgents.html">Create Agents Guide</a> — Build custom agents</li>
+<li><a href="RoundRobinModels.html">Round-Robin Models Guide</a> — Distribute across multiple models</li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

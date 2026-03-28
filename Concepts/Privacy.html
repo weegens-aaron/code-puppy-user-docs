@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Understanding Code Puppy's Privacy Model — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="index.html">Index</a>
+<a href="AgentSkills.html">Agent Skills</a>
+<a href="Agents.html">Agents</a>
+<a href="Hooks.html">Hooks</a>
+<a href="MCP.html">MCP</a>
+<a href="Privacy.html" class="active">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="understanding-code-puppy-s-privacy-model">Understanding Code Puppy's Privacy Model</h1>
+<h2 id="what-is-the-privacy-model">What Is the Privacy Model?</h2>
+<p>Code Puppy's <strong>privacy model</strong> is a zero-compromise architecture that ensures your code, conversations, and project data never leave your control unless you explicitly choose to send them to an LLM provider.</p>
+<p>Unlike commercial AI coding tools, Code Puppy is built from the ground up with privacy as a fundamental requirement—not an optional feature.</p>
+<hr>
+<h2 id="why-does-it-matter">Why Does It Matter?</h2>
+<p>When you're working on proprietary code, sensitive projects, or regulated systems, you need to know:</p>
+<ul>
+<li><strong>Your code stays yours</strong>: No third party can access what you're building</li>
+<li><strong>No hidden tracking</strong>: Your usage patterns aren't being harvested for advertising</li>
+<li><strong>Full control</strong>: You decide what data leaves your machine and where it goes</li>
+<li><strong>Auditability</strong>: Everything is open source—you can verify the claims</li>
+</ul>
+<p><strong>For regulated environments</strong>: Healthcare (HIPAA), finance (SOC 2), government contracts, or any scenario where data sovereignty matters.</p>
+<hr>
+<h2 id="how-it-works-simplified">How It Works (Simplified)</h2>
+<pre class="mermaid">
+flowchart LR
+    A[You run Code Puppy] --&gt; B[Local processing]
+    B --&gt; C{Choose model}
+    C --&gt;|Local model| D[Zero data leaves network]
+    C --&gt;|Cloud model| E[Only prompt sent to provider]
+    E --&gt; F[Response returned]
+    F --&gt; G[Result shown locally]
+</pre>
+<p><strong>The data flow:</strong></p>
+<ol>
+<li><strong>You type a prompt</strong> in the Code Puppy terminal</li>
+<li><strong>Code Puppy processes it locally</strong> (no external calls yet)</li>
+<li><strong>You choose a model</strong> (local or cloud provider)</li>
+<li><strong>If local model</strong>: Everything stays on your machine</li>
+<li><strong>If cloud model</strong>: Only your prompt goes to the provider</li>
+<li><strong>Response returns</strong> and is displayed to you</li>
+<li><strong>No logs, no storage, no tracking</strong></li>
+</ol>
+<hr>
+<h2 id="key-terms">Key Terms</h2>
+<table>
+<thead><tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>Telemetry</strong></td>
+<td>Data about how you use software (usage analytics, crash reports)</td>
+</tr>
+<tr>
+<td><strong>Prompt logging</strong></td>
+<td>Storing your conversations and code for later analysis</td>
+</tr>
+<tr>
+<td><strong>Data sovereignty</strong></td>
+<td>Control over where your data is stored and processed</td>
+</tr>
+<tr>
+<td><strong>Local model</strong></td>
+<td>An AI model running on your own hardware or network</td>
+</tr>
+<tr>
+<td><strong>Cloud provider</strong></td>
+<td>External API like OpenAI, Anthropic, etc.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="what-code-puppy-does-not-collect">What Code Puppy Does NOT Collect</h2>
+<h3 id="zero-telemetry">❌ Zero Telemetry</h3>
+<p>Code Puppy does <strong>not</strong> send:</p>
+<ul>
+<li>Usage statistics (how often you use it, what features you use)</li>
+<li>Crash reports or error logs to external servers</li>
+<li>Performance metrics or timing data</li>
+<li>Feature adoption tracking</li>
+<li>A/B testing or experimentation data</li>
+</ul>
+<h3 id="zero-prompt-logging">❌ Zero Prompt Logging</h3>
+<p>Code Puppy does <strong>not</strong> store:</p>
+<ul>
+<li>Your code snippets or file contents</li>
+<li>Your conversation history with agents</li>
+<li>Your project structure or file names</li>
+<li>Your prompts or agent responses</li>
+<li>Any identifying information about your work</li>
+</ul>
+<h3 id="zero-behavioral-profiling">❌ Zero Behavioral Profiling</h3>
+<p>Code Puppy does <strong>not</strong> track:</p>
+<ul>
+<li>When you use the tool</li>
+<li>How long you work on tasks</li>
+<li>What types of projects you build</li>
+<li>Your coding patterns or style</li>
+<li>Your productivity metrics</li>
+</ul>
+<h3 id="zero-third-party-sharing">❌ Zero Third-Party Sharing</h3>
+<p>Code Puppy does <strong>not</strong> share:</p>
+<ul>
+<li>Your data with investors or partners</li>
+<li>Your information with analytics platforms</li>
+<li>Your usage data with advertisers</li>
+<li>Any information with external services (except the LLM provider you choose)</li>
+</ul>
+<hr>
+<h2 id="data-flow-by-model-type">Data Flow by Model Type</h2>
+<h3 id="local-models-maximum-privacy">Local Models (Maximum Privacy)</h3>
+<p>When you use a local model (VLLM, Ollama, Llama.cpp, etc.):</p>
+<pre class="mermaid">
+flowchart LR
+    A[Your Terminal] --&gt; B[Code Puppy]
+    B --&gt; C[Local Model Server]
+    C --&gt; B
+    B --&gt; A
+    style A fill:#90EE90
+    style B fill:#90EE90
+    style C fill:#90EE90
+</pre>
+<p><strong>Result</strong>: <strong>Zero data leaves your network.</strong> Everything runs on your hardware.</p>
+<p><strong>Setup</strong>: Configure in <code>~/.code_puppy/extra_models.json</code>:</p>
+<pre><code class="language-json">{
+  "local-codestral": {
+    "type": "openai",
+    "name": "codestral-latest",
+    "custom_endpoint": {
+      "url": "http://localhost:8080/v1",
+      "api_key": "local-key"
+    }
+  }
+}</code></pre>
+<h3 id="cloud-models-provider-privacy">Cloud Models (Provider Privacy)</h3>
+<p>When you use a cloud provider (OpenAI, Anthropic, etc.):</p>
+<pre class="mermaid">
+flowchart LR
+    A[Your Terminal] --&gt; B[Code Puppy]
+    B --&gt; C[LLM Provider API]
+    C --&gt; B
+    B --&gt; A
+    style A fill:#90EE90
+    style B fill:#90EE90
+    style C fill:#FFB6C1
+</pre>
+<p><strong>Result</strong>: Your prompt goes to the provider, response returns. <strong>Code Puppy never sees or stores it.</strong></p>
+<p><strong>Important</strong>: Each provider has their own privacy policy. Code Puppy can't control what they do with your data—only that we don't add to it.</p>
+<hr>
+<h2 id="our-privacy-first-architecture">Our Privacy-First Architecture</h2>
+<h3 id="structural-enforcement">Structural Enforcement</h3>
+<div class="callout callout-note">
+<div class="callout-title">NOTE</div>
+<p>Our privacy commitment is <strong>structurally enforced</strong>—it's not just a policy, it's built into the code.</p>
+</div>
+<p><strong>How we enforce it:</strong></p>
+<ol>
+<li><strong>No external API calls</strong> except to your chosen LLM provider</li>
+<li><strong>No analytics SDKs</strong> or tracking libraries included</li>
+<li><strong>No cloud storage</strong> for user data or logs</li>
+<li><strong>Open source codebase</strong>—anyone can audit what we do</li>
+<li><strong>MIT license</strong>—no hidden terms or conditions</li>
+</ol>
+<h3 id="the-no-investor-pressure-advantage">The "No Investor Pressure" Advantage</h3>
+<p>Unlike venture-backed competitors, Code Puppy has:</p>
+<ul>
+<li><strong>No investors</strong> demanding growth metrics</li>
+<li><strong>No board</strong> pushing for monetization through data</li>
+<li><strong>No quarterly earnings</strong> to report</li>
+<li><strong>No acquisition</strong> that could change privacy policies</li>
+</ul>
+<p>This means privacy isn't a feature we might compromise for profit—it's a principle we can maintain indefinitely.</p>
+<hr>
+<h2 id="examples">Examples</h2>
+<h3 id="example-1-working-on-proprietary-code">Example 1: Working on Proprietary Code</h3>
+<p><strong>Scenario</strong>: You're building a startup's core algorithm.</p>
+<p><strong>With Code Puppy</strong>:</p>
+<pre><code class="language-bash"># Run Code Puppy locally
+code_puppy
+
+# Work on your proprietary code
+/think Help me optimize this sorting algorithm
+
+# Your code never leaves your machine (if using local model)</code></pre>
+<p><strong>Result</strong>: Your algorithm stays yours. No risk of it being used to train public models or shared with third parties.</p>
+<hr>
+<h3 id="example-2-regulated-environment-hipaa">Example 2: Regulated Environment (HIPAA)</h3>
+<p><strong>Scenario</strong>: You're building healthcare software with patient data.</p>
+<p><strong>With Code Puppy</strong>:</p>
+<pre><code class="language-bash"># Use a local model for maximum compliance
+# Configure local VLLM server
+export LOCAL_MODEL_URL=http://localhost:8080/v1
+
+# Work on HIPAA-regulated code
+/think Review this patient data handling code for HIPAA compliance</code></pre>
+<p><strong>Result</strong>: Patient data never leaves your network. You maintain full control for compliance audits.</p>
+<hr>
+<h3 id="example-3-security-sensitive-project">Example 3: Security-Sensitive Project</h3>
+<p><strong>Scenario</strong>: You're developing security tools or vulnerability research.</p>
+<p><strong>With Code Puppy</strong>:</p>
+<pre><code class="language-bash"># Use local model to avoid exposing security research
+/think Analyze this exploit code for educational purposes
+
+# Your research stays private</code></pre>
+<p><strong>Result</strong>: No risk of your security research being logged, leaked, or used against you.</p>
+<hr>
+<h2 id="common-misconceptions">Common Misconceptions</h2>
+<div class="callout callout-caution">
+<div class="callout-title">CAUTION</div>
+<p><strong>Misconception</strong>: "All AI coding tools are the same" <strong>Reality</strong>: Commercial tools often log prompts, track usage, and may use your data for training. Code Puppy does none of these.</p>
+</div>
+<div class="callout callout-caution">
+<div class="callout-title">CAUTION</div>
+<p><strong>Misconception</strong>: "Privacy means less functionality" <strong>Reality</strong>: Code Puppy has full-featured agents, tools, and capabilities—privacy doesn't require sacrificing features.</p>
+</div>
+<div class="callout callout-caution">
+<div class="callout-title">CAUTION</div>
+<p><strong>Misconception</strong>: "I need to trust Code Puppy's privacy claims" <strong>Reality</strong>: Everything is open source. You can audit the code yourself to verify no data exfiltration.</p>
+</div>
+<div class="callout callout-caution">
+<div class="callout-title">CAUTION</div>
+<p><strong>Misconception</strong>: "Local models are too slow" <strong>Reality</strong>: Modern local models on decent hardware can be very fast, and you control the trade-off between speed and privacy.</p>
+</div>
+<hr>
+<h2 id="tips">Tips</h2>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Use local models for maximum privacy</strong>: Set up VLLM, Ollama, or Llama.cpp on your machine for zero data egress.</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Audit the code yourself</strong>: Clone the repo and grep for network calls to verify what data leaves your machine.</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Check your firewall</strong>: Monitor outbound connections to verify only your chosen LLM provider is contacted.</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Review provider policies</strong>: When using cloud models, read the privacy policy of your chosen provider (OpenAI, Anthropic, etc.).</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Use environment variables</strong>: Store API keys in environment variables, not in config files, for better security.</p>
+</div>
+<hr>
+<h2 id="privacy-checklist">Privacy Checklist</h2>
+<p>Use this checklist to verify your setup:</p>
+<ul>
+<li>[ ] <strong>No telemetry</strong>: Code Puppy doesn't send usage data</li>
+<li>[ ] <strong>No prompt logging</strong>: Your conversations aren't stored externally</li>
+<li>[ ] <strong>Local option available</strong>: You can run entirely offline with local models</li>
+<li>[ ] <strong>Open source</strong>: Code is auditable on GitHub</li>
+<li>[ ] <strong>MIT license</strong>: No hidden terms or conditions</li>
+<li>[ ] <strong>Direct support</strong>: No third-party analytics or customer data platforms</li>
+</ul>
+<hr>
+<h2 id="compare-to-commercial-alternatives">Compare to Commercial Alternatives</h2>
+<table>
+<thead><tr>
+<th>Feature</th>
+<th>Code Puppy</th>
+<th>Commercial AI IDEs</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Telemetry</td>
+<td>❌ None</td>
+<td>✅ Extensive tracking</td>
+</tr>
+<tr>
+<td>Prompt logging</td>
+<td>❌ Never</td>
+<td>✅ Often logged</td>
+</tr>
+<tr>
+<td>Data for training</td>
+<td>❌ No</td>
+<td>✅ Sometimes opt-out</td>
+</tr>
+<tr>
+<td>Source code</td>
+<td>✅ Open</td>
+<td>❌ Closed</td>
+</tr>
+<tr>
+<td>Local models</td>
+<td>✅ Full support</td>
+<td>⚠️ Limited or none</td>
+</tr>
+<tr>
+<td>Investor pressure</td>
+<td>❌ None</td>
+<td>✅ Growth metrics</td>
+</tr>
+<tr>
+<td>Auditability</td>
+<td>✅ Full</td>
+<td>❌ Black box</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="learn-more">Learn More</h2>
+<ul>
+<li><a href="../Reference/EnvVars.html">Reference: Environment Variables</a> — Configure local models and API keys</li>
+<li><a href="../Tutorials/MultiModelSetup.html">Tutorial: Multi-Model Setup</a> — Set up local and cloud models</li>
+<li><a href="../Guides/AddModels.html">Guide: Add Models from models.dev</a> — Browse 65+ providers</li>
+<li><a href="https://github.com/mpfaffenberger/code_puppy#code-puppy-privacy-commitment">README Privacy Section</a> — Full privacy commitment</li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

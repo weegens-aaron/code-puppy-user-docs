@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Use Skills — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="index.html">Index</a>
+<a href="AddModels.html">Add Models</a>
+<a href="BlockToolCalls.html">Block Tool Calls</a>
+<a href="Commands.html">Commands</a>
+<a href="CreateAgents.html">Create Agents</a>
+<a href="CreateHooks.html">Create Hooks</a>
+<a href="CreateSkills.html">Create Skills</a>
+<a href="InstallSkills.html">Install Skills</a>
+<a href="ManageMCP.html">Manage MCP</a>
+<a href="ModelConfiguration.html">Model Configuration</a>
+<a href="RoundRobinModels.html">Round Robin Models</a>
+<a href="SwitchAgents.html">Switch Agents</a>
+<a href="UseSkills.html" class="active">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="how-to-use-skills">How to Use Skills</h1>
+<h2 id="what-you-ll-learn">What You'll Learn</h2>
+<p>By the end of this guide, you'll understand how to activate skills during agent conversations, when to use them, and how they enhance Code Puppy's capabilities.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Code Puppy installed and running</li>
+<li>At least one skill installed (see <a href="InstallSkills.html">How to Install Skills</a>)</li>
+<li>Familiarity with basic agent interaction</li>
+</ul>
+<h2 id="quick-version">Quick Version</h2>
+<pre><code class="language-bash"># Start an agent
+/agent code-puppy
+
+# Ask for help with something that matches a skill
+# The agent will automatically detect and activate the relevant skill</code></pre>
+<hr>
+<h2 id="how-skills-work-in-practice">How Skills Work in Practice</h2>
+<p>Skills are <strong>automatically discovered</strong> and <strong>dynamically activated</strong> by agents. You don't need to manually load them—just ask for help with something that matches a skill's description.</p>
+<h3 id="the-skill-activation-flow">The Skill Activation Flow</h3>
+<pre class="mermaid">
+flowchart LR
+    A[You ask for help] --&gt; B[Agent analyzes request]
+    B --&gt; C[Agent finds matching skill]
+    C --&gt; D[Agent activates skill]
+    D --&gt; E[Agent follows skill instructions]
+    E --&gt; F[You get specialized help]
+</pre>
+<hr>
+<h2 id="using-skills-with-agents">Using Skills with Agents</h2>
+<h3 id="step-1-start-an-agent">Step 1: Start an Agent</h3>
+<pre><code class="language-bash">/agent code-puppy</code></pre>
+<h3 id="step-2-ask-for-help">Step 2: Ask for Help</h3>
+<p>When you ask for help with something that matches a skill, the agent will automatically:</p>
+<ol>
+<li><strong>Detect</strong> the relevant skill from its knowledge of available skills</li>
+<li><strong>Activate</strong> the skill by loading its full instructions</li>
+<li><strong>Follow</strong> the skill's guidance to help you</li>
+</ol>
+<p><strong>Example conversation:</strong></p>
+<pre><code>You: Help me create a Dockerfile for this Python app
+
+Agent: I'll help you containerize this Python app. Let me activate the docker skill first.
+
+[Agent internally calls activate_skill(skill_name="docker")]
+
+Agent: Now I have the docker skill loaded. Here's what I recommend...
+
+[Agent follows the docker skill's best practices to create the Dockerfile]</code></pre>
+<h3 id="step-3-see-the-results">Step 3: See the Results</h3>
+<p>The agent will use the skill's instructions to provide specialized, high-quality guidance.</p>
+<hr>
+<h2 id="skill-discovery-and-activation">Skill Discovery and Activation</h2>
+<h3 id="automatic-activation">Automatic Activation</h3>
+<p>Agents automatically activate skills when:</p>
+<ul>
+<li><strong>User request matches</strong> a skill's description or tags</li>
+<li><strong>Task domain aligns</strong> with a skill's purpose</li>
+<li><strong>Specialized knowledge</strong> is needed</li>
+</ul>
+<p><strong>Example triggers:</strong></p>
+<table>
+<thead><tr>
+<th>User Request</th>
+<th>Skill Activated</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>"Help me set up Kubernetes"</td>
+<td><code>kubernetes</code></td>
+</tr>
+<tr>
+<td>"Review this for security issues"</td>
+<td><code>security-audit</code></td>
+</tr>
+<tr>
+<td>"Write pytest tests"</td>
+<td><code>python-testing</code></td>
+</tr>
+<tr>
+<td>"Create a docker-compose file"</td>
+<td><code>docker</code></td>
+</tr>
+</tbody></table>
+<h3 id="manual-skill-activation">Manual Skill Activation</h3>
+<p>If you know which skill you want to use, you can ask the agent to activate it explicitly:</p>
+<pre><code>You: Please use the docker skill to help me containerize this app</code></pre>
+<p>The agent will then call <code>activate_skill(skill_name="docker")</code> to load the skill's full instructions.</p>
+<hr>
+<h2 id="skill-tools-reference">Skill Tools Reference</h2>
+<p>Agents have access to two dedicated tools for working with skills:</p>
+<h3 id="list-or-search-skills"><code>list_or_search_skills</code></h3>
+<p>Lists all available skills, optionally filtered by search query.</p>
+<p><strong>When agents use it:</strong></p>
+<ul>
+<li>At the start of a task to see what's available</li>
+<li>When searching for a skill matching keywords</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python"># List all skills
+list_or_search_skills()
+
+# Search for docker-related skills
+list_or_search_skills(query="docker")</code></pre>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><code>skills</code>: List of skill metadata (name, description, path, tags)</li>
+<li><code>total_count</code>: Total number of skills found</li>
+<li><code>query</code>: The search query (if provided)</li>
+</ul>
+<h3 id="activate-skill"><code>activate_skill</code></h3>
+<p>Loads and activates a specific skill by name.</p>
+<p><strong>When agents use it:</strong></p>
+<ul>
+<li>When a user's task matches a skill's description</li>
+<li>To load full instructions for a specific capability</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">activate_skill(skill_name="docker")</code></pre>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><code>skill_name</code>: Name of the activated skill</li>
+<li><code>content</code>: Full SKILL.md content (including instructions)</li>
+<li><code>resources</code>: List of available resource files</li>
+<li><code>error</code>: Error message (if activation failed)</li>
+</ul>
+<hr>
+<h2 id="example-workflows">Example Workflows</h2>
+<h3 id="example-1-docker-containerization">Example 1: Docker Containerization</h3>
+<p><strong>Scenario:</strong> You need to containerize a Python web application.</p>
+<pre><code>You: Help me create a Dockerfile for this Flask app
+
+Agent: I'll help you create a Dockerfile. Let me check what skills are available.
+
+[Agent calls list_or_search_skills(query="docker")]
+
+Agent: I found the 'docker-expert' skill. Let me activate it.
+
+[Agent calls activate_skill(skill_name="docker-expert")]
+
+Agent: Based on the docker skill's best practices, here's what I recommend:
+
+1. Use a multi-stage build to minimize image size
+2. Use python:3.11-slim as the base image
+3. Install dependencies in a virtual environment
+4. Run as non-root user for security
+
+Here's the Dockerfile:
+</code></pre>
+<p>FROM python:3.11-slim AS builder WORKDIR /app COPY requirements.txt . RUN python -m venv /opt/venv &amp;&amp; \ /opt/venv/bin/pip install --no-cache-dir -r requirements.txt</p>
+<p>FROM python:3.11-slim WORKDIR /app COPY --from=builder /opt/venv /opt/venv ENV PATH="/opt/venv/bin:$PATH" COPY . . USER nobody EXPOSE 8000 CMD ["python", "app.py"]</p>
+<pre><code></code></pre>
+<h3 id="example-2-security-audit">Example 2: Security Audit</h3>
+<p><strong>Scenario:</strong> You want to review your code for security vulnerabilities.</p>
+<pre><code>You: Can you review this code for security issues?
+
+Agent: Let me activate the security-audit skill to help with this.
+
+[Agent calls activate_skill(skill_name="security-audit")]
+
+Agent: Based on the security audit checklist, I'll check for:
+
+1. SQL injection vulnerabilities
+2. Cross-site scripting (XSS) risks
+3. Insecure dependencies
+4. Hardcoded secrets
+
+[Agent analyzes your code and provides specific findings]</code></pre>
+<h3 id="example-3-python-testing">Example 3: Python Testing</h3>
+<p><strong>Scenario:</strong> You need to write comprehensive tests for a Python module.</p>
+<pre><code>You: Help me write tests for this Python module
+
+Agent: I'll help you write tests. Let me activate the python-testing skill.
+
+[Agent calls activate_skill(skill_name="python-testing")]
+
+Agent: Following the pytest best practices from the skill, I recommend:
+
+1. Use fixtures for setup/teardown
+2. Mock external dependencies
+3. Achieve &gt;80% code coverage
+4. Use parametrize for edge cases
+
+Here's the test file:
+</code></pre>
+<p>import pytest from unittest.mock import Mock, patch from mymodule import process_data</p>
+<p>@pytest.fixture def sample_data(): return {"key": "value"}</p>
+<p>def test_process_data_success(sample_data): result = process_data(sample_data) assert result["status"] == "success"</p>
+<p>@patch('mymodule.external_api') def test_process_data_with_mock(mock_api, sample_data): mock_api.return_value = {"response": "ok"} result = process_data(sample_data) assert result["api_called"] is True</p>
+<pre><code></code></pre>
+<hr>
+<h2 id="tips-best-practices">Tips &amp; Best Practices</h2>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Let the Agent Decide</strong>: You don't need to manually activate skills. Just describe what you need, and the agent will find the right skill.</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Be Specific</strong>: The more specific your request, the better the agent can match it to the right skill.</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Multiple Skills</strong>: Agents can activate multiple skills for complex tasks that span multiple domains.</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Check Available Skills</strong>: Run <code>/skills list</code> to see what skills are available before starting a task.</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Skill Quality Matters</strong>: Skills with detailed instructions and good metadata produce better results.</p>
+</div>
+<hr>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead><tr>
+<th>Problem</th>
+<th>Cause</th>
+<th>Solution</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>"No skills found"</td>
+<td>Skills integration disabled</td>
+<td>Run <code>/skills enable</code></td>
+</tr>
+<tr>
+<td>Skill not activating</td>
+<td>Skill name doesn't match</td>
+<td>Check <code>/skills list</code> for exact skill names</td>
+</tr>
+<tr>
+<td>Agent ignores skills</td>
+<td>No matching skill</td>
+<td>Install a skill for that domain</td>
+</tr>
+<tr>
+<td>Skill activation fails</td>
+<td>Missing SKILL.md</td>
+<td>Ensure skill has valid SKILL.md file</td>
+</tr>
+<tr>
+<td>Agent doesn't use skill instructions</td>
+<td>Skill not properly activated</td>
+<td>Ask agent to explicitly activate the skill</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="related-guides">Related Guides</h2>
+<ul>
+<li><a href="InstallSkills.html">How to Install Skills</a> - Browse and install new skills</li>
+<li><a href="CreateSkills.html">How to Create Custom Skills</a> - Build your own skills</li>
+<li><a href="../Concepts/AgentSkills.html">Concept: Understanding Agent Skills</a> - Deep dive into how skills work</li>
+<li><a href="../Reference/SkillsCommands.html">Reference: Skills Commands</a> - All available commands</li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scheduler Commands Reference — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="index.html">Index</a>
+<a href="ConfigCommands.html">Config Commands</a>
+<a href="ConfigReference.html">Config Reference</a>
+<a href="CoreCommands.html">Core Commands</a>
+<a href="EnvVars.html">Env Vars</a>
+<a href="MCPCommands.html">MCPCommands</a>
+<a href="RESTAPI.html">RESTAPI</a>
+<a href="SchedulerCommands.html" class="active">Scheduler Commands</a>
+<a href="SessionCommands.html">Session Commands</a>
+<a href="SkillsCommands.html">Skills Commands</a>
+<a href="ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="scheduler-commands-reference">Scheduler Commands Reference</h1>
+<h2 id="overview">Overview</h2>
+<p>This reference covers all <code>/scheduler</code> commands for managing scheduled tasks in Code Puppy. The scheduler allows you to run automated tasks at regular intervals.</p>
+<hr>
+<h2 id="scheduler-no-arguments"><code>/scheduler</code> (no arguments)</h2>
+<p><strong>Description:</strong> Launch the interactive scheduler wizard to create a new scheduled task.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/scheduler</code></pre>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>Opens an interactive wizard to create a new scheduled task</li>
+<li>Guides you through: 1. Task name 2. Schedule type (interval, hourly, daily, custom) 3. Agent selection 4. Model selection (optional) 5. Task prompt 6. Working directory</li>
+</ul>
+<p><strong>Wizard Steps:</strong></p>
+<table>
+<thead><tr>
+<th>Step</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Enter task name</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Select schedule type</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Choose agent</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Choose model (optional)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Enter task prompt</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Set working directory</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Review and confirm</td>
+</tr>
+</tbody></table>
+<p><strong>Schedule Types:</strong></p>
+<table>
+<thead><tr>
+<th>Option</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Every 15 minutes</td>
+<td>Run 4 times per hour</td>
+</tr>
+<tr>
+<td>Every 30 minutes</td>
+<td>Run twice per hour</td>
+</tr>
+<tr>
+<td>Every hour</td>
+<td>Run once per hour</td>
+</tr>
+<tr>
+<td>Every 2 hours</td>
+<td>Run 12 times per day</td>
+</tr>
+<tr>
+<td>Every 6 hours</td>
+<td>Run 4 times per day</td>
+</tr>
+<tr>
+<td>Daily</td>
+<td>Run once per day</td>
+</tr>
+<tr>
+<td>Custom interval</td>
+<td>Specify like <code>45m</code>, <code>3h</code>, <code>2d</code></td>
+</tr>
+</tbody></table>
+<p><strong>Example Output:</strong></p>
+<pre><code>============================================================
+📅 CREATE NEW SCHEDULED TASK
+============================================================
+
+  Task name: Daily Code Review
+
+  Select schedule type:
+
+  ❯ Every hour
+      Run once per hour
+    Every 2 hours
+    Every 6 hours
+    Daily
+    Custom interval...
+
+  ↑/↓ Navigate  Enter Select  Ctrl+C Cancel</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/RoundRobinModels.html">Guide: How to use round-robin models</a></li>
+</ul>
+<hr>
+<h2 id="scheduler-start"><code>/scheduler start</code></h2>
+<p><strong>Description:</strong> Start the scheduler daemon in the background.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/scheduler start</code></pre>
+<p><strong>Output (success):</strong></p>
+<pre><code>Starting scheduler daemon...
+Scheduler daemon started (PID 12345)</code></pre>
+<p><strong>Output (already running):</strong></p>
+<pre><code>Scheduler daemon already running (PID 12345)</code></pre>
+<p><strong>Output (failure):</strong></p>
+<pre><code>Failed to start scheduler daemon</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Concepts/Hooks.html">Concept: Understanding Hooks</a></li>
+</ul>
+<hr>
+<h2 id="scheduler-stop"><code>/scheduler stop</code></h2>
+<p><strong>Description:</strong> Stop the scheduler daemon.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/scheduler stop</code></pre>
+<p><strong>Output (success):</strong></p>
+<pre><code>Stopping scheduler daemon (PID 12345)...
+Scheduler daemon stopped</code></pre>
+<p><strong>Output (not running):</strong></p>
+<pre><code>Scheduler daemon is not running</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Concepts/Hooks.html">Concept: Understanding Hooks</a></li>
+</ul>
+<hr>
+<h2 id="scheduler-status"><code>/scheduler status</code></h2>
+<p><strong>Description:</strong> Show scheduler daemon status and task overview.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/scheduler status</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>🐕 Scheduler daemon: RUNNING (PID 12345)
+
+📅 Scheduled tasks: 3 total, 2 enabled
+
+Tasks:
+  🟢 daily-code-review (interval: 24h)
+      Last run: 2024-01-15 09:00:00 (success)
+
+  🟢 hourly-check (interval: 1h)
+      Last run: 2024-01-15 14:00:00 (success)
+
+  🔴 weekly-report (interval: 168h)
+      Last run: never (pending)</code></pre>
+<p><strong>Status Icons:</strong></p>
+<table>
+<thead><tr>
+<th>Icon</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>🟢</td>
+<td>Task is enabled</td>
+</tr>
+<tr>
+<td>🔴</td>
+<td>Task is disabled</td>
+</tr>
+</tbody></table>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/RoundRobinModels.html">Guide: How to use round-robin models</a></li>
+</ul>
+<hr>
+<h2 id="scheduler-list"><code>/scheduler list</code></h2>
+<p><strong>Description:</strong> List all scheduled tasks with details.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/scheduler list</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>📅 Scheduled Tasks (3):
+
+  [1] daily-code-review
+      Status: 🟢 enabled
+      Schedule: interval (24h)
+      Agent: code-puppy, Model: (default)
+      Last run: 2024-01-15 09:00:00 (success)
+
+  [2] hourly-check
+      Status: 🟢 enabled
+      Schedule: interval (1h)
+      Agent: code-puppy, Model: claude-3-5-sonnet
+      Last run: 2024-01-15 14:00:00 (success)
+
+  [3] weekly-report
+      Status: 🔴 disabled
+      Schedule: interval (168h)
+      Agent: code-puppy, Model: (default)
+      Last run: never (pending)</code></pre>
+<p><strong>Task Fields:</strong></p>
+<table>
+<thead><tr>
+<th>Field</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>[id]</code></td>
+<td>Unique task identifier</td>
+</tr>
+<tr>
+<td><code>Status</code></td>
+<td>Enabled/disabled state</td>
+</tr>
+<tr>
+<td><code>Schedule</code></td>
+<td>Schedule type and value</td>
+</tr>
+<tr>
+<td><code>Agent</code></td>
+<td>Agent that runs the task</td>
+</tr>
+<tr>
+<td><code>Model</code></td>
+<td>Model used (or default)</td>
+</tr>
+<tr>
+<td><code>Last run</code></td>
+<td>Timestamp and status of last execution</td>
+</tr>
+</tbody></table>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/RoundRobinModels.html">Guide: How to use round-robin models</a></li>
+</ul>
+<hr>
+<h2 id="scheduler-run"><code>/scheduler run</code></h2>
+<p><strong>Description:</strong> Run a specific task immediately (outside its schedule).</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">/scheduler run &lt;task-id&gt;</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>&lt;task-id&gt;</code></td>
+<td>ID of the task to run (from <code>/scheduler list</code>)</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Run the daily-code-review task immediately
+/scheduler run 1</code></pre>
+<p><strong>Output (success):</strong></p>
+<pre><code>Running task 1...
+Task 'daily-code-review' started successfully</code></pre>
+<p><strong>Output (failure):</strong></p>
+<pre><code>Running task 999...
+Error: Task with ID '999' not found</code></pre>
+<p><strong>Related:</strong></p>
+<ul>
+<li><a href="../Guides/RoundRobinModels.html">Guide: How to use round-robin models</a></li>
+</ul>
+<hr>
+<h2 id="task-configuration">Task Configuration</h2>
+<p>Scheduled tasks are stored in <code>~/.code_puppy/scheduler/tasks.json</code>.</p>
+<p><strong>Task Structure:</strong></p>
+<pre><code class="language-json">{
+  "id": "1",
+  "name": "Daily Code Review",
+  "prompt": "Review the code in the current directory...",
+  "agent": "code-puppy",
+  "model": "claude-3-5-sonnet",
+  "schedule_type": "interval",
+  "schedule_value": "24h",
+  "working_directory": ".",
+  "enabled": true,
+  "last_run": "2024-01-15T09:00:00",
+  "last_status": "success"
+}</code></pre>
+<hr>
+<h2 id="schedule-types">Schedule Types</h2>
+<table>
+<thead><tr>
+<th>Type</th>
+<th>Value Format</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>interval</code></td>
+<td><code>15m</code>, <code>1h</code>, <code>2d</code></td>
+<td>Run at regular intervals</td>
+</tr>
+<tr>
+<td><code>hourly</code></td>
+<td><code>1h</code></td>
+<td>Run once per hour</td>
+</tr>
+<tr>
+<td><code>daily</code></td>
+<td><code>24h</code></td>
+<td>Run once per day</td>
+</tr>
+</tbody></table>
+<p><strong>Interval Examples:</strong></p>
+<table>
+<thead><tr>
+<th>Value</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>15m</code></td>
+<td>Every 15 minutes</td>
+</tr>
+<tr>
+<td><code>1h</code></td>
+<td>Every hour</td>
+</tr>
+<tr>
+<td><code>2h</code></td>
+<td>Every 2 hours</td>
+</tr>
+<tr>
+<td><code>6h</code></td>
+<td>Every 6 hours</td>
+</tr>
+<tr>
+<td><code>24h</code></td>
+<td>Every day</td>
+</tr>
+<tr>
+<td><code>168h</code></td>
+<td>Every week</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="daemon-management">Daemon Management</h2>
+<p>The scheduler runs as a background daemon process.</p>
+<p><strong>Daemon Commands:</strong></p>
+<table>
+<thead><tr>
+<th>Command</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>/scheduler start</code></td>
+<td>Start the daemon</td>
+</tr>
+<tr>
+<td><code>/scheduler stop</code></td>
+<td>Stop the daemon</td>
+</tr>
+<tr>
+<td><code>/scheduler status</code></td>
+<td>Check daemon status</td>
+</tr>
+</tbody></table>
+<p><strong>Daemon Location:</strong></p>
+<ul>
+<li>PID file: <code>~/.code_puppy/scheduler/daemon.pid</code></li>
+<li>Logs: <code>~/.code_puppy/scheduler/daemon.log</code></li>
+</ul>
+<hr>
+<h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="../Guides/RoundRobinModels.html">Guide: How to use round-robin models</a></li>
+<li><a href="../Concepts/Hooks.html">Concept: Understanding Hooks</a></li>
+<li><a href="CoreCommands.html">Reference: Core Commands</a></li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

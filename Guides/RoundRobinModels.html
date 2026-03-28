@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Use Round-Robin Models — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="index.html">Index</a>
+<a href="AddModels.html">Add Models</a>
+<a href="BlockToolCalls.html">Block Tool Calls</a>
+<a href="Commands.html">Commands</a>
+<a href="CreateAgents.html">Create Agents</a>
+<a href="CreateHooks.html">Create Hooks</a>
+<a href="CreateSkills.html">Create Skills</a>
+<a href="InstallSkills.html">Install Skills</a>
+<a href="ManageMCP.html">Manage MCP</a>
+<a href="ModelConfiguration.html">Model Configuration</a>
+<a href="RoundRobinModels.html" class="active">Round Robin Models</a>
+<a href="SwitchAgents.html">Switch Agents</a>
+<a href="UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="how-to-use-round-robin-models">How to Use Round-Robin Models</h1>
+<h2 id="what-you-ll-learn">What You'll Learn</h2>
+<p>By the end of this guide, you'll be able to configure round-robin models to distribute requests across multiple models, helping you overcome rate limits and balance load.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Code Puppy installed and running</li>
+<li>At least two models configured in your <code>models.json</code> or <code>~/.code_puppy/models.json</code></li>
+<li>Familiarity with <a href="ModelConfiguration.html">Model Configuration</a></li>
+</ul>
+<h2 id="quick-version">Quick Version</h2>
+<p>Add a round-robin model to your configuration:</p>
+<pre><code class="language-json">{
+  "my_round_robin": {
+    "type": "round_robin",
+    "models": ["model1", "model2", "model3"],
+    "rotate_every": 1
+  }
+}</code></pre>
+<p>Then select it with <code>/model</code> and choose <code>my_round_robin</code>.</p>
+<h2 id="detailed-steps">Detailed Steps</h2>
+<h3 id="1-understand-round-robin-distribution">1. Understand Round-Robin Distribution</h3>
+<p>Round-robin models cycle through multiple candidate models in sequence. This is useful when:</p>
+<ul>
+<li><strong>Rate limits</strong>: Spread requests across multiple API keys to avoid hitting per-model limits</li>
+<li><strong>Load balancing</strong>: Distribute work across different model providers</li>
+<li><strong>Cost optimization</strong>: Mix expensive and cheaper models</li>
+<li><strong>Reliability</strong>: If one model is temporarily unavailable, others can still serve requests</li>
+</ul>
+<h3 id="2-configure-your-round-robin-model">2. Configure Your Round-Robin Model</h3>
+<p>Add an entry to your <code>models.json</code> (or <code>~/.code_puppy/models.json</code>):</p>
+<pre><code class="language-json">{
+  "cerebras_round_robin": {
+    "type": "round_robin",
+    "models": ["qwen1", "qwen2", "qwen3"],
+    "rotate_every": 5
+  }
+}</code></pre>
+<p><strong>Configuration options:</strong></p>
+<table>
+<thead><tr>
+<th>Option</th>
+<th>Description</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>Must be <code>"round_robin"</code></td>
+<td><code>"round_robin"</code></td>
+</tr>
+<tr>
+<td><code>models</code></td>
+<td>List of model names to cycle through</td>
+<td><code>["model1", "model2"]</code></td>
+</tr>
+<tr>
+<td><code>rotate_every</code></td>
+<td>Number of requests per model before rotating (default: 1)</td>
+<td><code>5</code></td>
+</tr>
+</tbody></table>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>Each model name in the <code>models</code> list must be a valid model already defined in your configuration. The round-robin model will resolve these to actual model instances.</p>
+</div>
+<h3 id="3-choose-your-rotation-strategy">3. Choose Your Rotation Strategy</h3>
+<p>The <code>rotate_every</code> parameter controls how many consecutive requests go to each model:</p>
+<p><strong>rotate_every = 1 (default):</strong></p>
+<pre><code>Request 1 → Model A
+Request 2 → Model B
+Request 3 → Model C
+Request 4 → Model A (cycle repeats)</code></pre>
+<p><strong>rotate_every = 5:</strong></p>
+<pre><code>Requests 1-5  → Model A
+Requests 6-10 → Model B
+Requests 11-15 → Model C
+Requests 16-20 → Model A (cycle repeats)</code></pre>
+<p><strong>When to use each:</strong></p>
+<table>
+<thead><tr>
+<th>Scenario</th>
+<th>Recommended <code>rotate_every</code></th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Maximizing distribution</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td>Reducing connection overhead</td>
+<td><code>5-10</code></td>
+</tr>
+<tr>
+<td>Session-based workloads</td>
+<td><code>10-20</code></td>
+</tr>
+<tr>
+<td>Testing specific models</td>
+<td>Large value (e.g., <code>100</code>)</td>
+</tr>
+</tbody></table>
+<h3 id="4-select-the-round-robin-model">4. Select the Round-Robin Model</h3>
+<p>Use the model picker to select your round-robin configuration:</p>
+<pre><code class="language-bash">/model</code></pre>
+<p>Tab through the list and select your round-robin model (e.g., <code>cerebras_round_robin</code>).</p>
+<p>The model name will display as:</p>
+<ul>
+<li><code>round_robin:model1,model2,model3</code> (default rotation)</li>
+<li><code>round_robin:model1,model2,model3:rotate_every=5</code> (custom rotation)</li>
+</ul>
+<h3 id="5-verify-it-s-working">5. Verify It's Working</h3>
+<p>Watch the model name in your session. As you make requests, you should see the underlying model change according to your rotation settings.</p>
+<p>You can also check the session logs to see which specific model handled each request.</p>
+<h2 id="example-rate-limit-distribution">Example: Rate Limit Distribution</h2>
+<p><strong>Scenario:</strong> You have three Cerebras API keys, each with a rate limit of 100 requests/hour. You want to maximize throughput.</p>
+<p><strong>Configuration:</strong></p>
+<pre><code class="language-json">{
+  "cerebras_key1": {
+    "type": "cerebras",
+    "name": "zai-glm-4.7",
+    "custom_endpoint": {
+      "url": "https://api.cerebras.ai/v1",
+      "api_key": "$CEREBRAS_API_KEY1"
+    },
+    "context_length": 131072
+  },
+  "cerebras_key2": {
+    "type": "cerebras",
+    "name": "zai-glm-4.7",
+    "custom_endpoint": {
+      "url": "https://api.cerebras.ai/v1",
+      "api_key": "$CEREBRAS_API_KEY2"
+    },
+    "context_length": 131072
+  },
+  "cerebras_key3": {
+    "type": "cerebras",
+    "name": "zai-glm-4.7",
+    "custom_endpoint": {
+      "url": "https://api.cerebras.ai/v1",
+      "api_key": "$CEREBRAS_API_KEY3"
+    },
+    "context_length": 131072
+  },
+  "cerebras_round_robin": {
+    "type": "round_robin",
+    "models": ["cerebras_key1", "cerebras_key2", "cerebras_key3"],
+    "rotate_every": 1
+  }
+}</code></pre>
+<p><strong>Result:</strong> You can now make up to 300 requests/hour by distributing across all three keys.</p>
+<h2 id="options-variations">Options &amp; Variations</h2>
+<h3 id="single-model-testing">Single Model (Testing)</h3>
+<p>You can create a round-robin with a single model for testing purposes:</p>
+<pre><code class="language-json">{
+  "test_rr": {
+    "type": "round_robin",
+    "models": ["my_model"],
+    "rotate_every": 100
+  }
+}</code></pre>
+<p>This always uses the same model but with a different model name prefix.</p>
+<h3 id="mixing-different-model-types">Mixing Different Model Types</h3>
+<p>Round-robin works with any model types:</p>
+<pre><code class="language-json">{
+  "mixed_round_robin": {
+    "type": "round_robin",
+    "models": ["gpt-5.2", "claude-4-5-sonnet", "Gemini-3"],
+    "rotate_every": 2
+  }
+}</code></pre>
+<h3 id="nested-round-robin">Nested Round-Robin</h3>
+<p>You can nest round-robin models (though this is advanced):</p>
+<pre><code class="language-json">{
+  "group1": {
+    "type": "round_robin",
+    "models": ["model_a", "model_b"],
+    "rotate_every": 1
+  },
+  "group2": {
+    "type": "round_robin",
+    "models": ["model_c", "model_d"],
+    "rotate_every": 1
+  },
+  "super_rr": {
+    "type": "round_robin",
+    "models": ["group1", "group2"],
+    "rotate_every": 1
+  }
+}</code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead><tr>
+<th>Problem</th>
+<th>Cause</th>
+<th>Solution</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>ValueError: Round-robin model requires a 'models' list</code></td>
+<td>Missing or invalid <code>models</code> field</td>
+<td>Ensure <code>models</code> is a non-empty array of valid model names</td>
+</tr>
+<tr>
+<td><code>rotate_every must be at least 1</code></td>
+<td>Invalid rotation value</td>
+<td>Set <code>rotate_every</code> to 1 or higher</td>
+</tr>
+<tr>
+<td>Model not found error</td>
+<td>One of the listed models doesn't exist</td>
+<td>Verify all model names in the <code>models</code> list are defined</td>
+</tr>
+<tr>
+<td>Not rotating as expected</td>
+<td><code>rotate_every</code> is too high</td>
+<td>Lower the <code>rotate_every</code> value or make more requests</td>
+</tr>
+</tbody></table>
+<h2 id="related-guides">Related Guides</h2>
+<ul>
+<li><a href="AddModels.html">How to Add Models from models.dev</a></li>
+<li><a href="ModelConfiguration.html">How to Configure Models</a></li>
+<li><a href="SwitchAgents.html">How to Switch Agents</a></li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

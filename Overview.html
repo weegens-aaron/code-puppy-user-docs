@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Code Puppy — Code Puppy Docs</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="index.html">Index</a>
+<a href="FAQ.html">FAQ</a>
+<a href="Overview.html" class="active">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="Concepts/index.html">Index</a>
+<a href="Concepts/AgentSkills.html">Agent Skills</a>
+<a href="Concepts/Agents.html">Agents</a>
+<a href="Concepts/Hooks.html">Hooks</a>
+<a href="Concepts/MCP.html">MCP</a>
+<a href="Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="Getting-Started/index.html">Index</a>
+<a href="Getting-Started/Configuration.html">Configuration</a>
+<a href="Getting-Started/Installation.html">Installation</a>
+<a href="Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="Guides/index.html">Index</a>
+<a href="Guides/AddModels.html">Add Models</a>
+<a href="Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="Guides/Commands.html">Commands</a>
+<a href="Guides/CreateAgents.html">Create Agents</a>
+<a href="Guides/CreateHooks.html">Create Hooks</a>
+<a href="Guides/CreateSkills.html">Create Skills</a>
+<a href="Guides/InstallSkills.html">Install Skills</a>
+<a href="Guides/ManageMCP.html">Manage MCP</a>
+<a href="Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="Guides/SwitchAgents.html">Switch Agents</a>
+<a href="Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="Reference/index.html">Index</a>
+<a href="Reference/ConfigCommands.html">Config Commands</a>
+<a href="Reference/ConfigReference.html">Config Reference</a>
+<a href="Reference/CoreCommands.html">Core Commands</a>
+<a href="Reference/EnvVars.html">Env Vars</a>
+<a href="Reference/MCPCommands.html">MCPCommands</a>
+<a href="Reference/RESTAPI.html">RESTAPI</a>
+<a href="Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="Reference/SessionCommands.html">Session Commands</a>
+<a href="Reference/SkillsCommands.html">Skills Commands</a>
+<a href="Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="Tutorials/index.html">Index</a>
+<a href="Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="Tutorials/FirstTask.html">First Task</a>
+<a href="Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="code-puppy">Code Puppy</h1>
+<h2 id="what-is-code-puppy">What Is Code Puppy?</h2>
+<p>Code Puppy is an AI-powered code generation agent that helps you write, review, and understand code through natural language conversations. Think of it as having a team of specialized AI developers at your command—each with their own personality and expertise.</p>
+<p>Unlike traditional IDEs or single-model AI assistants, Code Puppy gives you <strong>1024+ different "puppies"</strong> (specialized agents) that can work simultaneously, distributed across multiple AI models to overcome rate limits and maximize productivity. It runs entirely in your terminal with a sassy, opinionated personality that keeps code quality high.</p>
+<p>Code Puppy is designed for developers who want:</p>
+<ul>
+<li><strong>Privacy-first AI assistance</strong> - Your code never leaves your control unless you choose an external provider</li>
+<li><strong>Multi-model distribution</strong> - Spread load across dozens of AI providers</li>
+<li><strong>Specialized agents</strong> - Switch between general-purpose coders, code reviewers, security auditors, and more</li>
+<li><strong>Extensible architecture</strong> - Add custom skills, hooks, and plugins without modifying core code</li>
+</ul>
+<h2 id="key-features">Key Features</h2>
+<table>
+<thead><tr>
+<th>Feature</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>Multi-Agent System</strong></td>
+<td>Switch between 20+ specialized agents (code reviewer, security auditor, Python programmer, etc.)</td>
+</tr>
+<tr>
+<td><strong>65+ AI Providers</strong></td>
+<td>Access 1000+ models from OpenAI, Anthropic, Google, Cerebras, and 60+ more providers</td>
+</tr>
+<tr>
+<td><strong>Agent Skills</strong></td>
+<td>Install reusable capability packs (Docker, Kubernetes, security audits, etc.)</td>
+</tr>
+<tr>
+<td><strong>MCP Integration</strong></td>
+<td>Connect to Model Context Protocol servers for extended tooling</td>
+</tr>
+<tr>
+<td><strong>Custom Hooks</strong></td>
+<td>Intercept and control every tool call with pre/post hooks</td>
+</tr>
+<tr>
+<td><strong>Round-Robin Models</strong></td>
+<td>Distribute requests across multiple model instances to bypass rate limits</td>
+</tr>
+<tr>
+<td><strong>Privacy-First</strong></td>
+<td>Zero telemetry, no prompt logging, no third-party data sharing</td>
+</tr>
+<tr>
+<td><strong>100% Open Source</strong></td>
+<td>Fully auditable MIT-licensed code</td>
+</tr>
+</tbody></table>
+<h2 id="requirements">Requirements</h2>
+<div class="callout callout-note">
+<div class="callout-title">NOTE</div>
+<p>Code Puppy is a <strong>CLI tool</strong> that runs locally on your machine. You need Python 3.11+ and at least one AI provider API key.</p>
+</div>
+<table>
+<thead><tr>
+<th>Requirement</th>
+<th>Details</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>OS</strong></td>
+<td>macOS, Linux, or Windows (with PowerShell)</td>
+</tr>
+<tr>
+<td><strong>Python</strong></td>
+<td>3.11 or higher</td>
+</tr>
+<tr>
+<td><strong>Package Manager</strong></td>
+<td>[<code>uv</code>](https://github.com/astral-sh/uv) (recommended) or pip</td>
+</tr>
+<tr>
+<td><strong>AI Provider</strong></td>
+<td>At least one: OpenAI, Anthropic, Google, Cerebras, or local model server</td>
+</tr>
+</tbody></table>
+<h2 id="getting-started">Getting Started</h2>
+<h3 id="quick-install">Quick Install</h3>
+<pre><code class="language-bash"># Install and run in one command (recommended)
+uvx code-puppy -i
+
+# Or install globally as a tool
+uv pip install code-puppy
+code-puppy -i</code></pre>
+<h3 id="first-run">First Run</h3>
+<p>When you first run Code Puppy, you'll see:</p>
+<ol>
+<li>A message of the day (MOTD) with latest updates</li>
+<li>The interactive terminal interface</li>
+<li>Available commands via <code>/help</code></li>
+</ol>
+<h3 id="configure-an-ai-model">Configure an AI Model</h3>
+<p>You need at least one AI provider configured. The easiest way is:</p>
+<pre><code class="language-bash"># Add models from models.dev (65+ providers)
+/add_model</code></pre>
+<p>Or set environment variables for built-in providers:</p>
+<pre><code class="language-bash"># OpenAI
+export OPENAI_API_KEY=sk-...
+
+# Anthropic (Claude)
+export ANTHROPIC_API_KEY=sk-ant-...
+
+# Google (Gemini)
+export GEMINI_API_KEY=AIza...
+
+# Cerebras
+export CEREBRAS_API_KEY=csk-...
+
+# Synthetic (recommended for best value)
+export SYN_API_KEY=...</code></pre>
+<h2 id="accessing-code-puppy">Accessing Code Puppy</h2>
+<p>Code Puppy runs in your terminal:</p>
+<pre><code class="language-bash"># Interactive mode (default)
+uvx code-puppy -i
+
+# Run a single prompt and exit
+uvx code-puppy -p "Write a Python function to calculate fibonacci"
+
+# Use a specific agent
+uvx code-puppy -i --agent code-puppy
+
+# Use a specific model
+uvx code-puppy -i --model gpt-5.2</code></pre>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><a href="Getting-Started/Installation.html">Installation Guide</a> - Detailed installation for your platform</li>
+<li><a href="Getting-Started/QuickStart.html">Quick Start Tutorial</a> - Your first coding task in 5 minutes</li>
+<li><a href="Guides/Commands.html">Available Commands</a> - Complete command reference</li>
+<li><a href="Concepts/Agents.html">Understanding Agents</a> - How to choose and switch between agents</li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

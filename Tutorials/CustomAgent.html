@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tutorial: Creating Your First Custom Agent — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="index.html">Index</a>
+<a href="CustomAgent.html" class="active">Custom Agent</a>
+<a href="FirstTask.html">First Task</a>
+<a href="MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="tutorial-creating-your-first-custom-agent">Tutorial: Creating Your First Custom Agent</h1>
+<h2 id="what-you-ll-build">What You'll Build</h2>
+<p>By the end of this tutorial, you'll have created a <strong>Python Code Reviewer Agent</strong> — a specialized assistant that reviews Python code for best practices, bugs, and performance issues. You'll learn the complete workflow from initial concept to a working custom agent.</p>
+<p><strong>Time needed:</strong> ~15 minutes</p>
+<p><strong>You'll need:</strong></p>
+<ul>
+<li>Code Puppy installed and running</li>
+<li>A text editor (optional, for editing JSON)</li>
+<li>Basic familiarity with the <code>/agents</code> command</li>
+</ul>
+<p><strong>You should already know:</strong></p>
+<ul>
+<li>How to switch agents using <code>/agents</code></li>
+<li>How to send messages to agents</li>
+<li>Basic Python programming concepts</li>
+</ul>
+<hr>
+<h2 id="the-scenario">The Scenario</h2>
+<p>You're working on a Python project and want an agent that:</p>
+<ol>
+<li>Specializes in Python code review</li>
+<li>Focuses on PEP 8 compliance and Pythonic patterns</li>
+<li>Checks for common bugs and security issues</li>
+<li>Provides concrete refactoring suggestions</li>
+</ol>
+<p>Instead of using the general-purpose agents, you'll create a dedicated <strong>Python Reviewer</strong> that always gives Python-focused feedback.</p>
+<hr>
+<h2 id="step-1-choose-your-agent-type">Step 1: Choose Your Agent Type</h2>
+<p>Code Puppy supports two agent types:</p>
+<table>
+<thead><tr>
+<th>Type</th>
+<th>When to Use</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>JSON Agent</strong></td>
+<td>Quick setup, static configuration, no custom logic</td>
+</tr>
+<tr>
+<td><strong>Python Agent</strong></td>
+<td>Complex behavior, dynamic tool selection, custom logic</td>
+</tr>
+</tbody></table>
+<p>For this tutorial, we'll create a <strong>JSON agent</strong> first (simplest), then show how to upgrade to Python if needed.</p>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>Start with JSON. You can always migrate to Python later if you need more power.</p>
+</div>
+<hr>
+<h2 id="step-2-create-the-agent-directory">Step 2: Create the Agent Directory</h2>
+<p>Open your terminal and create a directory for your agent:</p>
+<pre><code class="language-bash">mkdir -p ~/.code_puppy/agents/python-reviewer</code></pre>
+<p><strong>What happened:</strong> This creates a folder where Code Puppy will look for your agent's configuration.</p>
+<hr>
+<h2 id="step-3-create-the-agent-configuration">Step 3: Create the Agent Configuration</h2>
+<p>Create a file called <code>agent.json</code> inside that directory:</p>
+<pre><code class="language-bash">cat &gt; ~/.code_puppy/agents/python-reviewer/agent.json &lt;&lt; 'EOF'
+{
+  "name": "python-reviewer",
+  "display_name": "Python Reviewer 🐍",
+  "description": "Specialized Python code reviewer for PEP 8, bugs, and best practices",
+  "system_prompt": "You are an expert Python developer specializing in code reviews. Your mission is to help developers write clean, Pythonic, and maintainable code.\n\n## Your Expertise\n\n### Code Quality\n- PEP 8 style guide compliance\n- Pythonic patterns and idioms\n- Type hints and type safety\n- Function and class design\n\n### Common Issues\n- Off-by-one errors\n- Mutable default arguments\n- Exception handling anti-patterns\n- Resource leaks (unclosed files, connections)\n- Import organization\n\n### Best Practices\n- DRY (Don't Repeat Yourself)\n- Single Responsibility Principle\n- Meaningful variable names\n- Appropriate use of comprehensions vs loops\n- Generator usage for memory efficiency\n\n## Review Process\n\n1. **Read** the code carefully\n2. **Identify** issues by category (style, bug, performance, security)\n3. **Prioritize** by severity (Critical/High/Medium/Low/Info)\n4. **Explain** why each issue matters\n5. **Suggest** concrete fixes with code examples\n\n## Output Format\n\nFor each finding:\n\n```\n**[SEVERITY]** Issue Title\n- **Location**: function_name or line number\n- **Problem**: Clear description\n- **Why it matters**: Impact explanation\n- **Fix**: Before/after code example\n```\n\n## Tone\n\n- Be constructive, not critical\n- Explain the \"why\" behind recommendations\n- Acknowledge when code is already good\n- Use examples from the codebase when possible\n\nRemember: Great code reviews make developers better, not just code better.",
+  "tools": [
+    "list_files",
+    "read_file",
+    "grep",
+    "replace_in_file",
+    "create_file",
+    "agent_run_shell_command"
+  ],
+  "user_prompt": "What Python code would you like me to review?"
+}
+EOF</code></pre>
+<p><strong>What happened:</strong> You've created a complete agent configuration with:</p>
+<ul>
+<li>A unique name (<code>python-reviewer</code>)</li>
+<li>A friendly display name with emoji</li>
+<li>A detailed system prompt defining expertise and behavior</li>
+<li>Tools needed for code review tasks</li>
+<li>A custom user prompt</li>
+</ul>
+<div class="callout callout-note">
+<div class="callout-title">NOTE</div>
+<p>The system prompt uses <code>\n</code> for newlines because JSON doesn't support multi-line strings.</p>
+</div>
+<hr>
+<h2 id="step-4-verify-the-json-syntax">Step 4: Verify the JSON Syntax</h2>
+<p>Before testing, validate your JSON:</p>
+<pre><code class="language-bash">cat ~/.code_puppy/agents/python-reviewer/agent.json | python -m json.tool &gt; /dev/null &amp;&amp; echo "✅ Valid JSON" || echo "❌ Invalid JSON"</code></pre>
+<p><strong>Expected result:</strong></p>
+<pre><code>✅ Valid JSON</code></pre>
+<p>If you see <code>❌ Invalid JSON</code>, check for:</p>
+<ul>
+<li>Missing commas between fields</li>
+<li>Unescaped quotes inside strings</li>
+<li>Trailing commas (not allowed in JSON)</li>
+</ul>
+<hr>
+<h2 id="step-5-load-your-agent">Step 5: Load Your Agent</h2>
+<p>Restart Code Puppy to load your new agent:</p>
+<pre><code class="language-bash"># If already running, exit with Ctrl+C or /quit
+# Then start again
+code_puppy</code></pre>
+<p><strong>What happened:</strong> Code Puppy scans <code>~/.code_puppy/agents/</code> at startup and registers any valid agent configurations.</p>
+<hr>
+<h2 id="step-6-switch-to-your-agent">Step 6: Switch to Your Agent</h2>
+<p>Use the <code>/agents</code> command to see your new agent:</p>
+<pre><code>/agents</code></pre>
+<p>You should see <strong>Python Reviewer 🐍</strong> in the list. Select it to switch.</p>
+<p><strong>Alternative:</strong> Use the direct command:</p>
+<pre><code>/switch-agent python-reviewer</code></pre>
+<p><strong>What happened:</strong> You're now talking to your custom agent instead of the default agent.</p>
+<hr>
+<h2 id="step-7-test-your-agent">Step 7: Test Your Agent</h2>
+<p>Try a simple code review request:</p>
+<pre><code>Here's some Python code. Can you review it?
+
+def process_items(items):
+    result = []
+    for i in range(len(items)):
+        if items[i] &gt; 5:
+            result.append(items[i] * 2)
+    return result</code></pre>
+<p><strong>Expected result:</strong> Your agent should respond with feedback like:</p>
+<pre><code>**[Medium]** Use enumerate instead of range(len())
+- **Location**: process_items function
+- **Problem**: Using `range(len(items))` is less Pythonic
+- **Why it matters**: `enumerate()` is more readable and efficient
+- **Fix**:</code></pre>
+<p>for i, item in enumerate(items): if item &gt; 5: result.append(item * 2)</p>
+<pre><code>
+**[Info]** Consider list comprehension
+- **Location**: process_items function
+- **Problem**: Simple filtering/transformation can use comprehension
+- **Fix**:</code></pre>
+<p>return [item * 2 for item in items if item &gt; 5]</p>
+<pre><code></code></pre>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>If your agent doesn't respond as expected, check that: 1. The <code>system_prompt</code> field is correctly formatted 2. Code Puppy was restarted after creating the agent 3. The agent name matches exactly (<code>python-reviewer</code>)</p>
+</div>
+<hr>
+<h2 id="step-8-test-tool-access">Step 8: Test Tool Access</h2>
+<p>Your agent has file tools. Try this:</p>
+<pre><code>Can you list the Python files in the current directory and review the first one?</code></pre>
+<p><strong>Expected result:</strong> Your agent should:</p>
+<ol>
+<li>Use the <code>list_files</code> tool to find <code>.py</code> files</li>
+<li>Use <code>read_file</code> to read the first file</li>
+<li>Provide a code review</li>
+</ol>
+<p>If tools don't work, verify the <code>tools</code> array in your <code>agent.json</code> includes the correct tool names.</p>
+<hr>
+<h2 id="step-9-customize-further-optional">Step 9: Customize Further (Optional)</h2>
+<h3 id="pin-a-specific-model">Pin a Specific Model</h3>
+<p>You might want your Python reviewer to always use a specific model. Edit <code>agent.json</code>:</p>
+<pre><code class="language-json">{
+  "name": "python-reviewer",
+  ...
+  "pinned_model": "claude-3-5-sonnet"
+}</code></pre>
+<p>Then restart Code Puppy.</p>
+<h3 id="add-more-specialization">Add More Specialization</h3>
+<p>Expand the <code>system_prompt</code> with domain-specific rules:</p>
+<pre><code class="language-json">"system_prompt": "... Your expertise includes:\n\n### Django Best Practices\n- Use `select_related` for foreign keys\n- Avoid N+1 queries\n- Follow Django REST framework patterns\n..."</code></pre>
+<hr>
+<h2 id="advanced-migrate-to-a-python-agent">Advanced: Migrate to a Python Agent</h2>
+<p>If you need dynamic behavior (e.g., different tools based on context), migrate to Python:</p>
+<h3 id="step-a-create-the-python-file">Step A: Create the Python File</h3>
+<pre><code class="language-bash">cat &gt; code_puppy/agents/agent_python_reviewer.py &lt;&lt; 'EOF'
+"""Python code reviewer agent with dynamic tool selection."""
+
+from .base_agent import BaseAgent
+
+
+class PythonReviewerAgent(BaseAgent):
+    """Specialized Python code reviewer."""
+
+    @property
+    def name(self) -&gt; str:
+        return "python-reviewer"
+
+    @property
+    def display_name(self) -&gt; str:
+        return "Python Reviewer 🐍"
+
+    @property
+    def description(self) -&gt; str:
+        return "Expert Python code reviewer for PEP 8, bugs, and best practices"
+
+    def get_system_prompt(self) -&gt; str:
+        return """
+You are an expert Python developer specializing in code reviews.
+
+[Copy the system_prompt from your JSON agent here]
+"""
+
+    def get_available_tools(self) -&gt; list[str]:
+        return [
+            "list_files",
+            "read_file",
+            "grep",
+            "replace_in_file",
+            "create_file",
+            "agent_run_shell_command",
+        ]
+
+    def get_user_prompt(self) -&gt; str:
+        return "What Python code would you like me to review?"
+EOF</code></pre>
+<p><strong>What happened:</strong> You've created a Python agent that implements the same behavior as your JSON agent but with full programmatic control.</p>
+<h3 id="step-b-remove-the-json-agent">Step B: Remove the JSON Agent</h3>
+<pre><code class="language-bash">rm -rf ~/.code_puppy/agents/python-reviewer</code></pre>
+<h3 id="step-c-restart-code-puppy">Step C: Restart Code Puppy</h3>
+<pre><code class="language-bash"># Exit and restart
+code_puppy</code></pre>
+<p>Your Python agent is now loaded and ready to use.</p>
+<hr>
+<h2 id="final-result">Final Result</h2>
+<p>You now have a working custom agent that:</p>
+<ul>
+<li>✅ Specializes in Python code review</li>
+<li>✅ Provides structured, actionable feedback</li>
+<li>✅ Has access to file tools for reviewing codebases</li>
+<li>✅ Can be extended with more rules or migrated to Python</li>
+</ul>
+<hr>
+<h2 id="what-you-learned">What You Learned</h2>
+<ul>
+<li><strong>JSON agents</strong> are the quickest way to create custom agents</li>
+<li><strong>System prompts</strong> define your agent's expertise and behavior</li>
+<li><strong>Tools</strong> give your agent capabilities to interact with files and systems</li>
+<li><strong>Python agents</strong> provide dynamic control when you need it</li>
+<li><strong>Agent discovery</strong> happens at startup, so restart is required after changes</li>
+</ul>
+<hr>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><a href="MultiModelSetup.html">Tutorial: Multi-Model Setup</a> — Configure different models for different agents</li>
+<li><a href="../Guides/CreateSkills.html">Guide: How to Create Skills</a> — Extend your agent with custom skills</li>
+<li><a href="../Guides/SwitchAgents.html">Guide: How to Switch Agents</a> — Master agent switching workflows</li>
+<li><a href="../Reference/ToolsReference.html">Reference: Available Tools</a> — See all tools your agent can use</li>
+</ul>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>Create more agents for different tasks: - <code>security-auditor</code> for security reviews - <code>docs-writer</code> for documentation - <code>test-generator</code> for writing tests - <code>refactor-helper</code> for code modernization</p>
+</div>
+<p>Each agent can have its own personality, expertise, and toolset!</p>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

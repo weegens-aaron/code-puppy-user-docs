@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Installation — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="index.html">Index</a>
+<a href="Configuration.html">Configuration</a>
+<a href="Installation.html" class="active">Installation</a>
+<a href="QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="installation">Installation</h1>
+<h2 id="overview">Overview</h2>
+<p>This guide walks you through installing Code Puppy on your system. Code Puppy is designed to work on macOS, Linux, and Windows.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Before you begin, make sure you have:</p>
+<ul>
+<li><strong>Python 3.11 or higher</strong> installed</li>
+<li><strong>UV package manager</strong> (recommended) or pip</li>
+<li><strong>API keys</strong> for the AI providers you want to use (see Configuration)</li>
+</ul>
+<h2 id="step-1-install-uv-recommended">Step 1: Install UV (Recommended)</h2>
+<p>UV is the fastest way to run Code Puppy. It's a Python package installer and manager.</p>
+<h3 id="macos-linux">macOS / Linux</h3>
+<pre><code class="language-bash">curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
+<h3 id="windows-powershell-as-admin">Windows (PowerShell as Admin)</h3>
+<pre><code class="language-powershell">powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"</code></pre>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>After installing UV, restart your terminal or run <code>source ~/.bashrc</code> (macOS/Linux) to make the <code>uv</code> command available.</p>
+</div>
+<h2 id="step-2-run-code-puppy">Step 2: Run Code Puppy</h2>
+<p>The easiest way to use Code Puppy is with <code>uvx</code>, which runs the tool without requiring a global installation.</p>
+<h3 id="quick-start">Quick Start</h3>
+<pre><code class="language-bash">uvx code-puppy -i</code></pre>
+<p>This launches Code Puppy in interactive mode where you can start giving it tasks.</p>
+<h3 id="verify-installation">Verify Installation</h3>
+<pre><code class="language-bash">uvx code-puppy --version</code></pre>
+<p>You should see something like:</p>
+<pre><code>code-puppy, version X.Y.Z</code></pre>
+<h2 id="step-3-configure-api-keys">Step 3: Configure API Keys</h2>
+<p>Code Puppy supports multiple AI providers. You'll need API keys for the models you want to use.</p>
+<h3 id="environment-variables">Environment Variables</h3>
+<p>Set your API keys as environment variables:</p>
+<pre><code class="language-bash"># OpenAI (GPT models)
+export OPENAI_API_KEY=sk-...
+
+# Anthropic (Claude models)
+export ANTHROPIC_API_KEY=sk-ant-...
+
+# Google (Gemini models)
+export GEMINI_API_KEY=AIza...
+
+# Cerebras (fast inference)
+export CEREBRAS_API_KEY=csk-...</code></pre>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>Add these to your shell profile (<code>~/.bashrc</code>, <code>~/.zshrc</code>, or <code>~/.config/fish/config.fish</code>) to persist them across sessions.</p>
+</div>
+<h3 id="windows-powershell">Windows PowerShell</h3>
+<pre><code class="language-powershell">$env:OPENAI_API_KEY = "sk-..."
+$env:ANTHROPIC_API_KEY = "sk-ant-..."</code></pre>
+<h2 id="alternative-global-installation">Alternative: Global Installation</h2>
+<p>If you prefer to install Code Puppy globally (so you can run <code>code-puppy</code> without <code>uvx</code>):</p>
+<pre><code class="language-bash">uv pip install --global code-puppy
+code-puppy -i</code></pre>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><a href="Configuration.html">Configuration</a> - Set up models, agents, and preferences</li>
+<li><a href="QuickStart.html">Quick Start</a> - Your first task with Code Puppy</li>
+<li><a href="../Overview.html">Overview</a> - Learn what Code Puppy can do</li>
+</ul>
+<h2 id="common-issues">Common Issues</h2>
+<table>
+<thead><tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>uvx: command not found</code></td>
+<td>Install UV first (Step 1)</td>
+</tr>
+<tr>
+<td><code>No module named 'code_puppy'</code></td>
+<td>Make sure you're using <code>uvx code-puppy</code>, not <code>uvx code_puppy</code></td>
+</tr>
+<tr>
+<td><code>API key not found</code></td>
+<td>Set the appropriate environment variable for your chosen provider</td>
+</tr>
+<tr>
+<td>Slow startup</td>
+<td>This is normal for the first run as dependencies are resolved</td>
+</tr>
+</tbody></table>
+<h2 id="system-requirements">System Requirements</h2>
+<table>
+<thead><tr>
+<th>Requirement</th>
+<th>Details</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>OS</td>
+<td>macOS, Linux, Windows</td>
+</tr>
+<tr>
+<td>Python</td>
+<td>3.11 or higher</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>2GB+ recommended</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>Required for cloud LLM providers</td>
+</tr>
+</tbody></table>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Configure Models — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="index.html">Index</a>
+<a href="AddModels.html">Add Models</a>
+<a href="BlockToolCalls.html">Block Tool Calls</a>
+<a href="Commands.html">Commands</a>
+<a href="CreateAgents.html">Create Agents</a>
+<a href="CreateHooks.html">Create Hooks</a>
+<a href="CreateSkills.html">Create Skills</a>
+<a href="InstallSkills.html">Install Skills</a>
+<a href="ManageMCP.html">Manage MCP</a>
+<a href="ModelConfiguration.html" class="active">Model Configuration</a>
+<a href="RoundRobinModels.html">Round Robin Models</a>
+<a href="SwitchAgents.html">Switch Agents</a>
+<a href="UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="how-to-configure-models">How to Configure Models</h1>
+<h2 id="what-you-ll-learn">What You'll Learn</h2>
+<p>By the end of this guide, you'll be able to configure model-specific settings like temperature, seed, and reasoning effort to fine-tune how Code Puppy interacts with each AI model.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li><a href="../Getting-Started/Installation.html">Code Puppy installed</a></li>
+<li>At least one model added to your configuration (see <a href="AddModels.html">AddModels guide</a>)</li>
+</ul>
+<h2 id="quick-version">Quick Version</h2>
+<pre><code class="language-bash"># Open the interactive model settings menu
+/model_settings</code></pre>
+<p>Navigate with arrow keys, press Enter to edit a setting, and Esc to save and exit.</p>
+<h2 id="detailed-steps">Detailed Steps</h2>
+<h3 id="1-open-the-model-settings-menu">1. Open the Model Settings Menu</h3>
+<p>Run the <code>/model_settings</code> command:</p>
+<pre><code class="language-bash">/model_settings</code></pre>
+<p>You'll see a split-screen interface:</p>
+<ul>
+<li><strong>Left panel</strong>: List of all available models (paginated if you have many)</li>
+<li><strong>Right panel</strong>: Details about the selected model</li>
+</ul>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>Models with custom settings show a ⚙ icon. The active model shows "(active)".</p>
+</div>
+<h3 id="2-select-a-model-to-configure">2. Select a Model to Configure</h3>
+<p>Use the <strong>↑/↓ arrow keys</strong> to navigate through the model list. If you have more than 15 models, use <strong>PgUp/PgDn</strong> to change pages.</p>
+<p>Press <strong>Enter</strong> on a model to view and edit its settings.</p>
+<h3 id="3-configure-model-settings">3. Configure Model Settings</h3>
+<p>You'll now see the settings available for that model. Navigate with <strong>↑/↓</strong> and press <strong>Enter</strong> to edit a setting.</p>
+<h4 id="numeric-settings">Numeric Settings</h4>
+<p>For settings like <strong>Temperature</strong>, <strong>Seed</strong>, or <strong>Top-P</strong>:</p>
+<ol>
+<li>Press <strong>Enter</strong> to enter edit mode</li>
+<li>Use <strong>←/→</strong> arrow keys to adjust the value</li>
+<li>Press <strong>Enter</strong> to save, or <strong>Esc</strong> to cancel</li>
+</ol>
+<p><strong>Example</strong>: Setting temperature to 0.7:</p>
+<ul>
+<li>Navigate to "Temperature"</li>
+<li>Press Enter</li>
+<li>Adjust with ←/→ until you see <code>0.70</code></li>
+<li>Press Enter to save</li>
+</ul>
+<h4 id="choice-settings">Choice Settings</h4>
+<p>For settings like <strong>Reasoning Effort</strong> or <strong>Verbosity</strong>:</p>
+<ol>
+<li>Press <strong>Enter</strong> to enter edit mode</li>
+<li>Use <strong>←/→</strong> arrow keys to cycle through options</li>
+<li>Press <strong>Enter</strong> to save</li>
+</ol>
+<p><strong>Available options</strong>:</p>
+<ul>
+<li><strong>Reasoning Effort</strong>: <code>minimal</code>, <code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code></li>
+<li><strong>Verbosity</strong>: <code>low</code>, <code>medium</code>, <code>high</code>, <code>max</code></li>
+<li><strong>Extended Thinking</strong>: <code>enabled</code>, <code>adaptive</code>, <code>off</code></li>
+</ul>
+<h4 id="boolean-settings">Boolean Settings</h4>
+<p>For settings like <strong>Clear Thinking</strong> or <strong>Thinking Enabled</strong>:</p>
+<ol>
+<li>Press <strong>Enter</strong> to toggle between Enabled/Disabled</li>
+<li>Press <strong>Enter</strong> to save, or <strong>Esc</strong> to cancel</li>
+</ol>
+<h3 id="4-reset-a-setting-to-default">4. Reset a Setting to Default</h3>
+<p>While viewing a setting:</p>
+<ul>
+<li>Press <strong>d</strong> to reset it to the model's default value</li>
+</ul>
+<p>This removes the custom setting and reverts to the model's built-in default.</p>
+<h3 id="5-exit-and-save">5. Exit and Save</h3>
+<ul>
+<li>Press <strong>Esc</strong> to go back to the model list</li>
+<li>Press <strong>Esc</strong> again to exit the menu</li>
+</ul>
+<p>All changes are saved automatically as you make them.</p>
+<h2 id="understanding-model-settings">Understanding Model Settings</h2>
+<h3 id="available-settings">Available Settings</h3>
+<table>
+<thead><tr>
+<th>Setting</th>
+<th>Type</th>
+<th>Description</th>
+<th>Typical Values</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>Temperature</strong></td>
+<td>Numeric (0.0-1.0)</td>
+<td>Controls randomness. Lower = more deterministic, higher = more creative</td>
+<td>0.2 (precise) to 0.8 (creative)</td>
+</tr>
+<tr>
+<td><strong>Seed</strong></td>
+<td>Numeric (0-999999)</td>
+<td>Random seed for reproducible outputs. Set same value for consistent results</td>
+<td>Any integer</td>
+</tr>
+<tr>
+<td><strong>Top-P</strong></td>
+<td>Numeric (0.0-1.0)</td>
+<td>Controls token diversity. 0.0 = least random, 1.0 = most random</td>
+<td>0.9 (common default)</td>
+</tr>
+<tr>
+<td><strong>Reasoning Effort</strong></td>
+<td>Choice</td>
+<td>How much effort GPT-5 models spend on reasoning</td>
+<td><code>medium</code> (balanced)</td>
+</tr>
+<tr>
+<td><strong>Verbosity</strong></td>
+<td>Choice</td>
+<td>Controls response length</td>
+<td><code>medium</code> (balanced)</td>
+</tr>
+<tr>
+<td><strong>Extended Thinking</strong></td>
+<td>Choice</td>
+<td>Enable thinking mode with budget_tokens</td>
+<td><code>enabled</code> (classic) or <code>adaptive</code> (model decides)</td>
+</tr>
+<tr>
+<td><strong>Thinking Budget</strong></td>
+<td>Numeric (1024-131072)</td>
+<td>Max tokens for extended thinking (when enabled)</td>
+<td>10000 (default)</td>
+</tr>
+<tr>
+<td><strong>Interleaved Thinking</strong></td>
+<td>Boolean</td>
+<td>Enable thinking between tool calls (Claude 4 only)</td>
+<td><code>false</code> (default)</td>
+</tr>
+<tr>
+<td><strong>Clear Thinking</strong></td>
+<td>Boolean</td>
+<td>Strip thinking blocks from responses</td>
+<td><code>false</code> (show thinking)</td>
+</tr>
+<tr>
+<td><strong>Thinking Enabled</strong></td>
+<td>Boolean</td>
+<td>Enable thinking mode for Gemini 3 Pro</td>
+<td><code>true</code> (default)</td>
+</tr>
+<tr>
+<td><strong>Thinking Level</strong></td>
+<td>Choice</td>
+<td>Depth of thinking for Gemini 3 Pro</td>
+<td><code>low</code> (faster) or <code>high</code> (thorough)</td>
+</tr>
+<tr>
+<td><strong>Effort</strong></td>
+<td>Choice</td>
+<td>Response effort for Opus 4-6</td>
+<td><code>high</code> (default)</td>
+</tr>
+</tbody></table>
+<div class="callout callout-note">
+<div class="callout-title">NOTE</div>
+<p>Not all models support all settings. The menu only shows settings that are valid for the selected model.</p>
+</div>
+<h3 id="global-vs-per-model-settings">Global vs. Per-Model Settings</h3>
+<p>Some settings are <strong>global</strong> (apply to all models of a type):</p>
+<ul>
+<li><strong>Reasoning Effort</strong>: Applies to all GPT-5 models</li>
+<li><strong>Verbosity</strong>: Applies to all OpenAI models</li>
+</ul>
+<p>When you configure these for a specific model, they affect all models of that type.</p>
+<h2 id="examples">Examples</h2>
+<h3 id="example-1-make-a-model-more-creative">Example 1: Make a Model More Creative</h3>
+<p>Configure <code>claude-3-5-sonnet</code> for creative brainstorming:</p>
+<ol>
+<li><code>/model_settings</code></li>
+<li>Select <code>claude-3-5-sonnet</code></li>
+<li>Set <strong>Temperature</strong> to <code>0.8</code></li>
+<li>Set <strong>Top-P</strong> to <code>0.95</code></li>
+</ol>
+<p><strong>Result</strong>: The model will produce more varied and creative responses.</p>
+<h3 id="example-2-make-a-model-more-precise">Example 2: Make a Model More Precise</h3>
+<p>Configure <code>gpt-5</code> for code review:</p>
+<ol>
+<li><code>/model_settings</code></li>
+<li>Select <code>gpt-5</code></li>
+<li>Set <strong>Temperature</strong> to <code>0.2</code></li>
+<li>Set <strong>Reasoning Effort</strong> to <code>high</code></li>
+</ol>
+<p><strong>Result</strong>: The model will be more deterministic and thorough in its analysis.</p>
+<h3 id="example-3-reproduce-results">Example 3: Reproduce Results</h3>
+<p>Set a fixed seed for reproducible outputs:</p>
+<ol>
+<li><code>/model_settings</code></li>
+<li>Select your model</li>
+<li>Set <strong>Seed</strong> to <code>42</code></li>
+</ol>
+<p><strong>Result</strong>: Running the same prompt will produce consistent results.</p>
+<h3 id="example-4-enable-extended-thinking">Example 4: Enable Extended Thinking</h3>
+<p>Configure a Claude model for deep reasoning:</p>
+<ol>
+<li><code>/model_settings</code></li>
+<li>Select your Claude model</li>
+<li>Set <strong>Extended Thinking</strong> to <code>enabled</code></li>
+<li>Set <strong>Thinking Budget</strong> to <code>20000</code></li>
+</ol>
+<p><strong>Result</strong>: The model will show its reasoning process with a 20k token budget.</p>
+<h2 id="options-variations">Options &amp; Variations</h2>
+<h3 id="command-line-configuration">Command-Line Configuration</h3>
+<p>You can also set some model settings via <code>/set</code> commands:</p>
+<pre><code class="language-bash"># Set global temperature
+/set temperature 0.7
+
+# Set reasoning effort (global for GPT-5)
+/set openai_reasoning_effort high
+
+# Set verbosity (global for OpenAI)
+/set openai_verbosity low</code></pre>
+<div class="callout callout-note">
+<div class="callout-title">NOTE</div>
+<p>The <code>/set</code> command only supports a subset of settings. For full control, use <code>/model_settings</code>.</p>
+</div>
+<h3 id="programmatic-configuration">Programmatic Configuration</h3>
+<p>You can configure models in your plugins using the config API:</p>
+<pre><code class="language-python">from code_puppy.config import set_model_setting
+
+# Set temperature for a specific model
+set_model_setting("gpt-5", "temperature", 0.7)
+
+# Clear a setting (revert to default)
+set_model_setting("gpt-5", "temperature", None)</code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead><tr>
+<th>Problem</th>
+<th>Cause</th>
+<th>Solution</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Setting not available for my model</td>
+<td>Model doesn't support that setting</td>
+<td>Check the model's <code>supported_settings</code> in <code>models.json</code></td>
+</tr>
+<tr>
+<td>Changes not taking effect</td>
+<td>Model was already loaded</td>
+<td>Use <code>/reload</code> or restart Code Puppy</td>
+</tr>
+<tr>
+<td>Can't find my model</td>
+<td>Model not added to models.json</td>
+<td>Use <code>/add_model</code> to add it first</td>
+</tr>
+<tr>
+<td>Settings reset after restart</td>
+<td>Settings not saved</td>
+<td>Changes are saved automatically; check you're editing the right model</td>
+</tr>
+</tbody></table>
+<h2 id="related-guides">Related Guides</h2>
+<ul>
+<li><a href="AddModels.html">AddModels</a> - Add new models from models.dev</li>
+<li><a href="SwitchAgents.html">SwitchAgents</a> - Switch between different agents</li>
+<li><a href="../Getting-Started/Configuration.html">Configuration</a> - General Code Puppy configuration</li>
+<li><a href="../Reference/ConfigReference.html">Reference: Configuration Options</a> - All available settings</li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

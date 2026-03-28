@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Block Tool Calls — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="index.html">Index</a>
+<a href="AddModels.html">Add Models</a>
+<a href="BlockToolCalls.html" class="active">Block Tool Calls</a>
+<a href="Commands.html">Commands</a>
+<a href="CreateAgents.html">Create Agents</a>
+<a href="CreateHooks.html">Create Hooks</a>
+<a href="CreateSkills.html">Create Skills</a>
+<a href="InstallSkills.html">Install Skills</a>
+<a href="ManageMCP.html">Manage MCP</a>
+<a href="ModelConfiguration.html">Model Configuration</a>
+<a href="RoundRobinModels.html">Round Robin Models</a>
+<a href="SwitchAgents.html">Switch Agents</a>
+<a href="UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="how-to-block-tool-calls">How to Block Tool Calls</h1>
+<h2 id="what-you-ll-learn">What You'll Learn</h2>
+<p>By the end of this guide, you'll be able to create a plugin that intercepts and blocks specific tool calls before they execute, giving you fine-grained control over what actions the AI agent can perform.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Familiarity with Code Puppy's plugin system</li>
+<li>Basic understanding of Python async/await</li>
+<li>Completed <a href="CreateHooks.html">Create Hooks</a> guide (recommended)</li>
+</ul>
+<h2 id="quick-version">Quick Version</h2>
+<p>Create a plugin with a <code>pre_tool_call</code> callback that returns <code>{"blocked": True, "error_message": "reason"}</code>:</p>
+<pre><code class="language-python">from code_puppy.callbacks import register_callback
+
+async def block_dangerous_tools(tool_name: str, tool_args: dict, context=None):
+    if tool_name == "delete_file":
+        return {
+            "blocked": True,
+            "error_message": "🚫 File deletion is not allowed"
+        }
+    return None  # Allow other tools
+
+register_callback("pre_tool_call", block_dangerous_tools)</code></pre>
+<h2 id="detailed-steps">Detailed Steps</h2>
+<h3 id="1-create-your-plugin-directory">1. Create Your Plugin Directory</h3>
+<p>Create a new plugin folder under <code>code_puppy/plugins/</code> (builtin) or <code>~/.code_puppy/plugins/</code> (user):</p>
+<pre><code class="language-bash">mkdir -p ~/.code_puppy/plugins/block_tool_calls</code></pre>
+<h3 id="2-create-the-callback-registration-file">2. Create the Callback Registration File</h3>
+<p>Create <code>register_callbacks.py</code> in your plugin directory:</p>
+<pre><code class="language-python">"""Block specific tool calls before they execute."""
+
+from typing import Any, Dict
+
+from code_puppy.callbacks import register_callback
+
+
+async def tool_blocker_callback(
+    tool_name: str,
+    tool_args: dict,
+    context: Any = None
+) -&gt; Dict[str, Any] | None:
+    """Intercept tool calls and block specific ones.
+
+    Args:
+        tool_name: Name of the tool being called
+        tool_args: Arguments being passed to the tool
+        context: Optional context data
+
+    Returns:
+        None to allow the tool call
+        Dict with "blocked": True to block it
+    """
+    # Example: Block all file deletions
+    if tool_name == "delete_file":
+        return {
+            "blocked": True,
+            "error_message": "🚫 File deletion is blocked by policy"
+        }
+
+    # Example: Block shell commands with dangerous patterns
+    if tool_name == "run_shell_command":
+        command = tool_args.get("command", "")
+        dangerous_patterns = ["rm -rf", "DROP TABLE", "chmod 777"]
+        for pattern in dangerous_patterns:
+            if pattern in command:
+                return {
+                    "blocked": True,
+                    "error_message": f"🚫 Command blocked: contains '{pattern}'"
+                }
+
+    # Allow all other tools
+    return None
+
+
+# Register the callback
+register_callback("pre_tool_call", tool_blocker_callback)</code></pre>
+<h3 id="3-understand-the-blocking-mechanism">3. Understand the Blocking Mechanism</h3>
+<p>When a callback returns a dict with <code>"blocked": True</code>, Code Puppy:</p>
+<ol>
+<li><strong>Cancels the tool execution</strong> - The tool never runs</li>
+<li><strong>Shows a warning</strong> - User sees: <code>🚫 Hook blocked this tool call: {reason}</code></li>
+<li><strong>Returns an error message</strong> - The agent receives: <code>ERROR: The hook policy prevented this tool from running</code></li>
+<li><strong>Allows agent recovery</strong> - The agent can acknowledge the block and try a different approach</li>
+</ol>
+<h3 id="4-access-tool-arguments">4. Access Tool Arguments</h3>
+<p>The <code>tool_args</code> dict contains all parameters passed to the tool. Common tools and their arguments:</p>
+<table>
+<thead><tr>
+<th>Tool</th>
+<th>Key Arguments</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>edit_file</code></td>
+<td><code>file_path</code>, <code>replacements</code></td>
+</tr>
+<tr>
+<td><code>create_file</code></td>
+<td><code>file_path</code>, <code>content</code>, <code>overwrite</code></td>
+</tr>
+<tr>
+<td><code>delete_file</code></td>
+<td><code>file_path</code></td>
+</tr>
+<tr>
+<td><code>run_shell_command</code></td>
+<td><code>command</code>, <code>cwd</code>, <code>timeout</code></td>
+</tr>
+<tr>
+<td><code>read_file</code></td>
+<td><code>file_path</code>, <code>start_line</code>, <code>num_lines</code></td>
+</tr>
+</tbody></table>
+<p><strong>Example: Block edits to specific files:</strong></p>
+<pre><code class="language-python">async def protect_config_files(tool_name: str, tool_args: dict, context=None):
+    protected = ["config.json", ".env", "secrets.yaml"]
+
+    if tool_name in ("edit_file", "create_file", "replace_in_file"):
+        file_path = tool_args.get("file_path", "")
+        if any(file_path.endswith(p) for p in protected):
+            return {
+                "blocked": True,
+                "error_message": f"🚫 Protected file: {file_path}"
+            }
+
+    return None</code></pre>
+<h3 id="5-implement-conditional-blocking">5. Implement Conditional Blocking</h3>
+<p>You can make blocking decisions based on context, user settings, or external conditions:</p>
+<p><strong>Example: Time-based restrictions:</strong></p>
+<pre><code class="language-python">import datetime
+
+async def block_after_hours(tool_name: str, tool_args: dict, context=None):
+    # Block destructive operations after 6 PM
+    if datetime.datetime.now().hour &gt;= 18:
+        if tool_name in ("delete_file", "delete_snippet"):
+            return {
+                "blocked": True,
+                "error_message": "🚫 Destructive operations blocked after business hours"
+            }
+    return None</code></pre>
+<p><strong>Example: Environment-based restrictions:</strong></p>
+<pre><code class="language-python">import os
+
+async def block_in_production(tool_name: str, tool_args: dict, context=None):
+    if os.environ.get("ENV") == "production":
+        if tool_name == "run_shell_command":
+            command = tool_args.get("command", "")
+            if "restart" in command or "deploy" in command:
+                return {
+                    "blocked": True,
+                    "error_message": "🚫 Deployment commands blocked in production"
+                }
+    return None</code></pre>
+<h2 id="example-complete-safety-policy-plugin">Example: Complete Safety Policy Plugin</h2>
+<p>Here's a comprehensive example that implements a safety policy:</p>
+<pre><code class="language-python">"""Safety policy plugin - blocks dangerous operations by default."""
+
+import os
+from typing import Any, Dict
+
+from code_puppy.callbacks import register_callback
+
+
+def is_destructive_tool(tool_name: str) -&gt; bool:
+    """Check if a tool can make destructive changes."""
+    return tool_name in (
+        "delete_file",
+        "delete_snippet",
+        "replace_in_file",
+        "run_shell_command",
+    )
+
+
+def is_protected_path(file_path: str) -&gt; bool:
+    """Check if a file path is protected."""
+    protected_patterns = [
+        ".env",
+        "secrets.",
+        "config.prod.",
+        "/etc/",
+        "/var/",
+    ]
+    return any(p in file_path for p in protected_patterns)
+
+
+async def safety_policy_callback(
+    tool_name: str,
+    tool_args: dict,
+    context: Any = None
+) -&gt; Dict[str, Any] | None:
+    """Enforce safety policy on tool calls."""
+
+    # Always block edits to protected paths
+    if tool_name in ("edit_file", "create_file", "replace_in_file"):
+        file_path = tool_args.get("file_path", "")
+        if is_protected_path(file_path):
+            return {
+                "blocked": True,
+                "error_message": f"🚫 Protected path: {file_path}"
+            }
+
+    # Block dangerous shell commands
+    if tool_name == "run_shell_command":
+        command = tool_args.get("command", "")
+
+        # Block destructive commands
+        dangerous = [
+            "rm -rf /",
+            "rm -rf *",
+            "mkfs",
+            "dd if=",
+            "DROP TABLE",
+            "TRUNCATE",
+        ]
+        for pattern in dangerous:
+            if pattern in command:
+                return {
+                    "blocked": True,
+                    "error_message": f"🚫 Dangerous command blocked: {pattern}"
+                }
+
+    # Require explicit approval for all destructive tools
+    if is_destructive_tool(tool_name):
+        # In a real plugin, you might check a config setting
+        # or prompt the user here
+        pass  # Allow for now, but log the attempt
+
+    return None
+
+
+register_callback("pre_tool_call", safety_policy_callback)</code></pre>
+<h2 id="options-variations">Options &amp; Variations</h2>
+<table>
+<thead><tr>
+<th>Pattern</th>
+<th>Description</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>Block by tool name</strong></td>
+<td>Block all calls to a specific tool</td>
+<td><code>if tool_name == "delete_file"</code></td>
+</tr>
+<tr>
+<td><strong>Block by argument value</strong></td>
+<td>Block based on specific arguments</td>
+<td><code>if "rm -rf" in tool_args["command"]</code></td>
+</tr>
+<tr>
+<td><strong>Block by file path</strong></td>
+<td>Protect specific files/directories</td>
+<td><code>if file_path.endswith(".env")</code></td>
+</tr>
+<tr>
+<td><strong>Block by time/context</strong></td>
+<td>Conditional blocking</td>
+<td><code>if datetime.now().hour &gt; 18</code></td>
+</tr>
+<tr>
+<td><strong>Allowlist mode</strong></td>
+<td>Only allow specific tools</td>
+<td><code>if tool_name not in allowed_tools</code></td>
+</tr>
+</tbody></table>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead><tr>
+<th>Problem</th>
+<th>Cause</th>
+<th>Solution</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Tool still executes after blocking</td>
+<td>Callback returns wrong format</td>
+<td>Ensure you return <code>{"blocked": True, ...}</code> not just <code>True</code></td>
+</tr>
+<tr>
+<td>Agent crashes on block</td>
+<td>Error in callback</td>
+<td>Wrap callback in try/except, return <code>None</code> on error</td>
+</tr>
+<tr>
+<td>Multiple blocks show confusing messages</td>
+<td>Multiple plugins blocking</td>
+<td>Only one block message is shown (first one wins)</td>
+</tr>
+<tr>
+<td>Callback not being called</td>
+<td>Plugin not loaded</td>
+<td>Check plugin directory is in <code>~/.code_puppy/plugins/</code></td>
+</tr>
+</tbody></table>
+<h2 id="related-guides">Related Guides</h2>
+<ul>
+<li><a href="CreateHooks.html">Create Hooks</a> - Understanding the hook system</li>
+<li><a href="ManageMCP.html">Manage MCP</a> - Managing external tool integrations</li>
+<li><a href="../Reference/ToolsReference.html">Reference: Available Tools</a> - Complete tool list</li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

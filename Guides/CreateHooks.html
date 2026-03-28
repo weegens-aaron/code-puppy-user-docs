@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Create Hooks — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="index.html">Index</a>
+<a href="AddModels.html">Add Models</a>
+<a href="BlockToolCalls.html">Block Tool Calls</a>
+<a href="Commands.html">Commands</a>
+<a href="CreateAgents.html">Create Agents</a>
+<a href="CreateHooks.html" class="active">Create Hooks</a>
+<a href="CreateSkills.html">Create Skills</a>
+<a href="InstallSkills.html">Install Skills</a>
+<a href="ManageMCP.html">Manage MCP</a>
+<a href="ModelConfiguration.html">Model Configuration</a>
+<a href="RoundRobinModels.html">Round Robin Models</a>
+<a href="SwitchAgents.html">Switch Agents</a>
+<a href="UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="how-to-create-hooks">How to Create Hooks</h1>
+<h2 id="what-you-ll-learn">What You'll Learn</h2>
+<p>By the end of this guide, you'll be able to create custom hooks to intercept and control agent tool calls, block dangerous commands, and extend Code Puppy's behavior without modifying core code.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Basic understanding of Code Puppy's command-line interface</li>
+<li>Familiarity with Python (for callback-based hooks) or shell scripting (for script-based hooks)</li>
+<li>Completed <a href="../Getting-Started/QuickStart.html">Getting Started</a> tutorial</li>
+</ul>
+<h2 id="quick-version">Quick Version</h2>
+<p><strong>Script-based hooks</strong> (Claude Code compatible):</p>
+<pre><code class="language-json">// .claude/settings.json
+{
+  "hooks": {
+    "PreToolUse": [{
+      "matcher": "Bash",
+      "hooks": [{
+        "type": "command",
+        "command": "bash .claude/hooks/my-check.sh"
+      }]
+    }]
+  }
+}</code></pre>
+<p><strong>Python callback hooks</strong> (Code Puppy native):</p>
+<pre><code class="language-python"># ~/.code_puppy/plugins/my_plugin/register_callbacks.py
+from code_puppy.callbacks import register_callback
+
+def my_hook():
+    print("Hook executed!")
+
+register_callback("startup", my_hook)</code></pre>
+<h2 id="detailed-steps">Detailed Steps</h2>
+<h3 id="understanding-hook-types">Understanding Hook Types</h3>
+<p>Code Puppy supports <strong>two types of hooks</strong>:</p>
+<table>
+<thead><tr>
+<th>Type</th>
+<th>Use Case</th>
+<th>Location</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>Script-based</strong></td>
+<td>Block/modify tool calls, integrate with external tools</td>
+<td><code>.claude/settings.json</code> + scripts</td>
+</tr>
+<tr>
+<td><strong>Python callbacks</strong></td>
+<td>Extend Code Puppy behavior, add custom commands</td>
+<td><code>~/.code_puppy/plugins/</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="script-based-hooks-pretooluse-posttooluse">Script-Based Hooks (PreToolUse / PostToolUse)</h2>
+<h3 id="step-1-create-your-hook-configuration">Step 1: Create Your Hook Configuration</h3>
+<p>Create <code>.claude/settings.json</code> in your project root:</p>
+<pre><code class="language-json">{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|agent_run_shell_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/safety-check.sh",
+            "timeout": 5000
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p>Use <code>Bash|agent_run_shell_command</code> to match both Claude Code and Code Puppy tool names.</p>
+</div>
+<h3 id="step-2-create-the-hook-script">Step 2: Create the Hook Script</h3>
+<p>Create <code>.claude/hooks/safety-check.sh</code>:</p>
+<pre><code class="language-bash">#!/bin/bash
+
+# Read JSON from stdin
+input=$(cat)
+
+# Extract the command being run
+command=$(echo "$input" | jq -r '.tool_input.command // empty')
+
+# Check for dangerous commands
+if echo "$command" | grep -qE '(^|\s)(rm -rf|sudo rm|mkfs)(\s|$)'; then
+  echo "🛑 Blocked: Dangerous command detected" &gt;&amp;2
+  echo "Command: $command" &gt;&amp;2
+  exit 1  # Block the tool call
+fi
+
+# Allow the command
+exit 0</code></pre>
+<p>Make it executable:</p>
+<pre><code class="language-bash">chmod +x .claude/hooks/safety-check.sh</code></pre>
+<h3 id="step-3-test-your-hook">Step 3: Test Your Hook</h3>
+<p>Run Code Puppy and try to execute a blocked command:</p>
+<pre><code>&gt; /ask Run: rm -rf /important/files</code></pre>
+<p>You should see:</p>
+<pre><code>🛑 Blocked: Dangerous command detected
+Command: rm -rf /important/files</code></pre>
+<h3 id="step-4-access-hook-input-data">Step 4: Access Hook Input Data</h3>
+<p>Your script receives JSON on <strong>stdin</strong> with this structure:</p>
+<pre><code class="language-json">{
+  "session_id": "codepuppy-session",
+  "hook_event_name": "PreToolUse",
+  "tool_name": "agent_run_shell_command",
+  "tool_input": {
+    "command": "echo hello"
+  },
+  "cwd": "/path/to/project",
+  "permission_mode": "default"
+}</code></pre>
+<p><strong>Common jq queries:</strong></p>
+<pre><code class="language-bash"># Get tool name
+echo "$input" | jq -r '.tool_name'
+
+# Get command argument
+echo "$input" | jq -r '.tool_input.command'
+
+# Get file path (for Edit/Read/Write tools)
+echo "$input" | jq -r '.tool_input.path'</code></pre>
+<h3 id="step-5-use-environment-variables">Step 5: Use Environment Variables</h3>
+<p>Hook scripts also have access to these environment variables:</p>
+<table>
+<thead><tr>
+<th>Variable</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>CLAUDE_TOOL_INPUT</code></td>
+<td>JSON string of tool arguments</td>
+</tr>
+<tr>
+<td><code>CLAUDE_TOOL_NAME</code></td>
+<td>Name of the tool being called</td>
+</tr>
+<tr>
+<td><code>CLAUDE_HOOK_EVENT</code></td>
+<td>Event type (<code>PreToolUse</code>, <code>PostToolUse</code>)</td>
+</tr>
+<tr>
+<td><code>CLAUDE_PROJECT_DIR</code></td>
+<td>Absolute path to project root</td>
+</tr>
+<tr>
+<td><code>CLAUDE_FILE_PATH</code></td>
+<td>File path if tool targets a file</td>
+</tr>
+</tbody></table>
+<p>Example using environment variables:</p>
+<pre><code class="language-bash">#!/bin/bash
+echo "Tool: $CLAUDE_TOOL_NAME"
+echo "Project: $CLAUDE_PROJECT_DIR"</code></pre>
+<hr>
+<h2 id="python-callback-hooks-code-puppy-native">Python Callback Hooks (Code Puppy Native)</h2>
+<h3 id="step-1-create-a-plugin-directory">Step 1: Create a Plugin Directory</h3>
+<p>Create a plugin in your user plugins directory:</p>
+<pre><code class="language-bash">mkdir -p ~/.code_puppy/plugins/my_plugin</code></pre>
+<h3 id="step-2-create-the-callback-registration-file">Step 2: Create the Callback Registration File</h3>
+<p>Create <code>~/.code_puppy/plugins/my_plugin/register_callbacks.py</code>:</p>
+<pre><code class="language-python">from code_puppy.callbacks import register_callback
+from code_puppy.messaging import emit_info
+
+def my_startup_hook():
+    """Runs when Code Puppy starts."""
+    emit_info("🐶 My plugin loaded successfully!")
+
+def my_custom_command_handler(command: str, name: str):
+    """Handle custom slash commands."""
+    if name == "hello":
+        emit_info("Hello! How can I help?")
+        return True  # Indicate we handled this command
+    return None  # Not handled
+
+# Register the callbacks
+register_callback("startup", my_startup_hook)
+register_callback("custom_command", my_custom_command_handler)</code></pre>
+<h3 id="step-3-restart-code-puppy">Step 3: Restart Code Puppy</h3>
+<p>Your plugin will be auto-discovered on the next startup. You should see:</p>
+<pre><code>🐶 My plugin loaded successfully!</code></pre>
+<h3 id="step-4-use-your-custom-command">Step 4: Use Your Custom Command</h3>
+<p>Now you can use your custom command:</p>
+<pre><code>&gt; /hello</code></pre>
+<hr>
+<h2 id="available-hook-types">Available Hook Types</h2>
+<h3 id="script-based-hooks-claude-settings-json">Script-Based Hooks (<code>.claude/settings.json</code>)</h3>
+<table>
+<thead><tr>
+<th>Event</th>
+<th>When It Fires</th>
+<th>Can Block?</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>PreToolUse</code></td>
+<td>Before any tool call</td>
+<td>✅ Yes (exit 1)</td>
+</tr>
+<tr>
+<td><code>PostToolUse</code></td>
+<td>After tool completes</td>
+<td>❌ No (observation only)</td>
+</tr>
+<tr>
+<td><code>SessionStart</code></td>
+<td>When session begins</td>
+<td>❌ No</td>
+</tr>
+<tr>
+<td><code>Stop</code></td>
+<td>When agent finishes task</td>
+<td>✅ Yes</td>
+</tr>
+<tr>
+<td><code>SubagentStop</code></td>
+<td>When sub-agent finishes</td>
+<td>✅ Yes</td>
+</tr>
+</tbody></table>
+<h3 id="python-callback-hooks">Python Callback Hooks</h3>
+<table>
+<thead><tr>
+<th>Callback</th>
+<th>When It Fires</th>
+<th>Typical Use</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>startup</code></td>
+<td>App boot</td>
+<td>Initialize resources, log startup</td>
+</tr>
+<tr>
+<td><code>shutdown</code></td>
+<td>Graceful exit</td>
+<td>Cleanup, save state</td>
+</tr>
+<tr>
+<td><code>run_shell_command</code></td>
+<td>Before shell exec</td>
+<td>Safety checks, logging</td>
+</tr>
+<tr>
+<td><code>pre_tool_call</code></td>
+<td>Before any tool</td>
+<td>Inspect/modify tool args</td>
+</tr>
+<tr>
+<td><code>post_tool_call</code></td>
+<td>After tool finishes</td>
+<td>Log results, metrics</td>
+</tr>
+<tr>
+<td><code>custom_command</code></td>
+<td>Unknown <code>/slash</code> cmd</td>
+<td>Add custom commands</td>
+</tr>
+<tr>
+<td><code>custom_command_help</code></td>
+<td><code>/help</code> menu</td>
+<td>Add help entries</td>
+</tr>
+<tr>
+<td><code>file_permission</code></td>
+<td>Before file op</td>
+<td>Access control, audit</td>
+</tr>
+<tr>
+<td><code>agent_run_start</code></td>
+<td>Agent task begins</td>
+<td>Start background tasks</td>
+</tr>
+<tr>
+<td><code>agent_run_end</code></td>
+<td>Agent task ends</td>
+<td>Stop background tasks</td>
+</tr>
+<tr>
+<td><code>stream_event</code></td>
+<td>Response streaming</td>
+<td>Real-time monitoring</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="example-block-git-commands">Example: Block Git Commands</h2>
+<h3 id="script-based-version">Script-Based Version</h3>
+<p><code>.claude/settings.json</code>:</p>
+<pre><code class="language-json">{
+  "hooks": {
+    "PreToolUse": [{
+      "matcher": "Bash|agent_run_shell_command",
+      "hooks": [{
+        "type": "command",
+        "command": "bash .claude/hooks/no-git.sh"
+      }]
+    }]
+  }
+}</code></pre>
+<p><code>.claude/hooks/no-git.sh</code>:</p>
+<pre><code class="language-bash">#!/bin/bash
+input=$(cat)
+command=$(echo "$input" | jq -r '.tool_input.command // empty')
+
+if echo "$command" | grep -qE '(^|\s)git(\s|$)'; then
+  echo "🛑 Git commands are not allowed. Use the PR workflow." &gt;&amp;2
+  exit 1
+fi
+exit 0</code></pre>
+<hr>
+<h2 id="example-log-all-tool-calls">Example: Log All Tool Calls</h2>
+<h3 id="python-callback-version">Python Callback Version</h3>
+<p><code>~/.code_puppy/plugins/tool_logger/register_callbacks.py</code>:</p>
+<pre><code class="language-python">import json
+from pathlib import Path
+from code_puppy.callbacks import register_callback
+
+LOG_FILE = Path.home() / ".code_puppy" / "tool_log.jsonl"
+
+def log_tool_call(tool_name: str, tool_args: dict, context=None):
+    """Log every tool call to a file."""
+    entry = {
+        "tool": tool_name,
+        "args": tool_args,
+        "context": str(context) if context else None
+    }
+    with open(LOG_FILE, "a") as f:
+        f.write(json.dumps(entry) + "\n")
+
+register_callback("pre_tool_call", log_tool_call)</code></pre>
+<hr>
+<h2 id="matcher-syntax">Matcher Syntax</h2>
+<h3 id="basic-matchers">Basic Matchers</h3>
+<pre><code class="language-text">"Bash"                    # Exact match (Claude Code name)
+"agent_run_shell_command" # Exact match (internal name)
+"Bash|agent_run_shell"    # OR — matches either
+"*"                       # Wildcard — matches everything</code></pre>
+<h3 id="compound-matchers">Compound Matchers</h3>
+<pre><code class="language-text">"Edit &amp;&amp; .py"             # AND — Edit tool AND .py file
+"Read || Write"           # OR — Read or Write tool</code></pre>
+<h3 id="file-extension-matchers">File Extension Matchers</h3>
+<pre><code class="language-text">"Edit &amp;&amp; .py"   # Python files only
+"Read &amp;&amp; .md"   # Markdown files only
+"Write &amp;&amp; .txt" # Text files only</code></pre>
+<hr>
+<h2 id="exit-codes-script-based-hooks">Exit Codes (Script-Based Hooks)</h2>
+<table>
+<thead><tr>
+<th>Code</th>
+<th>Meaning</th>
+<th>Effect</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td>Allow</td>
+<td>Tool runs normally. Stdout shown in transcript.</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>Block</td>
+<td>Tool is prevented. Stderr shown as block reason.</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>Error feedback</td>
+<td>Stderr fed back to agent. Tool still runs.</td>
+</tr>
+</tbody></table>
+<div class="callout callout-warning">
+<div class="callout-title">WARNING</div>
+<p>Always exit with an explicit code. Missing exit statements default to 0 (allow).</p>
+</div>
+<hr>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="hook-isn-t-running">Hook Isn't Running</h3>
+<p><strong>Check:</strong></p>
+<ol>
+<li>Is the script executable? <code>chmod +x .claude/hooks/my-hook.sh</code></li>
+<li>Is the matcher correct? Try <code>"*"</code> temporarily to test</li>
+<li>Check startup logs for: <code>Hook engine ready - Total: N</code></li>
+</ol>
+<p><strong>Test standalone:</strong></p>
+<pre><code class="language-bash">echo '{"tool_input":{"command":"echo test"}}' | bash .claude/hooks/my-hook.sh</code></pre>
+<h3 id="json-parsing-fails">JSON Parsing Fails</h3>
+<p><strong>Problem:</strong> Using wrong field names</p>
+<p><strong>Fix:</strong> Use <code>.tool_input.command</code> (not <code>.command</code>) — args are nested under <code>tool_input</code></p>
+<h3 id="python-callback-not-loading">Python Callback Not Loading</h3>
+<p><strong>Check:</strong></p>
+<ol>
+<li>Is the file named <code>register_callbacks.py</code>?</li>
+<li>Is it in a subdirectory of <code>~/.code_puppy/plugins/</code>?</li>
+<li>Check logs for plugin loading errors</li>
+</ol>
+<hr>
+<h2 id="related-guides">Related Guides</h2>
+<ul>
+<li><a href="ManageMCP.html">How to Manage MCP Servers</a> — MCP server integration</li>
+<li><a href="CreateSkills.html">How to Create Skills</a> — Building custom skills</li>
+<li><a href="../Reference/ToolsReference.html">Reference: Available Tools</a> — All tools you can hook</li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

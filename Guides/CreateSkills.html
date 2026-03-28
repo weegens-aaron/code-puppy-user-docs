@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Create Custom Skills — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="index.html">Index</a>
+<a href="AddModels.html">Add Models</a>
+<a href="BlockToolCalls.html">Block Tool Calls</a>
+<a href="Commands.html">Commands</a>
+<a href="CreateAgents.html">Create Agents</a>
+<a href="CreateHooks.html">Create Hooks</a>
+<a href="CreateSkills.html" class="active">Create Skills</a>
+<a href="InstallSkills.html">Install Skills</a>
+<a href="ManageMCP.html">Manage MCP</a>
+<a href="ModelConfiguration.html">Model Configuration</a>
+<a href="RoundRobinModels.html">Round Robin Models</a>
+<a href="SwitchAgents.html">Switch Agents</a>
+<a href="UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="../Reference/index.html">Index</a>
+<a href="../Reference/ConfigCommands.html">Config Commands</a>
+<a href="../Reference/ConfigReference.html">Config Reference</a>
+<a href="../Reference/CoreCommands.html">Core Commands</a>
+<a href="../Reference/EnvVars.html">Env Vars</a>
+<a href="../Reference/MCPCommands.html">MCPCommands</a>
+<a href="../Reference/RESTAPI.html">RESTAPI</a>
+<a href="../Reference/SchedulerCommands.html">Scheduler Commands</a>
+<a href="../Reference/SessionCommands.html">Session Commands</a>
+<a href="../Reference/SkillsCommands.html">Skills Commands</a>
+<a href="../Reference/ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="how-to-create-custom-skills">How to Create Custom Skills</h1>
+<h2 id="what-you-ll-learn">What You'll Learn</h2>
+<p>By the end of this guide, you'll be able to create, structure, and deploy your own custom skills that extend Code Puppy's capabilities with domain-specific knowledge and workflows.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Code Puppy installed and running</li>
+<li>Basic familiarity with the <code>/skills</code> command (see <a href="InstallSkills.html">How to Install Skills</a>)</li>
+<li>A text editor for creating skill files</li>
+</ul>
+<h2 id="quick-version">Quick Version</h2>
+<pre><code class="language-bash"># 1. Create skill directory
+mkdir -p ~/.code_puppy/skills/my-custom-skill
+
+# 2. Create SKILL.md with frontmatter
+cat &gt; ~/.code_puppy/skills/my-custom-skill/SKILL.md &lt;&lt; 'EOF'
+---
+name: my-custom-skill
+description: Does something useful
+version: 1.0.0
+author: Your Name
+tags:
+  - custom
+  - example
+---
+
+# My Custom Skill
+
+Detailed instructions go here...
+EOF
+
+# 3. Refresh and enable
+/skills refresh
+/skills enable my-custom-skill</code></pre>
+<hr>
+<h2 id="understanding-custom-skills">Understanding Custom Skills</h2>
+<p>Custom skills are your own extensions that teach Code Puppy specialized knowledge. Unlike remote catalog skills, custom skills:</p>
+<ul>
+<li><strong>Live locally</strong> in your skill directories</li>
+<li><strong>Are fully under your control</strong> - edit anytime</li>
+<li><strong>Can include resources</strong> - templates, configs, examples</li>
+<li><strong>Work offline</strong> - no network required</li>
+<li><strong>Can be shared</strong> - version control or share with your team</li>
+</ul>
+<hr>
+<h2 id="basic-skill-structure">Basic Skill Structure</h2>
+<p>A custom skill is a directory with at least one file: <code>SKILL.md</code>.</p>
+<h3 id="minimal-structure">Minimal Structure</h3>
+<pre><code>my-custom-skill/
+└── SKILL.md    # Required</code></pre>
+<h3 id="recommended-structure">Recommended Structure</h3>
+<pre><code>my-custom-skill/
+├── SKILL.md              # Required: metadata + instructions
+├── templates/            # Optional: reusable templates
+│   ├── config.yaml.tmpl
+│   └── script.sh.tmpl
+├── examples/             # Optional: example files
+│   ├── sample.json
+│   └── sample.yaml
+├── guides/               # Optional: detailed documentation
+│   └── best-practices.md
+└── scripts/              # Optional: helper scripts
+    └── validate.sh</code></pre>
+<hr>
+<h2 id="the-skill-md-file">The SKILL.md File</h2>
+<p>The <code>SKILL.md</code> file has two parts:</p>
+<ol>
+<li><strong>YAML Frontmatter</strong> - Metadata for discovery and identification</li>
+<li><strong>Markdown Content</strong> - Instructions for the agent</li>
+</ol>
+<h3 id="yaml-frontmatter">YAML Frontmatter</h3>
+<pre><code class="language-markdown">---
+name: my-custom-skill
+description: Brief description of what the skill does
+version: 1.0.0
+author: Your Name &lt;email@example.com&gt;
+tags:
+  - tag1
+  - tag2
+  - tag3
+---</code></pre>
+<h4 id="required-fields">Required Fields</h4>
+<table>
+<thead><tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Unique identifier (kebab-case recommended)</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>One-sentence summary of the skill's purpose</td>
+</tr>
+</tbody></table>
+<h4 id="optional-fields">Optional Fields</h4>
+<table>
+<thead><tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>version</code></td>
+<td>string</td>
+<td>Semantic version (e.g., "1.0.0")</td>
+</tr>
+<tr>
+<td><code>author</code></td>
+<td>string</td>
+<td>Author name or contact</td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>list</td>
+<td>Keywords for categorization and search</td>
+</tr>
+</tbody></table>
+<h3 id="markdown-content">Markdown Content</h3>
+<p>After the frontmatter, write detailed instructions in Markdown:</p>
+<pre><code class="language-markdown"># Skill Name
+
+## When to Use This Skill
+
+Describe scenarios where this skill applies.
+
+## Instructions
+
+Step-by-step guidance for the agent.
+
+## Best Practices
+
+Recommendations and guidelines.
+
+## Examples
+
+Concrete examples of usage.
+
+## Resources
+
+List any bundled resources and how to use them.</code></pre>
+<hr>
+<h2 id="example-creating-a-git-helper-skill">Example: Creating a Git Helper Skill</h2>
+<p>Let's create a practical skill for common Git operations.</p>
+<h3 id="step-1-create-the-directory">Step 1: Create the Directory</h3>
+<pre><code class="language-bash">mkdir -p ~/.code_puppy/skills/git-helper</code></pre>
+<h3 id="step-2-create-skill-md">Step 2: Create SKILL.md</h3>
+<pre><code class="language-bash">cat &gt; ~/.code_puppy/skills/git-helper/SKILL.md &lt;&lt; 'EOF'
+---
+name: git-helper
+description: Common Git operations including status, branching, commits, and history
+version: 1.0.0
+author: You
+tags:
+  - git
+  - version-control
+  - scm
+---
+
+# Git Helper Skill
+
+## When to Use This Skill
+
+Use this skill when the user needs help with:
+- Checking Git repository status
+- Creating and managing branches
+- Writing commit messages
+- Viewing commit history
+- Understanding Git workflows
+
+## Instructions
+
+### 1. Check Repository Status
+
+Always start by understanding the current state:
+</code></pre>
+<p>git status --short git diff --stat</p>
+<pre><code>
+### 2. Branch Management
+
+For new features:
+1. Create a feature branch from main
+2. Use descriptive branch names (e.g., `feature/add-auth`)
+3. Keep branches focused and small
+
+### 3. Commit Best Practices
+
+- Write clear, concise commit messages
+- Use the imperative mood ("Add feature" not "Added feature")
+- Keep commits atomic (one logical change per commit)
+- Include relevant context in the commit body
+
+### 4. Common Workflows
+
+#### Feature Development
+</code></pre>
+<h1 id="create-and-switch-to-feature-branch">Create and switch to feature branch</h1>
+<p>git checkout -b feature/feature-name</p>
+<h1 id="make-changes-and-commit">Make changes and commit</h1>
+<p>git add . git commit -m "feat: add feature description"</p>
+<h1 id="push-and-create-pr">Push and create PR</h1>
+<p>git push -u origin feature/feature-name</p>
+<pre><code>
+#### Bug Fixes
+</code></pre>
+<h1 id="create-hotfix-branch">Create hotfix branch</h1>
+<p>git checkout -b hotfix/bug-description</p>
+<h1 id="fix-and-commit">Fix and commit</h1>
+<p>git add . git commit -m "fix: describe the bug fix"</p>
+<h1 id="push-and-create-pr">Push and create PR</h1>
+<p>git push -u origin hotfix/bug-description</p>
+<pre><code>
+## Tips
+
+&gt; [!TIP]
+&gt; Always review `git status` before making changes to understand the current state.
+
+&gt; [!TIP]
+&gt; Use `git diff` to review changes before committing.
+
+&gt; [!TIP]
+&gt; Keep commit messages under 72 characters for the subject line.
+
+## Resources
+
+This skill works with standard Git commands. No additional resources are required.
+EOF</code></pre>
+<h3 id="step-3-verify-the-skill">Step 3: Verify the Skill</h3>
+<pre><code class="language-bash"># Check the file exists
+ls -la ~/.code_puppy/skills/git-helper/SKILL.md
+
+# Verify frontmatter parsing
+head -20 ~/.code_puppy/skills/git-helper/SKILL.md</code></pre>
+<hr>
+<h2 id="example-creating-a-skill-with-resources">Example: Creating a Skill with Resources</h2>
+<p>Skills can include templates, configs, and examples.</p>
+<h3 id="step-1-create-directory-structure">Step 1: Create Directory Structure</h3>
+<pre><code class="language-bash">mkdir -p ~/.code_puppy/skills/docker-expert/{templates,examples}</code></pre>
+<h3 id="step-2-create-skill-md">Step 2: Create SKILL.md</h3>
+<pre><code class="language-markdown">---
+name: docker-expert
+description: Docker containerization, Dockerfile optimization, and docker-compose orchestration
+version: 1.0.0
+author: You
+tags:
+  - docker
+  - containers
+  - devops
+---
+
+# Docker Expert Skill
+
+## When to Use This Skill
+
+Use this skill when the user needs help with:
+- Writing or optimizing Dockerfiles
+- Setting up docker-compose configurations
+- Container best practices and security
+- Multi-stage builds for smaller images
+
+## Instructions
+
+### 1. Dockerfile Best Practices
+
+Always follow these principles:
+- Use specific base image tags (not `latest`)
+- Leverage multi-stage builds to minimize image size
+- Combine RUN commands to reduce layers
+- Use `.dockerignore` to exclude unnecessary files
+
+### 2. Security Guidelines
+
+- Run containers as non-root users
+- Scan images for vulnerabilities
+- Minimize installed packages
+- Use distroless or slim base images when possible
+
+### 3. Available Templates
+
+This skill includes the following templates:
+- `templates/Dockerfile.multi-stage` - Multi-stage build template
+- `templates/docker-compose.yml` - Basic compose template
+- `templates/.dockerignore` - Common ignore patterns
+
+Use these as starting points and customize as needed.
+
+## Resources
+
+- `templates/Dockerfile.multi-stage` - Multi-stage Dockerfile template
+- `templates/docker-compose.yml` - Docker Compose template
+- `templates/.dockerignore` - Common ignore patterns
+- `examples/node-app/Dockerfile` - Example Node.js Dockerfile
+- `examples/python-app/Dockerfile` - Example Python Dockerfile
+EOF</code></pre>
+<h3 id="step-3-add-template-files">Step 3: Add Template Files</h3>
+<p><strong>templates/Dockerfile.multi-stage:</strong></p>
+<pre><code class="language-dockerfile"># Multi-stage build template
+# Replace &lt;base-image&gt; and &lt;workdir&gt; as needed
+
+# Stage 1: Builder
+FROM &lt;base-image&gt;:&lt;version&gt;-alpine AS builder
+WORKDIR &lt;workdir&gt;
+
+# Copy dependency files first (better caching)
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Copy source and build
+COPY . .
+RUN npm run build
+
+# Stage 2: Runtime
+FROM &lt;base-image&gt;:&lt;version&gt;-alpine
+
+# Create non-root user
+RUN addgroup -g 1000 app &amp;&amp; \
+    adduser -u 1000 -G app -s /bin/sh -D app
+
+WORKDIR &lt;workdir&gt;
+
+# Copy built artifacts from builder
+COPY --from=builder &lt;workdir&gt;/dist ./dist
+COPY --from=builder &lt;workdir&gt;/node_modules ./node_modules
+
+# Run as non-root
+USER app
+
+CMD ["node", "dist/index.js"]</code></pre>
+<p><strong>templates/docker-compose.yml:</strong></p>
+<pre><code class="language-yaml">version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Optional: Add services as needed
+  # redis:
+  #   image: redis:7-alpine
+  #   ports:
+  #     - "6379:6379"</code></pre>
+<p><strong>templates/.dockerignore:</strong></p>
+<pre><code># Dependencies
+node_modules
+npm-debug.log
+
+# Build outputs
+dist
+build
+*.log
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Documentation
+*.md
+docs/
+
+# Testing
+coverage
+.nyc_output
+tests/</code></pre>
+<h3 id="step-4-add-example-files">Step 4: Add Example Files</h3>
+<p><strong>examples/node-app/Dockerfile:</strong></p>
+<pre><code class="language-dockerfile">FROM node:18-alpine AS builder
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --only=production
+
+COPY . .
+RUN npm run build
+
+FROM node:18-alpine
+WORKDIR /app
+
+RUN addgroup -g 1000 app &amp;&amp; \
+    adduser -u 1000 -G app -s /bin/sh -D app
+
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+
+USER app
+
+EXPOSE 3000
+CMD ["node", "dist/index.js"]</code></pre>
+<hr>
+<h2 id="testing-your-custom-skill">Testing Your Custom Skill</h2>
+<h3 id="step-1-refresh-the-skill-cache">Step 1: Refresh the Skill Cache</h3>
+<pre><code class="language-bash">/skills refresh</code></pre>
+<p>You should see:</p>
+<pre><code>✓ Skill cache refreshed
+Found 1 new skill(s)</code></pre>
+<h3 id="step-2-list-your-skills">Step 2: List Your Skills</h3>
+<pre><code class="language-bash">/skills list</code></pre>
+<p>Your skill should appear:</p>
+<pre><code>🛠️ Skills (integration: enabled)
+Found 5 skills:
+
+  🟢 enabled docker-expert v1.0.0 by You
+      Docker containerization, Dockerfile optimization...
+      tags: docker, containers, devops
+
+  🟢 enabled git-helper v1.0.0 by You
+      Common Git operations including status, branching...
+      tags: git, version-control, scm</code></pre>
+<h3 id="step-3-enable-the-skill">Step 3: Enable the Skill</h3>
+<p>If not automatically enabled:</p>
+<pre><code class="language-bash">/skills enable git-helper</code></pre>
+<h3 id="step-4-test-activation">Step 4: Test Activation</h3>
+<p>Start a conversation with an agent and ask a relevant question:</p>
+<pre><code>/agent code-puppy
+
+# Then ask:
+Help me create a Dockerfile for my Node.js application</code></pre>
+<p>The agent should:</p>
+<ol>
+<li>Detect the relevant skill from <code>&lt;available_skills&gt;</code> in context</li>
+<li>Call <code>activate_skill(skill_name="docker-expert")</code></li>
+<li>Follow the instructions from your SKILL.md</li>
+</ol>
+<hr>
+<h2 id="advanced-skill-with-scripts">Advanced: Skill with Scripts</h2>
+<p>Skills can include executable scripts that agents can reference or run.</p>
+<h3 id="structure">Structure</h3>
+<pre><code>script-helper/
+├── SKILL.md
+└── scripts/
+    ├── validate-config.sh
+    └── backup-database.sh</code></pre>
+<h3 id="skill-md-excerpt">SKILL.md Excerpt</h3>
+<pre><code class="language-markdown">---
+name: script-helper
+description: Helper scripts for common operations
+version: 1.0.0
+author: You
+tags:
+  - scripts
+  - automation
+---
+
+# Script Helper Skill
+
+## Available Scripts
+
+### validate-config.sh
+
+Validates configuration files (YAML, JSON, TOML).
+
+**Usage:**</code></pre>
+<p>./scripts/validate-config.sh path/to/config.yaml</p>
+<pre><code>
+**Output:**
+- Exit code 0: Valid
+- Exit code 1: Invalid with error details
+
+### backup-database.sh
+
+Creates database backups with timestamp.
+
+**Usage:**</code></pre>
+<p>./scripts/backup-database.sh --database mydb --output /backups</p>
+<pre><code>
+**Output:**
+- Backup file: `mydb-YYYYMMDD-HHMMSS.sql.gz`
+- Exit code 0: Success
+- Exit code 1: Failure</code></pre>
+<hr>
+<h2 id="best-practices">Best Practices</h2>
+<h3 id="naming-conventions">Naming Conventions</h3>
+<ul>
+<li>Use <strong>kebab-case</strong> for skill names (<code>my-skill</code>, not <code>mySkill</code> or <code>my_skill</code>)</li>
+<li>Keep names <strong>descriptive but concise</strong></li>
+<li>Avoid generic names like <code>utils</code> or <code>helpers</code></li>
+<li>Prefix domain-specific skills (<code>aws-s3</code>, <code>gcp-cloudrun</code>)</li>
+</ul>
+<h3 id="writing-instructions">Writing Instructions</h3>
+<ul>
+<li><strong>Be specific</strong> - "Use Python 3.11+" not "Use Python"</li>
+<li><strong>Include examples</strong> - Show, don't just tell</li>
+<li><strong>Cover edge cases</strong> - What if something goes wrong?</li>
+<li><strong>Version when relevant</strong> - "As of 2024" or "For Node.js 18+"</li>
+</ul>
+<h3 id="organizing-resources">Organizing Resources</h3>
+<ul>
+<li>Group related files in subdirectories</li>
+<li>Use clear, descriptive filenames</li>
+<li>Include a README in complex skills</li>
+<li>Keep templates generic but customizable</li>
+</ul>
+<h3 id="versioning">Versioning</h3>
+<ul>
+<li>Use semantic versioning (<code>major.minor.patch</code>)</li>
+<li>Increment version when:</li>
+<li>Adding new features (minor)</li>
+<li>Making breaking changes (major)</li>
+<li>Fixing bugs (patch)</li>
+</ul>
+<hr>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead><tr>
+<th>Problem</th>
+<th>Cause</th>
+<th>Solution</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Skill not appearing</td>
+<td>Missing SKILL.md</td>
+<td>Add valid SKILL.md to skill directory</td>
+</tr>
+<tr>
+<td>Skill shows "no metadata"</td>
+<td>Invalid frontmatter</td>
+<td>Check YAML syntax, ensure <code>name</code> and <code>description</code> are present</td>
+</tr>
+<tr>
+<td>Skill not activating</td>
+<td>Skill disabled</td>
+<td>Run <code>/skills enable &lt;skill-name&gt;</code></td>
+</tr>
+<tr>
+<td>Instructions not loading</td>
+<td>File encoding issue</td>
+<td>Ensure SKILL.md is UTF-8 encoded</td>
+</tr>
+<tr>
+<td>Resources not found</td>
+<td>Wrong path</td>
+<td>Use relative paths from skill directory</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="tips-tricks">Tips &amp; Tricks</h2>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Share Your Skills</strong>: Put custom skills in a Git repo and share with your team. Everyone can clone to their <code>~/.code_puppy/skills/</code> directory.</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Version Control</strong>: Track your custom skills in Git. This lets you: - Share with team members - Roll back changes - Maintain a history of improvements</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Skill Templates</strong>: Create a "starter skill" template with proper structure. Clone it when creating new skills.</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Test Iteratively</strong>: Make small changes and test frequently. Use <code>/skills refresh</code> after each change.</p>
+</div>
+<div class="callout callout-tip">
+<div class="callout-title">TIP</div>
+<p><strong>Document Dependencies</strong>: If your skill requires external tools or services, document them clearly in the SKILL.md.</p>
+</div>
+<hr>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><a href="UseSkills.html">How to Use Skills</a> - Learn how to activate and work with skills</li>
+<li><a href="InstallSkills.html">How to Install Skills</a> - Browse and install remote catalog skills</li>
+<li><a href="../Concepts/AgentSkills.html">Concept: Understanding Agent Skills</a> - Deep dive into how skills work internally</li>
+<li><a href="../Reference/SkillsCommands.html">Reference: Skills Commands</a> - All available skills commands</li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>

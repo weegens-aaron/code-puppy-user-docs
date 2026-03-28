@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Configuration Commands Reference — Code Puppy Docs</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-title">Code Puppy Docs</div>
+<nav>
+<div class="nav-section">Overview</div>
+<a href="../index.html">Index</a>
+<a href="../FAQ.html">FAQ</a>
+<a href="../Overview.html">Overview</a>
+<div class="nav-section">Concepts</div>
+<a href="../Concepts/index.html">Index</a>
+<a href="../Concepts/AgentSkills.html">Agent Skills</a>
+<a href="../Concepts/Agents.html">Agents</a>
+<a href="../Concepts/Hooks.html">Hooks</a>
+<a href="../Concepts/MCP.html">MCP</a>
+<a href="../Concepts/Privacy.html">Privacy</a>
+<div class="nav-section">Getting-Started</div>
+<a href="../Getting-Started/index.html">Index</a>
+<a href="../Getting-Started/Configuration.html">Configuration</a>
+<a href="../Getting-Started/Installation.html">Installation</a>
+<a href="../Getting-Started/QuickStart.html">Quick Start</a>
+<div class="nav-section">Guides</div>
+<a href="../Guides/index.html">Index</a>
+<a href="../Guides/AddModels.html">Add Models</a>
+<a href="../Guides/BlockToolCalls.html">Block Tool Calls</a>
+<a href="../Guides/Commands.html">Commands</a>
+<a href="../Guides/CreateAgents.html">Create Agents</a>
+<a href="../Guides/CreateHooks.html">Create Hooks</a>
+<a href="../Guides/CreateSkills.html">Create Skills</a>
+<a href="../Guides/InstallSkills.html">Install Skills</a>
+<a href="../Guides/ManageMCP.html">Manage MCP</a>
+<a href="../Guides/ModelConfiguration.html">Model Configuration</a>
+<a href="../Guides/RoundRobinModels.html">Round Robin Models</a>
+<a href="../Guides/SwitchAgents.html">Switch Agents</a>
+<a href="../Guides/UseSkills.html">Use Skills</a>
+<div class="nav-section">Reference</div>
+<a href="index.html">Index</a>
+<a href="ConfigCommands.html" class="active">Config Commands</a>
+<a href="ConfigReference.html">Config Reference</a>
+<a href="CoreCommands.html">Core Commands</a>
+<a href="EnvVars.html">Env Vars</a>
+<a href="MCPCommands.html">MCPCommands</a>
+<a href="RESTAPI.html">RESTAPI</a>
+<a href="SchedulerCommands.html">Scheduler Commands</a>
+<a href="SessionCommands.html">Session Commands</a>
+<a href="SkillsCommands.html">Skills Commands</a>
+<a href="ToolsReference.html">Tools Reference</a>
+<div class="nav-section">Tutorials</div>
+<a href="../Tutorials/index.html">Index</a>
+<a href="../Tutorials/CustomAgent.html">Custom Agent</a>
+<a href="../Tutorials/FirstTask.html">First Task</a>
+<a href="../Tutorials/MultiModelSetup.html">Multi Model Setup</a>
+</nav>
+</aside>
+<main class="content">
+<h1 id="configuration-commands-reference">Configuration Commands Reference</h1>
+<h2 id="overview">Overview</h2>
+<p>This reference covers all configuration-related commands in Code Puppy. These commands let you view and modify the application's behavior, manage sessions, configure colors, and more.</p>
+<hr>
+<h2 id="core-configuration-commands">Core Configuration Commands</h2>
+<h3 id="show"><code>/show</code></h3>
+<p>Display the current puppy configuration in a formatted status view.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/show</code></pre>
+<p><strong>What it shows:</strong></p>
+<ul>
+<li><code>puppy_name</code> - Your puppy's name</li>
+<li><code>owner_name</code> - Your name</li>
+<li><code>current_agent</code> - Currently active agent</li>
+<li><code>default_agent</code> - Default agent for new sessions</li>
+<li><code>model</code> - Active model</li>
+<li><code>YOLO_MODE</code> - Whether YOLO mode is on/off</li>
+<li><code>DBOS</code> - Whether DBOS is enabled</li>
+<li><code>auto_save_session</code> - Auto-save status</li>
+<li><code>protected_tokens</code> - Recent tokens preserved during compaction</li>
+<li><code>compaction_threshold</code> - Context usage percentage that triggers compaction</li>
+<li><code>compaction_strategy</code> - Either "summarization" or "truncation"</li>
+<li><code>resume_message_count</code> - Messages shown on resume</li>
+<li><code>reasoning_effort</code> - OpenAI reasoning effort level</li>
+<li><code>verbosity</code> - OpenAI verbosity level</li>
+<li><code>temperature</code> - Current temperature (per-model or global)</li>
+<li><code>cancel_agent_key</code> - Key binding to cancel agent tasks</li>
+</ul>
+<p><strong>Example Output:</strong></p>
+<pre><code>🐶 Puppy Status
+
+puppy_name:            code_puppy
+owner_name:            Developer
+current_agent:         Code Puppy
+default_agent:         code_puppy
+model:                 claude-3-5-sonnet
+YOLO_MODE:             off
+DBOS:                  enabled
+auto_save_session:     enabled
+protected_tokens:      1000 recent tokens preserved
+compaction_threshold:  80.0% context usage triggers compaction
+compaction_strategy:   summarization
+reasoning_effort:      medium
+verbosity:             medium
+temperature:           0.7
+cancel_agent_key:      ctrl+c</code></pre>
+<hr>
+<h3 id="set"><code>/set</code></h3>
+<p>Set configuration values by key.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/set &lt;key&gt; &lt;value&gt;
+/set &lt;key&gt;=&lt;value&gt;</code></pre>
+<p><strong>Available Keys:</strong></p>
+<table>
+<thead><tr>
+<th>Key</th>
+<th>Description</th>
+<th>Values</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>yolo_mode</code></td>
+<td>Enable/disable YOLO mode</td>
+<td><code>true</code> / <code>false</code></td>
+</tr>
+<tr>
+<td><code>enable_dbos</code></td>
+<td>Enable DBOS storage</td>
+<td><code>true</code> / <code>false</code></td>
+</tr>
+<tr>
+<td><code>auto_save_session</code></td>
+<td>Auto-save chat after responses</td>
+<td><code>true</code> / <code>false</code></td>
+</tr>
+<tr>
+<td><code>protected_tokens</code></td>
+<td>Recent tokens to preserve</td>
+<td>Number (e.g., <code>1000</code>)</td>
+</tr>
+<tr>
+<td><code>compaction_threshold</code></td>
+<td>Context usage % to trigger compaction</td>
+<td>Percentage (e.g., <code>0.8</code>)</td>
+</tr>
+<tr>
+<td><code>compaction_strategy</code></td>
+<td>Compaction method</td>
+<td><code>summarization</code> / <code>truncation</code></td>
+</tr>
+<tr>
+<td><code>resume_message_count</code></td>
+<td>Messages shown on resume</td>
+<td>Number (e.g., <code>10</code>)</td>
+</tr>
+<tr>
+<td><code>cancel_agent_key</code></td>
+<td>Key to cancel agent tasks</td>
+<td><code>ctrl+c</code> / <code>ctrl+k</code> / <code>ctrl+q</code></td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code>/set yolo_mode true
+/set auto_save_session=false
+/set protected_tokens 2000
+/set compaction_strategy truncation</code></pre>
+<div class="callout callout-note">
+<div class="callout-title">NOTE</div>
+<p>Some settings (like <code>enable_dbos</code> and <code>cancel_agent_key</code>) require a restart to take effect.</p>
+</div>
+<hr>
+<h3 id="reasoning"><code>/reasoning</code></h3>
+<p>Set OpenAI reasoning effort level for GPT-5 models.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/reasoning &lt;level&gt;</code></pre>
+<p><strong>Levels:</strong></p>
+<ul>
+<li><code>minimal</code> - Least reasoning</li>
+<li><code>low</code> - Low reasoning</li>
+<li><code>medium</code> - Medium reasoning (default)</li>
+<li><code>high</code> - High reasoning</li>
+<li><code>xhigh</code> - Extra high reasoning</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code>/reasoning high</code></pre>
+<p><strong>Result:</strong></p>
+<pre><code>Reasoning effort set to 'high' and active agent reloaded</code></pre>
+<hr>
+<h3 id="verbosity"><code>/verbosity</code></h3>
+<p>Set OpenAI verbosity level for GPT-5 models.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/verbosity &lt;level&gt;</code></pre>
+<p><strong>Levels:</strong></p>
+<ul>
+<li><code>low</code> - More concise responses</li>
+<li><code>medium</code> - Balanced (default)</li>
+<li><code>high</code> - More verbose responses</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code>/verbosity low</code></pre>
+<p><strong>Result:</strong></p>
+<pre><code>Verbosity set to 'low' and active agent reloaded</code></pre>
+<hr>
+<h3 id="pin-model"><code>/pin_model</code></h3>
+<p>Pin a specific model to an agent.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/pin_model &lt;agent-name&gt; &lt;model-name&gt;</code></pre>
+<p><strong>Examples:</strong></p>
+<pre><code>/pin_model code_puppy claude-3-5-sonnet
+/pin_model planner gpt-4o</code></pre>
+<p><strong>What it does:</strong></p>
+<ul>
+<li>For built-in Python agents: Stores the pin in config</li>
+<li>For JSON agents: Modifies the JSON file directly</li>
+<li>If the current agent is pinned, it reloads immediately</li>
+</ul>
+<p><strong>Result:</strong></p>
+<pre><code>Model 'claude-3-5-sonnet' pinned to agent 'code_puppy'
+Active agent reloaded with pinned model 'claude-3-5-sonnet'</code></pre>
+<hr>
+<h3 id="unpin"><code>/unpin</code></h3>
+<p>Unpin a model from an agent (resets to default).</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/unpin &lt;agent-name&gt;</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>/unpin code_puppy</code></pre>
+<p><strong>Result:</strong></p>
+<pre><code>Model unpinned from agent 'code_puppy' (reset to default)
+Active agent reloaded with default model</code></pre>
+<hr>
+<h3 id="diff"><code>/diff</code></h3>
+<p>Configure diff highlighting colors for additions and deletions.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/diff</code></pre>
+<p>Opens an interactive TUI picker to select colors.</p>
+<p><strong>Recommended Colors:</strong></p>
+<p><strong>Additions (green tones):</strong></p>
+<ul>
+<li><code>green</code>, <code>bright_green</code>, <code>chartreuse1</code>, <code>green3</code>, <code>sea_green1</code></li>
+</ul>
+<p><strong>Deletions (red/orange tones):</strong></p>
+<ul>
+<li><code>orange1</code>, <code>red</code>, <code>bright_red</code>, <code>indian_red</code>, <code>dark_red</code></li>
+</ul>
+<p><strong>All Available Colors:</strong></p>
+<ul>
+<li>Basic: <code>black</code>, <code>red</code>, <code>green</code>, <code>yellow</code>, <code>blue</code>, <code>magenta</code>, <code>cyan</code>, <code>white</code></li>
+<li>Bright: <code>bright_black</code>, <code>bright_red</code>, <code>bright_green</code>, etc.</li>
+<li>Special: <code>orange1</code>, <code>orange3</code>, <code>deep_sky_blue1</code>, <code>turquoise2</code>, <code>steel_blue1</code>, <code>chartreuse1</code>, <code>gold1</code>, etc.</li>
+</ul>
+<p><strong>Hex/RGB Support:</strong> You can also use hex colors like <code>#ff0000</code> or <code>rgb(255,0,0)</code>.</p>
+<hr>
+<h3 id="colors"><code>/colors</code></h3>
+<p>Configure banner colors for tool outputs (THINKING, SHELL COMMAND, etc.).</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/colors</code></pre>
+<p>Opens an interactive TUI picker to customize banner colors.</p>
+<hr>
+<h2 id="session-management-commands">Session Management Commands</h2>
+<h3 id="session"><code>/session</code></h3>
+<p>Show or rotate the autosave session ID.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/session          # Show current session ID
+/session id       # Same as above
+/session new      # Create new session and rotate ID</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>/session</code></pre>
+<p><strong>Result:</strong></p>
+<pre><code>Autosave Session: abc123-def456
+Files prefix: ~/.code_puppy/autosave/abc123-def456</code></pre>
+<hr>
+<h3 id="compact"><code>/compact</code></h3>
+<p>Summarize and compact current chat history using the configured compaction strategy.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/compact</code></pre>
+<p><strong>What it does:</strong></p>
+<ul>
+<li>Uses either summarization or truncation based on <code>compaction_strategy</code> config</li>
+<li>Preserves protected tokens (recent messages)</li>
+<li>Shows token reduction percentage</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code>/compact</code></pre>
+<p><strong>Result:</strong></p>
+<pre><code>🤔 Compacting 50 messages using summarization strategy... (~15000 tokens)
+✨ Done! History: 50 → 25 messages via summarization
+🏦 Tokens: 15,000 → 6,000 (60.0% reduction)</code></pre>
+<hr>
+<h3 id="truncate"><code>/truncate</code></h3>
+<p>Truncate history to N most recent messages.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/truncate &lt;N&gt;</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>/truncate 10</code></pre>
+<p><strong>Result:</strong></p>
+<pre><code>Truncated message history from 50 to 10 messages (keeping system message and 9 most recent)</code></pre>
+<div class="callout callout-note">
+<div class="callout-title">NOTE</div>
+<p>Always keeps the system message plus the N-1 most recent messages.</p>
+</div>
+<hr>
+<h3 id="resume-or-autosave-load"><code>/resume</code> or <code>/autosave_load</code></h3>
+<p>Load an autosave session interactively.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/resume
+/autosave_load</code></pre>
+<p>Opens an interactive menu to select and load a previous autosave session.</p>
+<hr>
+<h3 id="dump-context"><code>/dump_context</code></h3>
+<p>Save current message history to a file.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/dump_context &lt;session-name&gt;</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>/dump_context my-project-context</code></pre>
+<p><strong>Result:</strong></p>
+<pre><code>✅ Context saved: 100 messages (25000 tokens)
+📁 Files: ~/.code_puppy/contexts/my-project-context.pkl, ...metadata.json</code></pre>
+<hr>
+<h3 id="load-context"><code>/load_context</code></h3>
+<p>Load message history from a previously saved context file.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/load_context &lt;session-name&gt;</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>/load_context my-project-context</code></pre>
+<p><strong>Result:</strong></p>
+<pre><code>✅ Context loaded: 100 messages (25000 tokens)
+📁 From: ~/.code_puppy/contexts/my-project-context.pkl
+
+Autosave session rotated to: new-id-123</code></pre>
+<hr>
+<h2 id="mcp-server-commands">MCP Server Commands</h2>
+<h3 id="mcp"><code>/mcp</code></h3>
+<p>Manage Model Context Protocol (MCP) servers.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/mcp                    # Show status dashboard
+/mcp &lt;subcommand&gt;       # Run a specific subcommand</code></pre>
+<p><strong>Available Subcommands:</strong></p>
+<table>
+<thead><tr>
+<th>Subcommand</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>list</code></td>
+<td>List all MCP servers and their status</td>
+</tr>
+<tr>
+<td><code>start &lt;server&gt;</code></td>
+<td>Start a specific server</td>
+</tr>
+<tr>
+<td><code>start-all</code></td>
+<td>Start all configured servers</td>
+</tr>
+<tr>
+<td><code>stop &lt;server&gt;</code></td>
+<td>Stop a specific server</td>
+</tr>
+<tr>
+<td><code>stop-all</code></td>
+<td>Stop all running servers</td>
+</tr>
+<tr>
+<td><code>restart &lt;server&gt;</code></td>
+<td>Restart a specific server</td>
+</tr>
+<tr>
+<td><code>status &lt;server&gt;</code></td>
+<td>Show detailed status for a server</td>
+</tr>
+<tr>
+<td><code>test &lt;server&gt;</code></td>
+<td>Test a server connection</td>
+</tr>
+<tr>
+<td><code>edit &lt;server&gt;</code></td>
+<td>Edit a server configuration</td>
+</tr>
+<tr>
+<td><code>remove &lt;server&gt;</code></td>
+<td>Remove a server configuration</td>
+</tr>
+<tr>
+<td><code>logs &lt;server&gt;</code></td>
+<td>Show server logs</td>
+</tr>
+<tr>
+<td><code>search &lt;query&gt;</code></td>
+<td>Search the server catalog</td>
+</tr>
+<tr>
+<td><code>install &lt;server&gt;</code></td>
+<td>Install a server from catalog</td>
+</tr>
+<tr>
+<td><code>help</code></td>
+<td>Show help information</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code>/mcp list
+/mcp start filesystem
+/mcp status filesystem
+/mcp search git
+/mcp install server-github</code></pre>
+<hr>
+<h2 id="skills-commands">Skills Commands</h2>
+<h3 id="skills"><code>/skills</code></h3>
+<p>Manage agent skills (custom tools and capabilities).</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/skills                    # Show interactive TUI
+/skills &lt;subcommand&gt;       # Run a specific subcommand</code></pre>
+<p><strong>Available Subcommands:</strong></p>
+<table>
+<thead><tr>
+<th>Subcommand</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>list</code></td>
+<td>List all discovered skills</td>
+</tr>
+<tr>
+<td><code>enable &lt;name&gt;</code></td>
+<td>Enable a specific skill</td>
+</tr>
+<tr>
+<td><code>disable &lt;name&gt;</code></td>
+<td>Disable a specific skill</td>
+</tr>
+<tr>
+<td><code>toggle</code></td>
+<td>Toggle skills integration on/off</td>
+</tr>
+<tr>
+<td><code>refresh</code></td>
+<td>Refresh the skill cache</td>
+</tr>
+<tr>
+<td><code>help</code></td>
+<td>Show help information</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code>/skills
+/skills list
+/skills enable my-custom-skill
+/skills disable unused-skill</code></pre>
+<hr>
+<h2 id="scheduler-commands">Scheduler Commands</h2>
+<h3 id="scheduler"><code>/scheduler</code></h3>
+<p>Manage scheduled tasks and the scheduler daemon.</p>
+<p><strong>Usage:</strong></p>
+<pre><code>/scheduler              # Show status
+/scheduler &lt;subcommand&gt; # Run a specific subcommand</code></pre>
+<p><strong>Available Subcommands:</strong></p>
+<table>
+<thead><tr>
+<th>Subcommand</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>start</code></td>
+<td>Start the scheduler daemon</td>
+</tr>
+<tr>
+<td><code>stop</code></td>
+<td>Stop the scheduler daemon</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>Show daemon and task status</td>
+</tr>
+<tr>
+<td><code>list</code></td>
+<td>List all scheduled tasks</td>
+</tr>
+<tr>
+<td><code>run &lt;id&gt;</code></td>
+<td>Run a specific task immediately</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code>/scheduler start
+/scheduler status
+/scheduler list
+/scheduler run task-123</code></pre>
+<hr>
+<h2 id="related-reference">Related Reference</h2>
+<ul>
+<li><a href="CoreCommands.html">Core Commands</a> - Basic chat and agent commands</li>
+<li><a href="SessionCommands.html">Session Commands</a> - Session management (this page)</li>
+<li><a href="MCPCommands.html">MCP Commands</a> - MCP server management</li>
+<li><a href="SkillsCommands.html">Skills Commands</a> - Skills management</li>
+<li><a href="SchedulerCommands.html">Scheduler Commands</a> - Task scheduling</li>
+</ul>
+<hr>
+<h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="../Guides/ModelConfiguration.html">Configuration Guide</a> - How to configure models</li>
+<li><a href="../Getting-Started/QuickStart.html">Quick Start</a> - Get started quickly</li>
+<li><a href="../Concepts/Hooks.html">Concepts: Understanding Hooks</a> - How hooks work</li>
+</ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad: true, theme: 'neutral'});</script>
+</body>
+</html>
